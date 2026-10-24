@@ -1,0 +1,6 @@
+mujoco>=3.1
+numpy
+imageio
+imageio-ffmpeg
+pytest
+hypothesis

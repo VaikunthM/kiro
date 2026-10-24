@@ -1,0 +1,15 @@
+[
+ {
+  "scene_id": "flat_stacked_000",
+  "mode": "flat_stacked",
+  "policy": "grab_only",
+  "json": "runs/flat_stacked_000_grab_only.json",
+  "video": "runs/flat_stacked_000_grab_only.mp4",
+  "summary": {
+   "clean": 5,
+   "double_grabs": 1,
+   "stalls": 0,
+   "moves": 6
+  }
+ }
+]

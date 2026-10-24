@@ -1,0 +1,27 @@
+# Documents (planning docs stay out of the repo)
+*.docx
+*.doc
+~$*.docx
+docs/
+
+# Data: ignore everything inside data/ but keep the folder itself
+data/*
+!data/.gitkeep
+
+# Simulator scratch output
+out/
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+.hypothesis/
+.venv/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Never ignore Kiro specs, steering or hooks (judged from the public repo)
+!.kiro/
