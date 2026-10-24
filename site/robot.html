@@ -178,9 +178,10 @@
     return el;
   }
   function modeName(m) { return MODE_NAMES[m] || m.replace(/_/g, " ").replace(/^./, function (c) { return c.toUpperCase(); }); }
+  function failRate(c) { var n = c.clean + c.double_grabs + c.misses; return n ? (c.double_grabs + c.misses) / n : 0; }
   function pct(x) { return (x * 100).toFixed(1) + "%"; }
   function plural(n, w) { return n + " " + w + (n === 1 ? "" : "s"); }
-  function dbl(sc, pol) { var r = sc.runs[pol]; return r ? (r.summary.double_grabs || 0) : null; }
+  function dbl(sc, pol) { var r = sc.runs[pol]; return r ? (r.summary.double_grabs || 0) + (r.summary.misses || 0) : null; }
   function status(id) {
     var sc = D.scenes[id], a = dbl(sc, "grab_only"), b = dbl(sc, "clearpick");
     if (a == null || b == null) return "same";
@@ -195,7 +196,7 @@
     var sb = D.scoreboard, modes = Object.keys(D.modes);
     var maxRate = 0.05;
     modes.forEach(function (m) { ["grab_only", "clearpick"].forEach(function (p) {
-      var c = sb[m] && sb[m][p]; if (c) maxRate = Math.max(maxRate, c.double_grab_rate);
+      var c = sb[m] && sb[m][p]; if (c) maxRate = Math.max(maxRate, failRate(c));
     }); });
     var bars = h("div", { class: "bars" });
     modes.forEach(function (m) {
@@ -204,19 +205,19 @@
         var c = sb[m] && sb[m][p]; if (!c) return;
         var picks = c.clean + c.double_grabs + c.misses;
         var fill = h("div", { class: "bar-fill " + p });
-        fill.style.width = (c.double_grab_rate / maxRate * 100) + "%";
+        fill.style.width = (failRate(c) / maxRate * 100) + "%";
         var extra = p === "clearpick" ? plural(c.pushes, "push") + " in " + plural(c.scenes, "scene")
-                                      : c.double_grabs + " of " + picks + " picks";
-        if (p === "clearpick") extra = c.double_grabs + " of " + picks + " picks, " + extra;
+                                      : (c.double_grabs + c.misses) + " of " + picks + " picks failed";
+        if (p === "clearpick") extra = (c.double_grabs + c.misses) + " of " + picks + " picks failed, " + extra;
         rows.appendChild(h("div", { class: "bar-row" },
-          h("div", { class: "bar-track", role: "img", "aria-label": POL[p] + " double-grab rate " + pct(c.double_grab_rate) }, fill),
-          h("div", { class: "bar-label" }, h("b", { text: POL[p] + " " + pct(c.double_grab_rate) }), h("span", { text: extra }))));
+          h("div", { class: "bar-track", role: "img", "aria-label": POL[p] + " failure rate " + pct(failRate(c)) }, fill),
+          h("div", { class: "bar-label" }, h("b", { text: POL[p] + " " + pct(failRate(c)) }), h("span", { text: extra }))));
       });
       bars.appendChild(h("div", { class: "bar-group" }, h("h3", { text: modeName(m) }), rows));
     });
     return h("section", null,
-      h("h2", { text: "How often each robot lifts two items at once" }),
-      h("p", { class: "sub", text: "A double grab is the failure that costs warehouses money: one pick takes a second item along. Shorter bars are better." }),
+      h("h2", { text: "How often each robot fails a pick" }),
+      h("p", { class: "sub", text: "A failed pick is a double grab (one pick takes a second item along) or a miss (the cup cannot seal and nothing is lifted). Shorter bars are better." }),
       bars,
       h("div", { class: "key" },
         h("span", null, h("i", { style: "background:var(--slate)" }), "Grab-only"),
@@ -251,7 +252,7 @@
     if (toggle) toggle.firstChild.checked = state.onlyDiff;
     return h("section", null,
       h("h2", { text: "Watch one scene, step by step" }),
-      h("p", { class: "sub", text: "Pick a failure mode and a scene. A blue bar under a scene number means ClearPick double-grabbed less there; an orange bar means it did worse." }),
+      h("p", { class: "sub", text: "Pick a failure mode and a scene. A blue bar under a scene number means ClearPick failed fewer picks there; an orange bar means it did worse." }),
       h("div", { class: "picker" }, tabs, toggle, chips));
   }
   function ensureScene() {
@@ -382,8 +383,8 @@
     var sc = D.scenes[state.scene], a = dbl(sc, "grab_only"), b = dbl(sc, "clearpick");
     var verdict = h("p", { class: "verdict" });
     if (a != null && b != null) {
-      verdict.appendChild(document.createTextNode("Grab-only double-grabbed "));
-      verdict.appendChild(h("em", { text: plural(a, "time") }));
+      verdict.appendChild(document.createTextNode("Grab-only failed "));
+      verdict.appendChild(h("em", { text: plural(a, "pick") }));
       verdict.appendChild(document.createTextNode(" here. ClearPick: "));
       verdict.appendChild(h("strong", { text: String(b) }));
       verdict.appendChild(document.createTextNode("."));

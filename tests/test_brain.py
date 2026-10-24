@@ -184,9 +184,12 @@ def test_wall_seal_rule_hurts_centre_suction_but_not_edge_suction():
     # foam brick flush to the +x wall, its wide side (7.5 cm) facing the wall: centre cup is 3.75 cm out, edge cup can slide away
     st = _one([0.075, 0.05, 0.05], [0.1625, 0.0, 0.025])
     assert score_grasp(st, "a", "suction_center") > score_grasp(st, "a", "suction_edge") + 0.1
-    # narrow side (5 cm) facing the wall: neither cup can get 3.5 cm away, both fail
+    # narrow side (5 cm) facing the wall: centre cup is 2.5 cm out and certainly misses; edge cup reaches 4.25 cm out and can seal
     narrow = _one([0.075, 0.05, 0.05], [0.0, 0.125, 0.025])
-    assert score_grasp(narrow, "a", "suction_center") > 0.9 and score_grasp(narrow, "a", "suction_edge") > 0.9
+    assert score_grasp(narrow, "a", "suction_center") >= 0.99 and score_grasp(narrow, "a", "suction_edge") < 0.5
+    # tiny item: neither cup spot gets 3.5 cm from the wall, both certainly miss
+    tiny = _one([0.04, 0.04, 0.05], [0.0, 0.13, 0.025])
+    assert score_grasp(tiny, "a", "suction_center") >= 0.99 and score_grasp(tiny, "a", "suction_edge") >= 0.99
     mid = _one([0.075, 0.05, 0.05], [0.0, 0.0, 0.025])
     assert score_grasp(mid, "a", "suction_center") < 0.1
 

@@ -7,6 +7,7 @@
 site/robot.html is hand-written and committed; this script only refreshes site/data.js and site/videos/.
 """
 import json
+import re
 import shutil
 import sys
 from pathlib import Path
@@ -41,6 +42,8 @@ def build(runs_dir="runs", scenes_dir="scenes", site_dir="site"):
         if not isinstance(r, dict) or "steps" not in r or "policy" not in r or "scene_id" not in r:
             continue  # e.g. runs/index.json
         sid, pol = r["scene_id"], r["policy"]
+        if not re.fullmatch(r"[a-z_]+_\d{3}", sid) or sid.endswith("_000"):
+            continue  # skip mock and test scenes such as flat_stacked_000 and flat_stacked_t01
         base = scene_files.get(sid, {})
         entry = scenes.setdefault(sid, {"mode": r.get("mode") or base.get("mode", ""),
                                         "tote": base.get("tote", {"size": [0.4, 0.3, 0.15]}),

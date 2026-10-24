@@ -6,7 +6,10 @@ from .score import GRASPS, features, score_grasp
 
 CUTOFF = 0.35
 MAX_PUSHES_PER_ITEM = 2
-PUSH_PREDICT = 0.06   # assumed push distance (m) when predicting overlap; check with brain.diagnose
+try:
+    from sim.sim import PUSH_DIST as PUSH_PREDICT   # predict with the distance the simulator really pushes
+except Exception:  # pragma: no cover
+    PUSH_PREDICT = 0.10
 
 
 def push_direction(state, item_id):

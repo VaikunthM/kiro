@@ -16,8 +16,12 @@ except Exception:  # pragma: no cover
 
 EPS = 0.004
 
-CUP_R = 0.02     # suction cup radius (m), from P2: rim within 1.5 cm of a wall = miss, so cup centre within 3.5 cm
-SEAL_D = 0.035
+try:  # the simulator's own rule constants, so the brain and the sim cannot drift apart
+    from sim.sim import CUP_RADIUS as CUP_R, WALL_SEAL_MARGIN as _MARGIN
+except Exception:  # pragma: no cover
+    CUP_R, _MARGIN = 0.02, 0.015
+SEAL_D = CUP_R + _MARGIN   # cup centre closer to a wall than this = miss (rule b)
+EDGE_FRAC = 0.35           # suction_edge offsets the cup by 35% of the item's extent
 
 BASE = {
     # suction_center: cup at the item centre; a side neighbour within ~1 cm gets lifted too (rule a); wall seal (rule b)
@@ -88,16 +92,17 @@ def features(state, item_id):
     flat = _clamp((0.3 - me["size"][2] / max(me["size"][0], me["size"][1])) / 0.3)
     cx, cy = (me["lo"][0] + me["hi"][0]) / 2, (me["lo"][1] + me["hi"][1]) / 2
     d_center = min(tx - abs(cx), ty - abs(cy))
-    ex = cx - math.copysign(min(max(0.0, me["size"][0] / 2 - CUP_R), abs(cx)), cx)   # best cup spot, away from walls
-    ey = cy - math.copysign(min(max(0.0, me["size"][1] / 2 - CUP_R), abs(cy)), cy)
-    d_edge = min(tx - abs(ex), ty - abs(ey))
+    # suction_edge picks the best of four spots at 35% of the item's extent
+    d_edge = max(min(tx - abs(cx + dx), ty - abs(cy + dy))
+                 for dx, dy in ((EDGE_FRAC * me["size"][0], 0), (-EDGE_FRAC * me["size"][0], 0),
+                                (0, EDGE_FRAC * me["size"][1]), (0, -EDGE_FRAC * me["size"][1])))
     above = _clamp(above * 3)  # anything resting on the item rides along when it is lifted
     return {"below": below, "above": above, "flat_below": flat * below,
             "crowd": 0.0 if gap_min == math.inf else _clamp(1 - gap_min / 0.03),
             "wall": _clamp(1 - wall_dist / 0.03), "big_nb": big, "small_nb": small, "flat": flat,
             "crowd_near": 0.0 if gap_min == math.inf else _clamp((0.02 - gap_min) / 0.02),
-            "seal_center": _clamp((SEAL_D + 0.005 - d_center) / 0.01),
-            "seal_edge": _clamp((SEAL_D + 0.005 - d_edge) / 0.01)}
+            "seal_center": _clamp((SEAL_D + 0.01 - d_center) / 0.01),
+            "seal_edge": _clamp((SEAL_D + 0.01 - d_edge) / 0.01)}
 
 
 def score_grasp(state, item_id, grasp_type):
@@ -108,4 +113,7 @@ def score_grasp(state, item_id, grasp_type):
     w = BASE[kind]
     scale = MODE_SCALE.get(s["mode"], {})
     z = w["bias"] + sum(v * scale.get(k, 1.0) * f.get(k, 0.0) for k, v in w.items() if k != "bias")
-    return round(1 / (1 + math.exp(-z)), 4)
+    risk = 1 / (1 + math.exp(-z))
+    if f["seal"] >= 1.0:  # rule (b) is certain: the cup centre is inside the seal margin, so the grasp misses
+        risk = max(risk, 0.99)
+    return round(risk, 4)
