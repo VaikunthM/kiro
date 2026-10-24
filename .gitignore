@@ -25,3 +25,12 @@ desktop.ini
 
 # Never ignore Kiro specs, steering or hooks (judged from the public repo)
 !.kiro/
+
+# P1
+.venv/
+__pycache__/
+.DS_Store
+p1/cache/
+p1/review/
+p1/manifest.csv
+p1/site/img/

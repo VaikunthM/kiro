@@ -1,0 +1,7 @@
+torch
+transformers
+pillow
+numpy
+pandas
+scikit-learn
+umap-learn
