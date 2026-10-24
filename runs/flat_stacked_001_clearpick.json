@@ -97,13 +97,66 @@
    "reason": "resting on another item: sliding it off",
    "outcome": "ok",
    "removed": []
+  },
+  {
+   "t": 10.766,
+   "action": "grasp",
+   "item": "flat_box_5",
+   "grasp": "suction_edge",
+   "direction": null,
+   "risk": 0.8072,
+   "reason": "no way to make more space: taking the safest option",
+   "outcome": "double",
+   "removed": [
+    "flat_box_4",
+    "flat_box_5"
+   ]
+  },
+  {
+   "t": 12.59,
+   "action": "grasp",
+   "item": "flat_box_3",
+   "grasp": "suction_edge",
+   "direction": null,
+   "risk": 0.1972,
+   "reason": "lowest-risk option (suction edge)",
+   "outcome": "clean",
+   "removed": [
+    "flat_box_3"
+   ]
+  },
+  {
+   "t": 14.562,
+   "action": "grasp",
+   "item": "flat_box_2",
+   "grasp": "side_pinch",
+   "direction": null,
+   "risk": 0.4088,
+   "reason": "no way to make more space: taking the safest option",
+   "outcome": "clean",
+   "removed": [
+    "flat_box_2"
+   ]
+  },
+  {
+   "t": 16.51,
+   "action": "grasp",
+   "item": "flat_box_1",
+   "grasp": "suction_center",
+   "direction": null,
+   "risk": 0.0392,
+   "reason": "clear on all sides",
+   "outcome": "clean",
+   "removed": [
+    "flat_box_1"
+   ]
   }
  ],
  "summary": {
-  "clean": 3,
-  "double_grabs": 0,
+  "clean": 6,
+  "double_grabs": 1,
   "stalls": 0,
-  "moves": 7,
+  "moves": 11,
   "misses": 0,
   "items": 8
  },

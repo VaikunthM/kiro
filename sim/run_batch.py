@@ -61,7 +61,7 @@ def run_scene(scene, policy_name, decide, out_dir, video=True, width=640, height
             summary["clean"] += outcome == "clean"
             summary["double_grabs"] += outcome == "double"
             summary["misses"] += outcome == "miss"
-            stuck = outcome == "miss" or (step["action"] == "push" and sim.last_push_blocked)
+            stuck = outcome == "miss"  # a blocked push is not a dead end: the policy grasps next
             no_progress = no_progress + 1 if stuck else 0
         before = {o["id"] for o in state["objects"]}
         state = sim.state()
