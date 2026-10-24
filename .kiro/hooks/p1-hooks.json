@@ -1,0 +1,39 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "p1-tests-on-save",
+      "description": "Run the P1 unit and property-based tests whenever the agent edits P1 Python code",
+      "trigger": "PostFileSave",
+      "matcher": "(^|[\\\\/])p1[\\\\/][^\\\\/]+\\.py$",
+      "action": {
+        "type": "command",
+        "command": "p1/.venv/bin/python -m pytest p1 -q"
+      },
+      "timeout": 180,
+      "enabled": true
+    },
+    {
+      "name": "validate-atlas-on-save",
+      "description": "Check atlas.json still matches the team contract after it is rewritten",
+      "trigger": "PostFileSave",
+      "matcher": "p1[\\\\/]site[\\\\/]atlas\\.json$",
+      "action": {
+        "type": "command",
+        "command": "p1/.venv/bin/python p1/validate_atlas.py"
+      },
+      "timeout": 60
+    },
+    {
+      "name": "validate-atlas-on-create",
+      "description": "Same contract check when atlas.json is first created",
+      "trigger": "PostFileCreate",
+      "matcher": "p1[\\\\/]site[\\\\/]atlas\\.json$",
+      "action": {
+        "type": "command",
+        "command": "p1/.venv/bin/python p1/validate_atlas.py"
+      },
+      "timeout": 60
+    }
+  ]
+}

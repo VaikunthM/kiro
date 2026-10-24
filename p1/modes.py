@@ -1,3 +1,4 @@
+# Failure modes from ARMBench labels.
 """Failure modes taken from ARMBench's own labels (label + sublabel in each image's .json)."""
 import json
 import os
