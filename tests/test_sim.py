@@ -186,12 +186,23 @@ def test_push_moves_item_in_direction(sim):
     assert sim.push("a", [1, 0]) == "ok"
     assert objs(sim.state())["a"]["pos"][0] - x0 > 0.03
 
-
-def test_push_separates_a_flat_stack(sim):
+def test_push_slides_the_top_box_off_the_stack(sim):
     sim.load(scene(*STACK))
     sim.push("top", [1, 0])
-    assert sim.grasp("top", "suction_center") == "clean"
+    top = objs(sim.state())["top"]
+    assert top["bbox"]["min"][2] < 0.005                      # on the floor now, not on the base
+    # it can land within 1 cm of its old base (rule a), so edge suction is the clean pick
+    assert sim.grasp("top", "suction_edge") == "clean"
 
+
+def test_push_moves_an_item_a_moderate_distance(sim):
+    # 40 cm tote: a long sweep shoves items into other stacks and walls (13% ClearPick doubles at 14 cm
+    # on P3's scenes vs 1.8% at 10 cm), a short one doesn't separate anything
+    sim.load(scene(box("a", [0.08, 0.08, 0.04], [-0.12, 0, 0.02])))
+    x0 = objs(sim.state())["a"]["pos"][0]
+    sim.push("a", [1, 0])
+    moved = objs(sim.state())["a"]["pos"][0] - x0
+    assert 0.06 <= moved <= 0.10
 
 def test_push_with_no_room_behind_item_leaves_it_in_place(sim):
     # item flush against the -x wall; pushing toward +x needs the pusher between item and wall
@@ -455,3 +466,23 @@ def test_property_picked_item_is_out_of_both_camera_frames(size, x, y, yaw):
     assert "a" in sim.removed
     assert not _geom_in_frame(sim, "a", "overhead")
     assert not _geom_in_frame(sim, "a", "angled")
+
+
+def test_demo_camera_frames_the_whole_tote_at_16_9():
+    sim = Sim(width=320, height=180, camera="demo")
+    sim.load(scene(box("a", [0.1, 0.08, 0.04], [0, 0, 0.02])))
+    m, d = sim.model, sim.data
+    cid = m.camera("demo").id
+    cam_p, cam_r = d.cam_xpos[cid], d.cam_xmat[cid].reshape(3, 3)
+    f = (180 / 2) / np.tan(np.radians(m.cam_fovy[cid] / 2))
+    L, W, H = sim.state()["tote"]["size"]
+    us, vs = [], []
+    for x in (-L / 2, L / 2):
+        for y in (-W / 2, W / 2):
+            for z in (0.0, H):
+                local = cam_r.T @ (np.array([x, y, z]) - cam_p)
+                assert local[2] < 0                                   # in front of the camera
+                us.append(f * local[0] / -local[2] + 160)
+                vs.append(-f * local[1] / -local[2] + 90)
+    assert min(us) >= 0 and max(us) <= 320 and min(vs) >= 0 and max(vs) <= 180   # whole tote in frame
+    assert (max(us) - min(us)) / 320 > 0.6                                  # and it fills the frame

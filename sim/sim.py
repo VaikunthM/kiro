@@ -202,10 +202,32 @@ def camera_poses(tote_size):
     return h, (0.0, -0.55 * s, 0.95 * s)
 
 
+DEMO_CAMERA_DISTANCE = 0.70   # share of the angled camera's distance to the tote centre
+
+
+def demo_camera_pose(tote_size):
+    """The angled view moved closer so the tote (walls included) fills about 3/4 of a 16:9 frame."""
+    _, angled = camera_poses(tote_size)
+    centre = np.array([0.0, 0.0, tote_size[2] / 2])
+    return tuple(centre + DEMO_CAMERA_DISTANCE * (np.array(angled) - centre))
+
+
 # ---------------------------------------------------------------- MJCF
 
-def build_mjcf(scene: dict) -> str:
-    """Return MJCF XML text for a scene dict."""
+def build_mjcf(scene: dict, suction: str = "attach", meshes: dict = None) -> str:
+    """Return MJCF XML text for a scene dict.
+
+    In physics mode (`suction == "physics"`) the cup's main geom is named "cup" and left colliding,
+    and an <equality> block adds one inactive cup->object weld per object. In attach mode (default)
+    the output is identical to before (cup non-colliding and unnamed, no equality block).
+
+    `meshes` (optional) maps object type -> {"mesh", "texture" (absolute paths), "scale", "quat", "pos"}.
+    For each object whose type has an entry, a textured `<id>_visual` mesh geom (visual-only, mass 0) is
+    added and the collision primitive is hidden (alpha 0); the primitive is otherwise unchanged. The mesh
+    `<mesh>/<texture>/<material>` assets are emitted once per type. When `meshes` is None/empty the output
+    is byte-for-byte identical to today's (collision primitive visible, no visual geoms, nmesh 0).
+    """
+    meshes = meshes or {}
     tote = {**TOTE_DEFAULT, **scene.get("tote", {})}
     L, W, H = tote["size"]
     t = tote["wall"]
@@ -222,6 +244,8 @@ def build_mjcf(scene: dict) -> str:
     )
 
     body_xml = []
+    mesh_asset_xml = []
+    seen_types = set()
     for i, obj in enumerate(scene["objects"]):
         oid = obj["id"]
         sx, sy, sz = obj["size"]
@@ -229,18 +253,55 @@ def build_mjcf(scene: dict) -> str:
             geom = f'type="cylinder" size="{_v([sx / 2, sz / 2])}"'
         else:
             geom = f'type="box" size="{_v([sx / 2, sy / 2, sz / 2])}"'
-        rgba = obj.get("rgba", PALETTE[i % len(PALETTE)])
+        rgba = list(obj.get("rgba", PALETTE[i % len(PALETTE)]))
         mass = obj_mass(obj)
         quat = obj_quat(obj)
+
+        mesh_entry = meshes.get(obj.get("type"))
+        visual_xml = ""
+        if mesh_entry is not None:
+            mt = obj["type"]
+            if mt not in seen_types:  # emit mesh/texture/material assets once per type
+                seen_types.add(mt)
+                mesh_file = Path(str(mesh_entry["mesh"])).as_posix()
+                tex_file = Path(str(mesh_entry["texture"])).as_posix()
+                mesh_asset_xml.append(
+                    f'<mesh name="mesh_{mt}" file="{mesh_file}" scale="{_v(mesh_entry["scale"])}"/>')
+                mesh_asset_xml.append(
+                    f'<texture name="tex_{mt}" type="2d" file="{tex_file}"/>')
+                mesh_asset_xml.append(
+                    f'<material name="mat_{mt}" texture="tex_{mt}"/>')
+            rgba[3] = 0  # hide the collision primitive; keep its type/size/contype/conaffinity/mass
+            visual_xml = (
+                f'\n      <geom name="{oid}_visual" type="mesh" mesh="mesh_{obj["type"]}" '
+                f'pos="{_v(mesh_entry["pos"])}" quat="{_v(mesh_entry["quat"])}" '
+                f'material="mat_{obj["type"]}" contype="0" conaffinity="0" mass="0"/>')
+
         body_xml.append(
             f'<body name="{oid}" pos="{_v(obj["pos"])}" quat="{_v(quat)}">\n'
             f'      <freejoint name="{oid}_joint"/>\n'
-            f'      <geom name="{oid}" {geom} mass="{mass:.5g}" rgba="{_v(rgba)}"/>\n'
+            f'      <geom name="{oid}" {geom} mass="{mass:.5g}" rgba="{_v(rgba)}"/>'
+            f'{visual_xml}\n'
             f"    </body>"
         )
+    mesh_assets = ("\n    " + "\n    ".join(mesh_asset_xml)) if mesh_asset_xml else ""
 
     ph = PUSHER_HALF
     cam_h, cam_angled = camera_poses(tote["size"])
+
+    # physics mode: the cup collides (so contacts can be read) and is named so it can be welded;
+    # attach mode keeps today's non-colliding, unnamed cup geom byte-for-byte.
+    if suction == "physics":
+        cup_geom = f'<geom name="cup" type="cylinder" size="{CUP_RADIUS} 0.004" pos="0 0 0.004" rgba="0.95 0.95 0.95 1"/>'
+        welds = "\n    ".join(
+            f'<weld name="hold_{o["id"]}" body1="cup" body2="{o["id"]}" active="false" solref="0.01 1"/>'
+            for o in scene["objects"]
+        )
+        equality_xml = f"\n  <equality>\n    {welds}\n  </equality>" if welds else "\n  <equality/>"
+    else:
+        cup_geom = f'<geom type="cylinder" size="{CUP_RADIUS} 0.004" pos="0 0 0.004" rgba="0.95 0.95 0.95 1" contype="0" conaffinity="0"/>'
+        equality_xml = ""
+
     return f"""<mujoco model="{scene.get('scene_id', 'scene')}">
   <option timestep="0.002" cone="elliptic" impratio="10"/>
   <visual>
@@ -252,7 +313,7 @@ def build_mjcf(scene: dict) -> str:
     <texture name="grid" type="2d" builtin="checker" rgb1="0.82 0.82 0.80" rgb2="0.74 0.74 0.72" width="512" height="512"/>
     <material name="ground" texture="grid" texrepeat="10 10"/>
     <material name="tote" rgba="0.18 0.32 0.62 1"/>
-    <material name="tool" rgba="0.25 0.25 0.28 1"/>
+    <material name="tool" rgba="0.25 0.25 0.28 1"/>{mesh_assets}
   </asset>
   <default>
     <geom friction="0.8 0.01 0.001" solref="0.004 1"/>
@@ -265,8 +326,9 @@ def build_mjcf(scene: dict) -> str:
     </body>
     <camera name="overhead" pos="0 0 {cam_h:.4f}" xyaxes="1 0 0 0 1 0" fovy="45"/>
     <camera name="angled" pos="{_v(cam_angled)}" xyaxes="1 0 0 0 0.866 0.5" fovy="45"/>
+    <camera name="demo" pos="{_v(demo_camera_pose(tote["size"]))}" xyaxes="1 0 0 0 0.866 0.5" fovy="45"/>
     <body name="cup" mocap="true" pos="{_v(PARK)}">
-      <geom type="cylinder" size="{CUP_RADIUS} 0.004" pos="0 0 0.004" rgba="0.95 0.95 0.95 1" contype="0" conaffinity="0"/>
+      {cup_geom}
       <geom type="cylinder" size="0.008 0.06" pos="0 0 0.068" material="tool" contype="0" conaffinity="0"/>
     </body>
     <body name="finger_a" mocap="true" pos="{_v(PARK)}">
@@ -280,7 +342,7 @@ def build_mjcf(scene: dict) -> str:
       <geom type="cylinder" size="0.006 0.06" pos="0 0 0.07" material="tool" contype="0" conaffinity="0"/>
     </body>
     {chr(10).join('    ' + b for b in body_xml).strip()}
-  </worldbody>
+  </worldbody>{equality_xml}
 </mujoco>
 """
 
@@ -288,13 +350,41 @@ def build_mjcf(scene: dict) -> str:
 # ---------------------------------------------------------------- simulator
 
 class Sim:
-    def __init__(self, width: int = 640, height: int = 480, camera: str = "overhead"):
-        self.width, self.height, self.camera = width, height, camera
+    def __init__(self, width: int = 640, height: int = 480, camera: str = "overhead",
+                 suction: str = "attach", meshes: bool = False, asset_dir=None):
+        if suction not in ("attach", "physics"):
+            raise ValueError(f'suction must be "attach" or "physics", got {suction!r}')
+        self.width, self.height, self.camera, self.suction = width, height, camera, suction
+        self.meshes = meshes
+        self.asset_dir = Path(asset_dir) if asset_dir is not None \
+            else Path(__file__).resolve().parents[1] / "assets" / "ycb"
+        self._mesh_info = self._load_mesh_info() if meshes else {}
         self.model = self.data = self.scene = None
         self._renderer = None
         self.frames, self._record_path, self._recording = [], None, False
         self.last_push_blocked = False
         self.highlight = set()  # ids a grasp is acting on, for the render path to mark; render-only
+
+    def _load_mesh_info(self) -> dict:
+        """Read the YCB manifest under asset_dir and keep only type entries whose mesh AND texture files
+        exist, resolving their paths to absolute. A missing manifest/folder means no meshes (no error).
+        Returns {type: {"mesh", "texture" (absolute paths), "scale", "quat", "pos"}}."""
+        manifest = self.asset_dir / "manifest.json"
+        try:
+            data = json.loads(manifest.read_text())
+        except (OSError, ValueError):
+            return {}
+        info = {}
+        for t, e in data.get("types", {}).items():
+            mesh_rel, tex_rel = e.get("mesh"), e.get("texture")
+            if not mesh_rel or not tex_rel:
+                continue
+            mesh_abs = (self.asset_dir / mesh_rel).resolve()
+            tex_abs = (self.asset_dir / tex_rel).resolve()
+            if mesh_abs.exists() and tex_abs.exists():
+                info[t] = {"mesh": mesh_abs, "texture": tex_abs,
+                           "scale": e["scale"], "quat": e["quat"], "pos": e["pos"]}
+        return info
 
     # ---- load / step / state ----
     def load(self, scene, settle_s: float = 1.0):
@@ -305,7 +395,8 @@ class Sim:
         self.tote = {**TOTE_DEFAULT, **scene.get("tote", {})}
         self.objs = {o["id"]: o for o in scene["objects"]}
         self.removed = []
-        self.model = mujoco.MjModel.from_xml_string(build_mjcf(scene))
+        self.model = mujoco.MjModel.from_xml_string(
+            build_mjcf(scene, suction=self.suction, meshes=self._mesh_info or None))
         self.data = mujoco.MjData(self.model)
         self._qadr = {i: self.model.joint(f"{i}_joint").qposadr[0] for i in self.objs}
         self._vadr = {i: self.model.joint(f"{i}_joint").dofadr[0] for i in self.objs}
@@ -439,18 +530,30 @@ class Sim:
         # render-only: mark the target plus any clung/ridden ids for the duration of the move
         self.highlight = {item_id, *attached}
 
-        if attached:
-            tpos = self.data.mocap_pos[self._mocap[tool]].copy()
-            offsets = {o: self.data.body(o).xpos.copy() - tpos for o in attached}
-            for o in attached:  # fingers / cup hold, so the attached group moves with the tool
-                self.data.qvel[self._vadr[o]:self._vadr[o] + 6] = 0
-            self._lift(tool, offsets)
+        physics_hold = self.suction == "physics" and tool == "cup"
+        if physics_hold:
+            # hold the held set with welds at the current relative pose, lift with physics (no pinning):
+            # the welds carry the welded objects, and anything resting on them rides along.
+            for o in attached:
+                self._weld(o, True)
+            self._lift(tool, {})  # follow=None; welds + physics do the carrying
+            self.step(0.4)
+            lifted = [o for o, z in z_before.items() if self.data.body(o).xpos[2] - z > LIFT_CHECK]
+            for o in attached:  # release before _remove teleports picks, or the weld drags them back
+                self._weld(o, False)
         else:
-            self._lift(tool, {})
+            if attached:
+                tpos = self.data.mocap_pos[self._mocap[tool]].copy()
+                offsets = {o: self.data.body(o).xpos.copy() - tpos for o in attached}
+                for o in attached:  # fingers / cup hold, so the attached group moves with the tool
+                    self.data.qvel[self._vadr[o]:self._vadr[o] + 6] = 0
+                self._lift(tool, offsets)
+            else:
+                self._lift(tool, {})
 
-        self.step(0.4, follow=(tool, {o: self.data.body(o).xpos.copy() - self.data.mocap_pos[self._mocap[tool]]
-                                      for o in attached}) if attached else None)
-        lifted = [o for o, z in z_before.items() if self.data.body(o).xpos[2] - z > LIFT_CHECK]
+            self.step(0.4, follow=(tool, {o: self.data.body(o).xpos.copy() - self.data.mocap_pos[self._mocap[tool]]
+                                          for o in attached}) if attached else None)
+            lifted = [o for o, z in z_before.items() if self.data.body(o).xpos[2] - z > LIFT_CHECK]
         for o in lifted:
             self._remove(o)
         self._park()
@@ -506,6 +609,8 @@ class Sim:
         return out
 
     def _plan_suction(self, item_id, grasp_type):
+        if self.suction == "physics":
+            return self._plan_suction_physics(item_id, grasp_type)
         pt = self._suction_point(item_id, grasp_type)
         touched = []
         for o in self.objs:
@@ -526,6 +631,67 @@ class Sim:
             attached += [o for o in self._side_neighbours(item_id) if o not in attached]
         self._move("cup", [pt[0], pt[1], touch_z])
         return attached, "cup", touch_z
+
+    def _plan_suction_physics(self, item_id, grasp_type):
+        """Physics mode: detect what the colliding cup actually touches via MuJoCo's contact list, then
+        add the agreed rules (cling + rule (a)) to the held set. Rule (b) wall-seal is checked first."""
+        pt = self._suction_point(item_id, grasp_type)
+        # expected top surface under the cup footprint, used to cap the descent at 3 mm below it
+        tops = [self._zrange(o)[1] for o in self.objs
+                if self._in_tote(o) and _dist_point_poly(pt, self._footprint(o)) <= CUP_RADIUS]
+        self._teleport("cup", [pt[0], pt[1], self._lift_z])
+        self._step_recorded(0.1)
+        if not tops:
+            self._move("cup", [pt[0], pt[1], 0.0])
+            return [], "cup", 0.0
+        touch_z = max(tops)
+        if self._wall_clearance(pt) < CUP_RADIUS + WALL_SEAL_MARGIN:  # rule (b): cup can't seal by the wall
+            self._move("cup", [pt[0], pt[1], touch_z])
+            return [], "cup", touch_z
+        held = self._descend_cup_to_contact(pt, touch_z)  # what the cup actually collides with
+        held += self._cling(held)
+        if grasp_type == "suction_center" and item_id in held:  # rule (a): side neighbour snags along
+            held += [o for o in self._side_neighbours(item_id) if o not in held]
+        return held, "cup", touch_z
+
+    # ---- physics-mode suction (suction == "physics") ----
+    def _cup_contacts(self):
+        """Body names MuJoCo reports in contact with the colliding cup geom (physics mode only)."""
+        gid = self.model.geom("cup").id
+        out = set()
+        for c in self.data.contact[: self.data.ncon]:
+            if gid in (c.geom1, c.geom2):
+                other = c.geom2 if c.geom1 == gid else c.geom1
+                out.add(self.model.body(self.model.geom_bodyid[other]).name)
+        return sorted(out)
+
+    def _weld(self, oid, on):
+        """Toggle the inactive cup->object weld, capturing the current relative pose when activating."""
+        eq = self.model.equality(f"hold_{oid}").id
+        if on:  # eq_data for a weld: anchor(3), relative pos(3), relative quat(4), torquescale(1)
+            cup, obj = self.data.body("cup"), self.data.body(oid)
+            rel_p = cup.xmat.reshape(3, 3).T @ (obj.xpos - cup.xpos)
+            qinv, rel_q = np.zeros(4), np.zeros(4)
+            mujoco.mju_negQuat(qinv, cup.xquat)
+            mujoco.mju_mulQuat(rel_q, qinv, obj.xquat)
+            self.model.eq_data[eq][:11] = [0, 0, 0, *rel_p, *rel_q, 1]
+        self.data.eq_active[eq] = 1 if on else 0
+
+    def _descend_cup_to_contact(self, pt, touch_z):
+        """Lower the colliding cup a step at a time from above, stopping at the first cup contact or
+        3 mm below the expected top surface (touch_z). Returns the touched body names from contacts."""
+        stop_z = touch_z - 0.003
+        mid = self._mocap["cup"]
+        z = self.data.mocap_pos[mid][2]
+        dz = TOOL_SPEED * self.model.opt.timestep
+        while z > stop_z:
+            z = max(stop_z, z - dz)
+            self.data.mocap_pos[mid] = [pt[0], pt[1], z]
+            self._physics_step()
+            touched = [o for o in self._cup_contacts() if o in self.objs]
+            if touched:
+                return touched
+        return [o for o in self._cup_contacts() if o in self.objs]
 
     def _cling(self, attached):
         extra = []
@@ -662,7 +828,15 @@ class Sim:
         Render-only: it edits the MjvScene geoms, never the model, state(), or physics."""
         if not self.highlight:
             return
-        gids = {self.model.geom(oid).id for oid in self.highlight if oid in self.objs}
+        gids = set()
+        for oid in self.highlight:
+            if oid not in self.objs:
+                continue
+            gids.add(self.model.geom(oid).id)
+            try:  # with meshes on the primitive is invisible, so tint the visual geom too
+                gids.add(self.model.geom(f"{oid}_visual").id)
+            except KeyError:
+                pass
         if not gids:
             return
         geom_obj = int(mujoco.mjtObj.mjOBJ_GEOM)

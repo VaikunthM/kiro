@@ -184,6 +184,101 @@
         "chatSessionId": "sess_e4e124a9-4187-44ae-b60b-edf798cfceb7",
         "timestamp": 1792871208807
       }
+    ],
+    "3.1 Add a `suction` constructor argument (`\"attach\"` default, `\"physics\"`; anything else raises": [
+      {
+        "executionId": "9be0e491-442a-4d42-a478-24265208aed5",
+        "chatSessionId": "sess_e4e124a9-4187-44ae-b60b-edf798cfceb7",
+        "timestamp": 1792874579925
+      },
+      {
+        "executionId": "9be0e491-442a-4d42-a478-24265208aed5",
+        "chatSessionId": "sess_e4e124a9-4187-44ae-b60b-edf798cfceb7",
+        "timestamp": 1792875704185
+      }
+    ],
+    "3.2 In physics mode, lower the colliding cup until MuJoCo's contact list (`data.contact`) reports a": [
+      {
+        "executionId": "9be0e491-442a-4d42-a478-24265208aed5",
+        "chatSessionId": "sess_e4e124a9-4187-44ae-b60b-edf798cfceb7",
+        "timestamp": 1792875707032
+      },
+      {
+        "executionId": "9be0e491-442a-4d42-a478-24265208aed5",
+        "chatSessionId": "sess_e4e124a9-4187-44ae-b60b-edf798cfceb7",
+        "timestamp": 1792876169028
+      }
+    ],
+    "3.3 Hold the touched objects (plus `_cling` and rule (a) neighbours, which stay as rules: a weld": [
+      {
+        "executionId": "9be0e491-442a-4d42-a478-24265208aed5",
+        "chatSessionId": "sess_e4e124a9-4187-44ae-b60b-edf798cfceb7",
+        "timestamp": 1792876171634
+      }
+    ],
+    "3.4 Make `tests/test_physics_suction.py` pass, plus the full suite; outcomes in physics mode must": [
+      {
+        "executionId": "9be0e491-442a-4d42-a478-24265208aed5",
+        "chatSessionId": "sess_e4e124a9-4187-44ae-b60b-edf798cfceb7",
+        "timestamp": 1792876175864
+      },
+      {
+        "executionId": "9be0e491-442a-4d42-a478-24265208aed5",
+        "chatSessionId": "sess_e4e124a9-4187-44ae-b60b-edf798cfceb7",
+        "timestamp": 1792876204181
+      }
+    ],
+    "3. Physics-based suction, opt-in behind `Sim(suction=\"physics\")`": [
+      {
+        "executionId": "9be0e491-442a-4d42-a478-24265208aed5",
+        "chatSessionId": "sess_e4e124a9-4187-44ae-b60b-edf798cfceb7",
+        "timestamp": 1792876204323
+      }
+    ],
+    "4.1 Add `meshes=False` and `asset_dir=None` constructor arguments (default folder: `assets/ycb` at": [
+      {
+        "executionId": "9be0e491-442a-4d42-a478-24265208aed5",
+        "chatSessionId": "sess_e4e124a9-4187-44ae-b60b-edf798cfceb7",
+        "timestamp": 1792876207294
+      },
+      {
+        "executionId": "9be0e491-442a-4d42-a478-24265208aed5",
+        "chatSessionId": "sess_e4e124a9-4187-44ae-b60b-edf798cfceb7",
+        "timestamp": 1792876416371
+      }
+    ],
+    "4.2 In `build_mjcf`, for each object whose `type` has a mesh: emit the `<mesh scale=...>`,": [
+      {
+        "executionId": "9be0e491-442a-4d42-a478-24265208aed5",
+        "chatSessionId": "sess_e4e124a9-4187-44ae-b60b-edf798cfceb7",
+        "timestamp": 1792876418949
+      }
+    ],
+    "4.3 Highlight must tint the `<id>_visual` geom too (the primitive is invisible with meshes on).": [
+      {
+        "executionId": "9be0e491-442a-4d42-a478-24265208aed5",
+        "chatSessionId": "sess_e4e124a9-4187-44ae-b60b-edf798cfceb7",
+        "timestamp": 1792876421602
+      }
+    ],
+    "4.4 Add `--meshes` to `run_batch` (passed through to `Sim`), make `tests/test_meshes.py` pass, plus": [
+      {
+        "executionId": "9be0e491-442a-4d42-a478-24265208aed5",
+        "chatSessionId": "sess_e4e124a9-4187-44ae-b60b-edf798cfceb7",
+        "timestamp": 1792876424631
+      },
+      {
+        "executionId": "9be0e491-442a-4d42-a478-24265208aed5",
+        "chatSessionId": "sess_e4e124a9-4187-44ae-b60b-edf798cfceb7",
+        "timestamp": 1792876598950
+      }
+    ],
+    "4. Optional YCB mesh visuals, opt-in behind `Sim(meshes=True)`": [
+      {
+        "executionId": "9be0e491-442a-4d42-a478-24265208aed5",
+        "chatSessionId": "sess_e4e124a9-4187-44ae-b60b-edf798cfceb7",
+        "timestamp": 1792876599055
+      }
     ]
   }
 }
