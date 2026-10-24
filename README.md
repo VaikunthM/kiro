@@ -85,7 +85,55 @@ A lower double-grab rate for ClearPick than Grab-only is the headline result. Mo
 
 ## Failure atlas (P1)
 
-_P1: describe the dataset, the failure clusters, and how to open `p1/site/atlas.html`._
+The atlas shows what real warehouse failures look like and which ones we simulate. It uses Amazon's ARMBench image-defect dataset (CC BY 4.0): 144,129 photos taken of an item hanging from the suction gripper right after a pick. Each photo is labeled clean (124,825), multi-pick (7,813) or package defect (11,491), and package defects carry a sublabel such as open box or torn bag.
+
+**Failure modes.** We first tried clustering CLIP image embeddings, but those clusters grouped photos by camera station, not by failure, so we use Amazon's own labels instead. The 8 modes below come from a balanced sample of 6,000 failures (3,000 multi-pick plus 3,000 package defects; shares are of this sample, not real-world rates):
+
+| Mode | Sample count |
+| --- | --- |
+| Multi-pick (two or more items lifted) | 3,000 |
+| Open book jacket | 805 |
+| Open box | 773 |
+| Book jacket | 723 |
+| Open book | 373 |
+| Partial box | 172 |
+| Torn or empty bag | 84 |
+| Crushed box and other damage | 70 |
+
+Only multi-pick is something a simulator can reproduce, so it is the one simulated mode. Its three scene recipes (flat_stacked, small_beside_big, against_wall) are our hypotheses about what causes double-picks. The photos show the result of a failure, not the tote beforehand, so the data does not prove them.
+
+**Classifier (real data).** CLIP ViT-B/32 embeddings plus logistic regression, trained on 7,200 images and tested on 1,800 held-out ones: 62.2% on three classes (clean, multi-pick, package defect) and 70.2% for failure versus clean. Because about two-thirds of the test set is failures, the 70.2% is only slightly above always answering "failure". It finds package damage well (open book jacket 90%, open box 84%, book jacket 93% detected) but multi-pick poorly (58.5% recall), since two items on a gripper look like one. That gap is why ClearPick scores the grasp geometry before it lifts. Full numbers are in `p1/results.md`.
+
+**Open the atlas.**
+
+```
+cd p1/site && python3 -m http.server
+# then open http://localhost:8000/atlas.html
+```
+
+**Rebuild it.** Needs the ARMBench image-defect download.
+
+```
+cd p1 && pip install -r requirements.txt
+python3 00_make_manifest.py /path/to/armbench-defects-image-0.1 --per-class 3000
+python3 01_embed.py
+python3 02_cluster.py
+python3 03_export.py
+python3 -m pytest -q
+```
+
+| File | What it does |
+| --- | --- |
+| `p1/modes.py` | maps ARMBench labels to our 8 modes; defines the 3 scene recipes |
+| `p1/00_make_manifest.py` | builds the image list from the per-image JSON labels |
+| `p1/01_embed.py` | CLIP embeddings, cached in `p1/cache/` |
+| `p1/02_cluster.py` | groups failures by mode, makes the 2D map |
+| `p1/03_export.py` | trains the classifier, writes `p1/site/atlas.json` and `p1/results.md` |
+| `p1/validate_atlas.py` | checks `atlas.json` against the team contract |
+| `p1/test_atlas.py`, `p1/test_export.py` | property-based and unit tests |
+| `p1/site/atlas.html` | the Atlas page |
+
+Data: [Amazon ARMBench](https://github.com/armbench/armbench), CC BY 4.0.
 
 ## Simulator
 
