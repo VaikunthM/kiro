@@ -1,0 +1,27 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "validate-scenes-on-save",
+      "description": "Check generated scene files load, stay in the tote and don't overlap",
+      "trigger": "PostFileSave",
+      "matcher": "scenes[\\\\/].*\\.json$",
+      "action": {
+        "type": "command",
+        "command": "conda run -n hackachusetts python -m sim.validate_scenes"
+      },
+      "timeout": 180
+    },
+    {
+      "name": "validate-scenes-on-create",
+      "description": "Same check when a new scene file is created",
+      "trigger": "PostFileCreate",
+      "matcher": "scenes[\\\\/].*\\.json$",
+      "action": {
+        "type": "command",
+        "command": "conda run -n hackachusetts python -m sim.validate_scenes"
+      },
+      "timeout": 180
+    }
+  ]
+}

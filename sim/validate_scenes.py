@@ -15,7 +15,7 @@ import numpy as np
 
 from sim.sim import TOTE_DEFAULT, Sim
 
-REQUIRED = ("id", "size", "pos")
+REQUIRED = ("id", "type", "size", "pos")
 MAX_SETTLE_MOVE = 0.02
 
 
@@ -35,11 +35,11 @@ def check_scene(scene) -> list:
     if problems:
         return problems
     try:
-        state = Sim(width=64, height=48, video=False).load(scene)
+        state = Sim(width=64, height=48).load(scene)
     except Exception as e:  # compile errors, bad shapes
         return [f"does not load: {e}"]
     for o in scene["objects"]:
-        now = np.array(state["objects"][o["id"]]["pos"])
+        now = np.array(next(x for x in state["objects"] if x["id"] == o["id"])["pos"])
         moved = float(np.linalg.norm(now - np.array(o["pos"])))
         if moved > MAX_SETTLE_MOVE:
             problems.append(f"{o['id']}: moved {moved * 100:.1f} cm while settling (overlap or floating?)")

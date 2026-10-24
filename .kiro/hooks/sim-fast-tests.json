@@ -1,0 +1,16 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "sim-fast-tests",
+      "description": "Run the fast simulator tests whenever the agent edits simulator code or tests",
+      "trigger": "PostFileSave",
+      "matcher": "(^|[\\\\/])(sim|tests)[\\\\/][^\\\\/]+\\.py$",
+      "action": {
+        "type": "command",
+        "command": "conda run -n hackachusetts python -m pytest -q -m \"not slow\""
+      },
+      "timeout": 180
+    }
+  ]
+}

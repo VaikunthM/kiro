@@ -1,0 +1,14 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "simulator-task-check",
+      "description": "After each spec task: full suite incl. property tests, then the demo scenario",
+      "trigger": "PostTaskExec",
+      "action": {
+        "type": "agent",
+        "prompt": "A spec task just finished. Run `conda run -n hackachusetts python -m pytest -q` (includes the slow Hypothesis property tests). If anything fails, fix the code, unless the test contradicts .kiro/specs/simulator/requirements.md, in which case stop and explain the conflict. Then run `conda run -n hackachusetts python -m sim.run_batch --scene scenes/mock/flat_stacked_000.json --no-video` and confirm grab_only still reports exactly one double grab. Report the results in two lines."
+      }
+    }
+  ]
+}

@@ -24,43 +24,48 @@ def run_scene(scene, policy_name, decide, out_dir, video=True, width=640, height
     """Run one policy on one scene until the tote is empty, the policy stops, or it stalls out."""
     out_dir = Path(out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
-    sim = Sim(width=width, height=height, video=video)
+    sim = Sim(width=width, height=height)
     state = sim.load(scene)
-    max_moves = 3 * len(scene["objects"])
-    steps, stalls_in_a_row = [], 0
-    summary = {"clean": 0, "double_grabs": 0, "stalls": 0, "moves": 0}
+    stem = f"{scene['scene_id']}_{policy_name}"
+    if video:
+        sim.record(out_dir / f"{stem}.mp4")
+    max_steps = 3 * len(scene["objects"])
+    steps, no_progress = [], 0
+    summary = {"clean": 0, "double_grabs": 0, "stalls": 0, "moves": 0, "misses": 0,
+               "items": len(scene["objects"])}
 
-    while state["objects"] and len(steps) < max_moves and stalls_in_a_row < MAX_STALLS_IN_A_ROW:
+    while state["objects"] and len(steps) < max_steps and no_progress < MAX_STALLS_IN_A_ROW:
         step = decide(state)
         if step is None:
             break
-        t = round(float(sim.data.time), 2)
-        if step["action"] == "grasp":
-            outcome = sim.grasp(step["item"], step["grasp"])
-        elif step["action"] == "push":
-            outcome = sim.push(step["item"], step["direction"])
-        else:
-            raise ValueError(f"unknown action {step['action']!r} from policy {policy_name}")
-
-        steps.append({"t": t, "action": step["action"], "item": step["item"],
-                      "grasp": step.get("grasp"), "direction": step.get("direction"),
-                      "risk": step.get("risk"), "reason": step.get("reason", ""), "outcome": outcome})
-        summary["moves"] += 1
-        if outcome == "clean":
-            summary["clean"] += 1
-        elif outcome == "double_grab":
-            summary["double_grabs"] += 1
-        if outcome in ("miss", "blocked"):
+        record = {"t": sim.clock(), "action": step.get("action"), "item": step.get("item"),
+                  "grasp": step.get("grasp"), "direction": step.get("direction"),
+                  "risk": step.get("risk"), "reason": step.get("reason", ""), "outcome": None}
+        if step.get("stall"):  # the policy gave up waiting for a safe grasp: nothing is executed
+            record["stall"] = True
             summary["stalls"] += 1
-            stalls_in_a_row += 1
+            no_progress += 1
+            sim.step(0.5)
         else:
-            stalls_in_a_row = 0
+            if step["action"] == "grasp":
+                record["outcome"] = sim.grasp(step["item"], step["grasp"])
+            elif step["action"] == "push":
+                record["outcome"] = sim.push(step["item"], step["direction"])
+            else:
+                raise ValueError(f"unknown action {step['action']!r} from policy {policy_name}")
+            summary["moves"] += 1
+            outcome = record["outcome"]
+            summary["clean"] += outcome == "clean"
+            summary["double_grabs"] += outcome == "double"
+            summary["misses"] += outcome == "miss"
+            stuck = outcome == "miss" or (step["action"] == "push" and sim.last_push_blocked)
+            no_progress = no_progress + 1 if stuck else 0
+        steps.append(record)
         state = sim.state()
 
-    stem = f"{scene['scene_id']}_{policy_name}"
     video_path = None
     if video:
-        sim.record(out_dir / f"{stem}.mp4")
+        sim.record(None)
         video_path = f"{out_dir.name}/{stem}.mp4"
     run = {"scene_id": scene["scene_id"], "mode": scene.get("mode"), "policy": policy_name,
            "steps": steps, "summary": summary, "video": video_path}

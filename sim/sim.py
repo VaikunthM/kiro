@@ -1,40 +1,36 @@
 """ClearPick simulator: tote + objects + overhead camera in MuJoCo, built from a scene JSON.
+Implements contract 3 (Simulator API) of the shared contracts steering doc; scenes follow contract 2.
 
-Scene JSON (scenes/<mode>/<n>.json), all units metres / kg:
-{
-  "scene_id": "flat_stacked_000",
-  "mode": "flat_stacked",
-  "tote": {"size": [0.60, 0.40, 0.20]},          # inner length, width, wall height (optional)
-  "objects": [
-    {"id": "pudding_box_1", "ycb": "008_pudding_box",
-     "shape": "box",                              # "box" or "cylinder"
-     "size": [0.110, 0.089, 0.035],               # full extents x, y, z in the object's own frame
-                                                  # (cylinder: diameter, diameter, height)
-     "pos": [0.05, 0.00, 0.0175],                 # centre, tote frame: origin = middle of tote floor, z up
-     "quat": [1, 0, 0, 0],                        # w x y z (optional, default upright)
-     "mass": 0.187, "rgba": [0.85, 0.3, 0.3, 1]}  # optional
-  ]
-}
-For an object resting on the floor, pos z = size z / 2. Stacked items sit on top, no overlap.
+Scene JSON (scenes/<mode>/<n>.json), units metres:
+  {"scene_id": "flat_stacked_007", "mode": "flat_stacked", "seed": 7,
+   "tote": {"size": [0.40, 0.30, 0.15]},                 # optional, this is the default
+   "objects": [{"id": "box_1", "type": "flat_box", "size": [0.14, 0.10, 0.015],
+                "pos": [0.02, -0.03, 0.0075], "yaw": 0.2}]}
+  size = full extents x, y, z; pos = object CENTRE (tote floor at z = 0, tote centred at origin);
+  resting z = size z / 2. Types in CYLINDER_TYPES load as cylinders (size = diameter, diameter, height),
+  everything else as a box. Optional extras: "shape", "quat" (w x y z, overrides yaw), "mass", "rgba".
 
-API (team contract):
-  sim.load(scene)                 -> state dict
-  sim.state()                     -> {"scene_id", "tote": {"size"}, "objects": {id: {pos, quat, size, shape, bbox_min, bbox_max}}}
-  sim.grasp(item_id, grasp_type)  -> "clean" | "double_grab" | "miss"     grasp_type in GRASP_TYPES
-  sim.push(item_id, [dx, dy])     -> "ok" | "blocked"
-  sim.record(path)                -> number of frames written to an .mp4 (everything since load)
-Picked items (clean or double grab) leave the tote and disappear from state().
+API:
+  sim.load(scene)                 -> state()        scene dict or path to a scene JSON
+  sim.state()  -> {"scene_id", "mode", "tote": {"size"},
+                   "objects": [{"id", "type", "size", "pos", "bbox": {"min", "max"}, "yaw", "shape"}]}
+                   only objects still in the tote
+  sim.grasp(item_id, grasp_type)  -> "clean" | "double" | "miss"; grasp_type in GRASP_TYPES
+  sim.push(item_id, [dx, dy])     -> "ok"  (sim.last_push_blocked is True when the pusher had no room)
+  sim.record(path)                start recording to an .mp4; sim.record(None) stops, saves, returns frames
+  sim.clock()                     -> simulated seconds since load
+"clean" removes exactly one object from the tote, "double" two or more, "miss" none.
 
 Grasp mechanics (attach-on-touch, deliberately simple and deterministic):
   suction  The cup (radius CUP_RADIUS) comes down at the pick point and stops on the highest surface
            under it. Every object whose top is within TOUCH_TOL of that surface and that overlaps the cup
            attaches. A flat attached item (thinner than CLING_MAX_THICKNESS) also drags up a flat item it
-           rests on when they overlap by CLING_MIN_OVERLAP or more: this is the ARMBench "flat items
-           stacked" multi-pick. Anything resting on a lifted item rides along by physics.
+           rests on when they overlap by CLING_MIN_OVERLAP or more: the ARMBench "flat items stacked"
+           multi-pick. Anything resting on a lifted item rides along by physics.
   pinch    Fingers close across the item's shorter horizontal side. If a finger can't get down (wall or
            another object in the way) it is a miss; every object between the fingers at the item's
            height is lifted.
-Outcome: count objects that rose more than LIFT_CHECK. 1 = clean, 2+ = double_grab, 0 = miss.
+Outcome = number of objects that rose more than LIFT_CHECK.
 """
 import json
 import sys
@@ -43,20 +39,22 @@ from pathlib import Path
 import mujoco
 import numpy as np
 
-TOTE_DEFAULT = {"size": [0.60, 0.40, 0.20], "wall": 0.01}
-CAMERA_HEIGHT = 0.90
+TOTE_DEFAULT = {"size": [0.40, 0.30, 0.15], "wall": 0.01}
+CYLINDER_TYPES = {"tomato_soup_can", "master_chef_can", "tuna_fish_can", "chips_can", "coffee_can",
+                  "soup_can", "can", "cylinder", "jar", "cup", "mug"}
+DENSITY = 400.0           # kg/m^3 for objects without a mass, roughly a packed retail box
 PALETTE = [
     [0.90, 0.35, 0.30, 1], [0.95, 0.75, 0.25, 1], [0.35, 0.70, 0.40, 1], [0.30, 0.55, 0.90, 1],
     [0.65, 0.40, 0.85, 1], [0.95, 0.55, 0.20, 1], [0.40, 0.80, 0.80, 1], [0.85, 0.45, 0.65, 1],
 ]
 
-GRASP_TYPES = ("suction_center", "suction_offcenter", "side_pinch")
+GRASP_TYPES = ("suction_center", "suction_edge", "side_pinch")
 CUP_RADIUS = 0.02
 TOUCH_TOL = 0.006
 CLING_MAX_THICKNESS = 0.045
 CLING_MIN_OVERLAP = 0.5
 FINGER_T, FINGER_W, JAW_CLEAR = 0.012, 0.03, 0.006
-LIFT_Z, LIFT_CHECK = 0.35, 0.10
+LIFT_ABOVE_WALL, LIFT_CHECK = 0.10, 0.10  # tools lift to wall height + 10 cm
 TOOL_SPEED = 0.4           # m/s for approach and lift
 PUSH_DIST, PUSH_SPEED = 0.10, 0.15
 PUSHER_HALF = (0.008, 0.035, 0.010)   # thickness along push, width across, half-height
@@ -157,6 +155,39 @@ def _area(poly):
     return 0.5 * abs(np.dot(x, np.roll(y, 1)) - np.dot(y, np.roll(x, 1)))
 
 
+# ---------------------------------------------------------------- scene fields
+
+def obj_shape(obj):
+    if "shape" in obj:
+        return obj["shape"]
+    t = str(obj.get("type", "")).lower()
+    return "cylinder" if t in CYLINDER_TYPES or t.endswith("_can") and t != "potted_meat_can" else "box"
+
+
+def obj_quat(obj):
+    if "quat" in obj:
+        return list(obj["quat"])
+    yaw = float(obj.get("yaw", 0.0))
+    return [np.cos(yaw / 2), 0.0, 0.0, np.sin(yaw / 2)]
+
+
+def obj_mass(obj):
+    if "mass" in obj:
+        return obj["mass"]
+    sx, sy, sz = obj["size"]
+    vol = np.pi * (sx / 2) ** 2 * sz if obj_shape(obj) == "cylinder" else sx * sy * sz
+    return max(0.01, DENSITY * vol)
+
+
+def camera_poses(tote_size):
+    """Overhead camera high enough to frame the tote at 4:3 with fovy 45; angled camera scaled to match."""
+    L, W, H = tote_size
+    tan = np.tan(np.radians(22.5))
+    h = H + max((W / 2 + 0.04) / tan, (L / 2 + 0.04) / (tan * 4 / 3))  # frame the wall tops, not the floor
+    s = max(L / 0.6, W / 0.4)
+    return h, (0.0, -0.55 * s, 0.95 * s)
+
+
 # ---------------------------------------------------------------- MJCF
 
 def build_mjcf(scene: dict) -> str:
@@ -180,21 +211,22 @@ def build_mjcf(scene: dict) -> str:
     for i, obj in enumerate(scene["objects"]):
         oid = obj["id"]
         sx, sy, sz = obj["size"]
-        if obj.get("shape", "box") == "cylinder":
+        if obj_shape(obj) == "cylinder":
             geom = f'type="cylinder" size="{_v([sx / 2, sz / 2])}"'
         else:
             geom = f'type="box" size="{_v([sx / 2, sy / 2, sz / 2])}"'
         rgba = obj.get("rgba", PALETTE[i % len(PALETTE)])
-        mass = obj.get("mass", 0.2)
-        quat = obj.get("quat", [1, 0, 0, 0])
+        mass = obj_mass(obj)
+        quat = obj_quat(obj)
         body_xml.append(
             f'<body name="{oid}" pos="{_v(obj["pos"])}" quat="{_v(quat)}">\n'
             f'      <freejoint name="{oid}_joint"/>\n'
-            f'      <geom name="{oid}" {geom} mass="{mass}" rgba="{_v(rgba)}"/>\n'
+            f'      <geom name="{oid}" {geom} mass="{mass:.5g}" rgba="{_v(rgba)}"/>\n'
             f"    </body>"
         )
 
     ph = PUSHER_HALF
+    cam_h, cam_angled = camera_poses(tote["size"])
     return f"""<mujoco model="{scene.get('scene_id', 'scene')}">
   <option timestep="0.002" cone="elliptic" impratio="10"/>
   <visual>
@@ -217,11 +249,11 @@ def build_mjcf(scene: dict) -> str:
     <body name="tote">
       {wall_xml}
     </body>
-    <camera name="overhead" pos="0 0 {CAMERA_HEIGHT}" xyaxes="1 0 0 0 1 0" fovy="45"/>
-    <camera name="angled" pos="0 -0.55 0.95" xyaxes="1 0 0 0 0.866 0.5" fovy="45"/>
+    <camera name="overhead" pos="0 0 {cam_h:.4f}" xyaxes="1 0 0 0 1 0" fovy="45"/>
+    <camera name="angled" pos="{_v(cam_angled)}" xyaxes="1 0 0 0 0.866 0.5" fovy="45"/>
     <body name="cup" mocap="true" pos="{_v(PARK)}">
       <geom type="cylinder" size="{CUP_RADIUS} 0.004" pos="0 0 0.004" rgba="0.95 0.95 0.95 1" contype="0" conaffinity="0"/>
-      <geom type="cylinder" size="0.008 0.15" pos="0 0 0.158" material="tool" contype="0" conaffinity="0"/>
+      <geom type="cylinder" size="0.008 0.06" pos="0 0 0.068" material="tool" contype="0" conaffinity="0"/>
     </body>
     <body name="finger_a" mocap="true" pos="{_v(PARK)}">
       <geom type="box" size="{FINGER_T / 2} {FINGER_W / 2} 0.08" pos="0 0 0.08" material="tool" contype="0" conaffinity="0"/>
@@ -231,7 +263,7 @@ def build_mjcf(scene: dict) -> str:
     </body>
     <body name="pusher" mocap="true" pos="{_v(PARK + [0.3, 0, 0])}">
       <geom name="pusher" type="box" size="{_v(ph)}" material="tool" friction="0.3 0.01 0.001"/>
-      <geom type="cylinder" size="0.006 0.12" pos="0 0 0.13" material="tool" contype="0" conaffinity="0"/>
+      <geom type="cylinder" size="0.006 0.06" pos="0 0 0.07" material="tool" contype="0" conaffinity="0"/>
     </body>
     {chr(10).join('    ' + b for b in body_xml).strip()}
   </worldbody>
@@ -242,11 +274,12 @@ def build_mjcf(scene: dict) -> str:
 # ---------------------------------------------------------------- simulator
 
 class Sim:
-    def __init__(self, width: int = 640, height: int = 480, camera: str = "overhead", video: bool = True):
-        self.width, self.height, self.camera, self.video = width, height, camera, video
+    def __init__(self, width: int = 640, height: int = 480, camera: str = "overhead"):
+        self.width, self.height, self.camera = width, height, camera
         self.model = self.data = self.scene = None
         self._renderer = None
-        self.frames = []
+        self.frames, self._record_path, self._recording = [], None, False
+        self.last_push_blocked = False
 
     # ---- load / step / state ----
     def load(self, scene, settle_s: float = 1.0):
@@ -268,12 +301,16 @@ class Sim:
         if self._renderer is not None:
             self._renderer.close()
         self._renderer = mujoco.Renderer(self.model, self.height, self.width)
-        self.frames = []
-        self._recording = False
+        self.frames, self._record_path, self._recording = [], None, False
+        self.last_push_blocked = False
         self.step(settle_s)
-        self._recording = self.video
-        self.step(0.3)
+        self._t0 = float(self.data.time)
+        self._lift_z = self.tote["size"][2] + LIFT_ABOVE_WALL
         return self.state()
+
+    def clock(self) -> float:
+        """Simulated seconds since load() finished settling."""
+        return round(float(self.data.time) - self._t0, 3)
 
     def step(self, seconds: float, follow=None):
         """Advance physics. `follow` = (tool_body, {obj_id: offset}) keeps attached objects on the tool."""
@@ -297,21 +334,24 @@ class Sim:
 
     def state(self) -> dict:
         """Each object's pose and world-frame axis-aligned bounding box (picked objects are left out)."""
-        objects = {}
+        objects = []
         for oid, obj in self.objs.items():
             if oid in self.removed:
                 continue
             corners = self._corners(oid)
             body = self.data.body(oid)
-            objects[oid] = {
+            R = body.xmat.reshape(3, 3)
+            objects.append({
+                "id": oid,
+                "type": obj.get("type", obj_shape(obj)),
+                "size": list(obj["size"]),
                 "pos": body.xpos.round(4).tolist(),
-                "quat": body.xquat.round(4).tolist(),
-                "size": obj["size"],
-                "shape": obj.get("shape", "box"),
-                "bbox_min": corners.min(0).round(4).tolist(),
-                "bbox_max": corners.max(0).round(4).tolist(),
-            }
-        return {"scene_id": self.scene.get("scene_id"), "tote": {"size": self.tote["size"]}, "objects": objects}
+                "bbox": {"min": corners.min(0).round(4).tolist(), "max": corners.max(0).round(4).tolist()},
+                "yaw": round(float(np.arctan2(R[1, 0], R[0, 0])), 4),
+                "shape": obj_shape(obj),
+            })
+        return {"scene_id": self.scene.get("scene_id"), "mode": self.scene.get("mode"),
+                "tote": {"size": list(self.tote["size"])}, "objects": objects}
 
     # ---- geometry of current poses ----
     def _corners(self, oid):
@@ -398,14 +438,14 @@ class Sim:
         self.step(0.3)
         if len(lifted) == 0:
             return "miss"
-        return "clean" if len(lifted) == 1 else "double_grab"
+        return "clean" if len(lifted) == 1 else "double"
 
     def _lift(self, tool, offsets):
         follow = (tool, offsets) if offsets else None
         if tool == "finger_a":  # move both fingers together; objects follow finger_a
             a0 = self.data.mocap_pos[self._mocap["finger_a"]].copy()
             b0 = self.data.mocap_pos[self._mocap["finger_b"]].copy()
-            dz = LIFT_Z - a0[2]
+            dz = self._lift_z - a0[2]
             n = max(1, int(abs(dz) / (TOOL_SPEED * self.model.opt.timestep)))
             vel = np.array([0, 0, dz / (n * self.model.opt.timestep)])
             for k in range(1, n + 1):
@@ -414,7 +454,7 @@ class Sim:
                 self._physics_step(follow, vel)
         else:
             p = self.data.mocap_pos[self._mocap[tool]].copy()
-            self._move(tool, [p[0], p[1], LIFT_Z], follow=follow)
+            self._move(tool, [p[0], p[1], self._lift_z], follow=follow)
 
     def _suction_point(self, item_id, grasp_type):
         pos = self.data.body(item_id).xpos[:2].copy()
@@ -434,7 +474,7 @@ class Sim:
         for o in self.objs:
             if self._in_tote(o) and _dist_point_poly(pt, self._footprint(o)) <= CUP_RADIUS:
                 touched.append((self._zrange(o)[1], o))
-        self._teleport("cup", [pt[0], pt[1], LIFT_Z])
+        self._teleport("cup", [pt[0], pt[1], self._lift_z])
         self._step_recorded(0.1)
         if not touched:
             self._move("cup", [pt[0], pt[1], 0.0])
@@ -476,7 +516,7 @@ class Sim:
         for name, s in (("finger_a", 1), ("finger_b", -1)):
             p = c + s * off * np.append(jaw, 0)
             self.data.mocap_quat[self._mocap[name]] = quat
-            self._teleport(name, [p[0], p[1], LIFT_Z])
+            self._teleport(name, [p[0], p[1], self._lift_z])
         self._step_recorded(0.1)
 
         blocked = any(self._rect_hits_wall(f) for f in fingers) or any(
@@ -519,6 +559,7 @@ class Sim:
 
     # ---- push ----
     def push(self, item_id: str, direction) -> str:
+        self.last_push_blocked = False
         if not self._in_tote(item_id):
             raise ValueError(f"{item_id} is not in the tote")
         d = np.asarray(direction, float)[:2]
@@ -533,7 +574,7 @@ class Sim:
 
         yaw = np.arctan2(d[1], d[0])
         self.data.mocap_quat[self._mocap["pusher"]] = [np.cos(yaw / 2), 0, 0, np.sin(yaw / 2)]
-        self._teleport("pusher", [start[0], start[1], LIFT_Z])
+        self._teleport("pusher", [start[0], start[1], self._lift_z])
         self.step(0.1)
 
         blocked = self._rect_hits_wall(start_rect) or any(
@@ -542,10 +583,11 @@ class Sim:
         )
         if blocked:
             self._move("pusher", [start[0], start[1], z + 0.08])
-            self._move("pusher", [start[0], start[1], LIFT_Z])
+            self._move("pusher", [start[0], start[1], self._lift_z])
             self._park()
             self.step(0.2)
-            return "blocked"
+            self.last_push_blocked = True
+            return "ok"
 
         before = c[:2].copy()
         self._move("pusher", [start[0], start[1], z])
@@ -553,11 +595,12 @@ class Sim:
         lim = self._inner_bounds() - PUSHER_HALF[1]
         end = np.clip(end, -lim, lim)
         self._move("pusher", [end[0], end[1], z], speed=PUSH_SPEED)
-        self._move("pusher", [end[0], end[1], LIFT_Z])
+        self._move("pusher", [end[0], end[1], self._lift_z])
         self._park()
         self.step(0.4)
         moved = np.linalg.norm(self.data.body(item_id).xpos[:2] - before)
-        return "ok" if moved > 0.01 else "blocked"
+        self.last_push_blocked = bool(moved <= 0.01)
+        return "ok"
 
     # ---- rendering / video ----
     def render(self, path=None, camera: str = None) -> np.ndarray:
@@ -569,12 +612,19 @@ class Sim:
         return img
 
     def record(self, path) -> int:
-        """Write every frame since load() to an .mp4. Returns the number of frames."""
+        """record(path) starts capturing frames for an .mp4 at path; record(None) stops and saves it.
+        Returns the number of frames saved (0 when starting, or when nothing was being recorded)."""
+        if path is not None:
+            self._record_path, self.frames, self._recording = Path(path), [self.render()], True
+            return 0
+        if not self._recording:
+            return 0
         import imageio.v2 as iio2
-        path = Path(path)
-        path.parent.mkdir(parents=True, exist_ok=True)
-        frames = self.frames or [self.render()]
-        iio2.mimwrite(path, frames, fps=FPS, codec="libx264", macro_block_size=8,
+        self.step(0.3)  # short tail so the last move is visible
+        out, frames = self._record_path, self.frames
+        self._recording, self._record_path, self.frames = False, None, []
+        out.parent.mkdir(parents=True, exist_ok=True)
+        iio2.mimwrite(out, frames, fps=FPS, codec="libx264", macro_block_size=8,
                       pixelformat="yuv420p", ffmpeg_params=["-preset", "veryfast", "-crf", "23"])
         return len(frames)
 
@@ -590,6 +640,6 @@ if __name__ == "__main__":
     st = sim.load(scene)
     sim.render(out / f"{scene_path.stem}_overhead.png")
     sim.render(out / f"{scene_path.stem}_angled.png", camera="angled")
-    for oid, o in st["objects"].items():
-        print(f"{oid:22s} pos={o['pos']}  bbox_z=[{o['bbox_min'][2]:.3f}, {o['bbox_max'][2]:.3f}]")
+    for o in st["objects"]:
+        print(f"{o['id']:22s} {o['shape']:8s} pos={o['pos']}  bbox_z=[{o['bbox']['min'][2]:.3f}, {o['bbox']['max'][2]:.3f}]")
     print(f"wrote out/{scene_path.stem}.xml and two PNGs")

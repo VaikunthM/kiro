@@ -1,14 +1,15 @@
 {
   "scene_id": "flat_stacked_000",
   "mode": "flat_stacked",
-  "tote": {"size": [0.60, 0.40, 0.20]},
+  "seed": 0,
+  "tote": {"size": [0.40, 0.30, 0.15]},
   "objects": [
-    {"id": "cracker_box_1", "ycb": "003_cracker_box", "shape": "box", "size": [0.210, 0.158, 0.060], "pos": [-0.170, 0.080, 0.030], "mass": 0.411},
-    {"id": "sugar_box_1", "ycb": "004_sugar_box", "shape": "box", "size": [0.175, 0.089, 0.038], "pos": [-0.150, -0.110, 0.019], "mass": 0.514},
-    {"id": "pudding_box_1", "ycb": "008_pudding_box", "shape": "box", "size": [0.110, 0.089, 0.035], "pos": [0.050, 0.000, 0.0175], "mass": 0.187},
-    {"id": "gelatin_box_1", "ycb": "009_gelatin_box", "shape": "box", "size": [0.085, 0.073, 0.028], "pos": [0.060, 0.010, 0.050], "mass": 0.097},
-    {"id": "soup_can_1", "ycb": "005_tomato_soup_can", "shape": "cylinder", "size": [0.066, 0.066, 0.101], "pos": [0.200, 0.100, 0.0505], "mass": 0.349},
-    {"id": "meat_can_1", "ycb": "010_potted_meat_can", "shape": "box", "size": [0.097, 0.082, 0.050], "pos": [0.220, -0.155, 0.025], "mass": 0.370},
-    {"id": "foam_brick_1", "ycb": "061_foam_brick", "shape": "box", "size": [0.075, 0.050, 0.050], "pos": [0.060, 0.130, 0.025], "mass": 0.028}
+    {"id": "box_1", "type": "flat_box", "size": [0.14, 0.10, 0.015], "pos": [0.05, 0.00, 0.0075], "yaw": 0.0},
+    {"id": "box_2", "type": "flat_box", "size": [0.11, 0.08, 0.015], "pos": [0.055, 0.005, 0.0230], "yaw": 0.1},
+    {"id": "sugar_box_1", "type": "sugar_box", "size": [0.175, 0.089, 0.038], "pos": [-0.10, -0.09, 0.019], "yaw": 0.0},
+    {"id": "soup_can_1", "type": "tomato_soup_can", "size": [0.066, 0.066, 0.101], "pos": [-0.14, 0.09, 0.0505], "yaw": 0.0},
+    {"id": "gelatin_box_1", "type": "gelatin_box", "size": [0.085, 0.073, 0.028], "pos": [-0.05, 0.09, 0.014], "yaw": 0.0},
+    {"id": "meat_can_1", "type": "potted_meat_can", "size": [0.097, 0.082, 0.050], "pos": [0.145, -0.105, 0.025], "yaw": 0.0},
+    {"id": "foam_brick_1", "type": "foam_brick", "size": [0.075, 0.050, 0.050], "pos": [0.15, 0.10, 0.025], "yaw": 0.0}
   ]
 }
