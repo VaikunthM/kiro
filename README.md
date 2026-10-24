@@ -212,4 +212,5 @@ Known issue: in `flat_stacked` scene 14 a push throws the top box out of the tot
 - Robot page (live): https://cozy-basbousa-340617.netlify.app/robot
 - Failure atlas (live): https://cozy-basbousa-340617.netlify.app/atlas
 - Demo video: _link from P2_
-- Kiro write-up:[Write-up](docs/report.pdf)
+- Kiro write-up: _[link](https://docs.google.com/document/d/1UgifSmtQEv1neho-h_WQNLW-W52nmZISPS00SdE9PJ0/edit?usp=sharing
+)_
