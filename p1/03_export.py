@@ -1,7 +1,7 @@
 """Train the failure classifier, export atlas.json and thumbnails into site/.
 
 Usage:  python 03_export.py
-Needs:  cache/ from steps 01-02, and names.json edited by you.
+Needs:  cache/ from steps 01-02.
 Writes: site/atlas.json, site/img/*.jpg, results.md (numbers for the write-up)
 
 atlas.json follows the team contract (clusters: id, name, defect, count, examples;
@@ -18,6 +18,8 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import confusion_matrix
 from sklearn.model_selection import train_test_split
 
+from modes import NAMES, SIMULATED
+
 THUMB = 200
 
 
@@ -32,26 +34,31 @@ def thumb(src, dst):
         Image.new("RGB", (THUMB, THUMB), (200, 200, 200)).save(dst)
 
 
-REQUIRED_SIMULATED = 3
+REQUIRED_SIMULATED = 1
+REQUIRED_SCENE_MODES = 3
 
 
-def check_simulated_count(names, required=REQUIRED_SIMULATED):
-    """Ensure exactly `required` clusters are marked simulate=true in names.json."""
-    n = sum(1 for v in names.values() if v.get("simulate", False))
-    if n != required:
+def check_simulated_count(clusters):
+    """Exactly one cluster (multi-pick) is simulated, and it carries exactly three scene modes."""
+    sim = [c for c in clusters if c.get("simulated")]
+    if len(sim) != REQUIRED_SIMULATED:
         raise SystemExit(
-            f"names.json marks {n} cluster(s) with simulate=true, "
-            f"but exactly {required} are required. Fix names.json."
+            f"{len(sim)} cluster(s) marked simulated, but exactly {REQUIRED_SIMULATED} "
+            "is required (multi_pick). Fix SIMULATED in modes.py."
         )
-    return n
+    n = len(sim[0].get("scene_modes", []))
+    if n != REQUIRED_SCENE_MODES:
+        raise SystemExit(
+            f"The simulated cluster has {n} scene mode(s), but exactly {REQUIRED_SCENE_MODES} "
+            "are required. Fix SIMULATED in modes.py."
+        )
+    return len(sim)
 
 
 def main():
     df = pd.read_csv("cache/meta.csv")
     E = np.load("cache/embeddings.npy")
     cl = pd.read_csv("cache/clusters.csv")
-    names = json.load(open("names.json"))
-    check_simulated_count(names)
     y = df.label.values
 
     # ---- classifier on frozen embeddings (real-data results) ----
@@ -86,31 +93,41 @@ def main():
     for _, r in cl.iterrows():
         rel = f"img/{int(r.row)}.jpg"
         thumb(r.image, os.path.join("site", rel))
-        cid = names[str(int(r.cluster))]["id"]
+        cid = r.cluster
         points.append({"image": rel, "x": float(r.x), "y": float(r.y),
                        "cluster": cid, "label": r.label})
 
     total = len(cl)
     for c in sorted(cl.cluster.unique()):
-        n = names[str(int(c))]
         sub = cl[cl.cluster == c]
-        clusters.append({
-            "id": n["id"], "name": n["name"],
+        ex = sub.sample(min(10, len(sub)), random_state=0)
+        for _, r in ex.iterrows():
+            thumb(r.image, os.path.join("site", f"img/{int(r.row)}.jpg"))
+        entry = {
+            "id": c, "name": NAMES[c],
             "defect": sub.label.value_counts().idxmax(),
             "count": int(len(sub)), "share": round(len(sub) / total, 4),
-            "simulated": bool(n.get("simulate", False)),
-            "examples": [f"img/{int(r)}.jpg" for r in sub.nsmallest(10, "dist").row],
+            "simulated": c in SIMULATED,
+            "examples": [f"img/{int(r)}.jpg" for r in ex.row],
             **per[c],
-        })
+        }
+        if c in SIMULATED:
+            entry["scene_modes"] = SIMULATED[c]
+        clusters.append(entry)
     clusters.sort(key=lambda c: -c["count"])
+    check_simulated_count(clusters)
 
     classifier = {"model": "CLIP ViT-B/32 embeddings + logistic regression",
                   "train": int(len(tr)), "test": int(len(te)),
                   "accuracy_3class": round(acc3, 3), "accuracy_failure_vs_clean": round(acc_bin, 3),
                   "recall": {k: round(v, 3) for k, v in recall.items()},
                   "classes": classes, "confusion": cm}
-    json.dump({"clusters": clusters, "points": points, "classifier": classifier},
-              open("site/atlas.json", "w"))
+    # Write to a temp file, re-read it to prove it is valid JSON, then swap it in.
+    tmp = "site/atlas.json.tmp"
+    with open(tmp, "w") as fh:
+        json.dump({"clusters": clusters, "points": points, "classifier": classifier}, fh, allow_nan=False)
+    json.load(open(tmp))
+    os.replace(tmp, "site/atlas.json")
 
     # ---- results.md for the write-up ----
     lines = ["# ClearPick real-data results (ARMBench Image defect)", "",

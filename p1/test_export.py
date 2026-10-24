@@ -1,4 +1,4 @@
-"""Tests for the names.json simulated-cluster count check in 03_export.py.
+"""Tests for the simulated-cluster check in 03_export.py.
 
 Run from p1/:  python3 -m pytest test_export.py -v
 """
@@ -18,30 +18,33 @@ def _load_export():
 
 
 export = _load_export()
+THREE = [{"id": "a"}, {"id": "b"}, {"id": "c"}]
 
 
-def _names(flags):
-    return {str(i): {"id": f"cluster_{i}", "name": f"c{i}", "simulate": f} for i, f in enumerate(flags)}
+def _clusters(sim_flags, scene_modes=THREE):
+    return [
+        {"id": f"c{i}", "simulated": f, **({"scene_modes": scene_modes} if f else {})}
+        for i, f in enumerate(sim_flags)
+    ]
 
 
-def test_exactly_three_passes():
-    assert export.check_simulated_count(_names([True, True, True, False, False])) == 3
+def test_one_simulated_cluster_with_three_modes_passes():
+    assert export.check_simulated_count(_clusters([True, False, False])) == 1
 
 
-def test_too_few_fails():
+def test_no_simulated_cluster_fails():
     with pytest.raises(SystemExit) as e:
-        export.check_simulated_count(_names([True, True, False, False]))
-    assert "2 cluster" in str(e.value) and "names.json" in str(e.value)
-
-
-def test_too_many_fails():
-    with pytest.raises(SystemExit) as e:
-        export.check_simulated_count(_names([True, True, True, True]))
-    assert "4 cluster" in str(e.value)
-
-
-def test_missing_simulate_key_counts_as_false():
-    names = {str(i): {"id": f"cluster_{i}"} for i in range(5)}
-    with pytest.raises(SystemExit) as e:
-        export.check_simulated_count(names)
+        export.check_simulated_count(_clusters([False, False]))
     assert "0 cluster" in str(e.value)
+
+
+def test_two_simulated_clusters_fail():
+    with pytest.raises(SystemExit) as e:
+        export.check_simulated_count(_clusters([True, True, False]))
+    assert "2 cluster" in str(e.value)
+
+
+def test_wrong_number_of_scene_modes_fails():
+    with pytest.raises(SystemExit) as e:
+        export.check_simulated_count(_clusters([True, False], scene_modes=THREE[:2]))
+    assert "2 scene mode" in str(e.value)
