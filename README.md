@@ -170,6 +170,7 @@ sim/sim.py                 the simulator: scene loading, grasp/push, outcomes, r
 sim/run_batch.py           runs every scene with every policy -> runs/*.json + .mp4
 sim/validate_scenes.py     checks scene files load, stay in the tote and don't overlap
 sim/reference_policies.py  stand-in grab_only used by the tests
+sim/stress_rules.py        re-runs every scene with stricter failure rules than ClearPick assumes
 scenes/mock/               one hand-made scene for quick checks
 assets/ycb/                optional YCB mesh visuals (credits in its README)
 tests/test_sim.py, test_failure_rules.py, test_run_batch.py, test_validate_scenes.py
@@ -179,7 +180,7 @@ tests/test_sim.py, test_failure_rules.py, test_run_batch.py, test_validate_scene
 
 ```
 python -m sim.validate_scenes                                        # check every scene first
-python -m sim.run_batch --size 480 360                               # all scenes, both robots, with video
+python -m sim.run_batch --size 480 360 --meshes                      # all scenes, both robots, with video
 python -m sim.run_batch --scene scenes/flat_stacked/15.json --camera angled --size 1280 720 --out demo_clips
 python -m pytest -q tests -m "not slow"                              # fast tests; drop -m for the property tests
 ```
@@ -187,6 +188,24 @@ python -m pytest -q tests -m "not slow"                              # fast test
 Each run writes `runs/<scene_id>_<policy>.json` (every step with its risk, reason and outcome) and the matching `.mp4`; `runs/index.json` lists them all. `--no-video` skips rendering, `--mode` and `--limit` run a subset.
 
 `--meshes` swaps in textured YCB meshes (visual only), `--camera demo` frames the tote for 16:9 video, and `Sim(suction="physics")` holds items with a MuJoCo weld instead of attach-on-touch. Defaults and outcomes are unchanged.
+
+### Does ClearPick only win because it knows the rules?
+
+`score_grasp` mirrors the three failure rules above, so ClearPick knows exactly what makes a pick fail here. To check it isn't relying on that, `python -m sim.stress_rules` makes the simulator's rules stricter than ClearPick assumes and re-runs every scene with both robots (no video, about 90 s). ClearPick keeps its original thresholds.
+
+| Rule | As ClearPick assumes | 1.5× stricter | 2× stricter |
+|---|---|---|---|
+| Cling: a flat item lifts the flat item under it when they overlap by at least | 50% | 40% | 30% |
+| Neighbour drag: centre suction also lifts a side neighbour within | 1 cm | 1.5 cm | 2 cm |
+| Wall seal: suction misses when the cup rim is closer to a wall than | 1.5 cm | 2.2 cm | 3 cm |
+| **Failed picks, Grab-only** | **46** | **90** | **153** |
+| **Failed picks, ClearPick** | **5** | **8** | **59** |
+
+At 1.5× ClearPick barely changes: its grips already keep extra distance from walls and neighbours. At 2× that margin runs out, mostly at the wall (32 of its 59 failures), but it still fails about 60% fewer picks than Grab-only. ClearPick needs the rules roughly right, not exactly right; learning them from real data is the next step.
+
+Grab-only is a deliberately simple baseline (highest item, centre suction), not a production picker.
+
+Known issue: in `flat_stacked` scene 14 a push throws the top box out of the tote, and ClearPick then misses it three times. Those three misses count in ClearPick's 5.
 
 ## Demo and write-up
 
