@@ -5,3 +5,5 @@ numpy
 pandas
 scikit-learn
 umap-learn
+hypothesis
+pytest
