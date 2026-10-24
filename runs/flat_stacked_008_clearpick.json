@@ -1,0 +1,138 @@
+{
+ "scene_id": "flat_stacked_008",
+ "mode": "flat_stacked",
+ "policy": "clearpick",
+ "steps": [
+  {
+   "t": 0.0,
+   "action": "grasp",
+   "item": "tomato_soup_can_1",
+   "grasp": "suction_center",
+   "direction": null,
+   "risk": 0.0397,
+   "reason": "clear on all sides",
+   "outcome": "clean"
+  },
+  {
+   "t": 1.544,
+   "action": "grasp",
+   "item": "gelatin_box_1",
+   "grasp": "suction_edge",
+   "direction": null,
+   "risk": 0.0767,
+   "reason": "clear on all sides",
+   "outcome": "clean"
+  },
+  {
+   "t": 3.452,
+   "action": "grasp",
+   "item": "foam_brick_1",
+   "grasp": "suction_edge",
+   "direction": null,
+   "risk": 0.0795,
+   "reason": "clear on all sides",
+   "outcome": "clean"
+  },
+  {
+   "t": 5.252,
+   "action": "push",
+   "item": "flat_box_2",
+   "grasp": null,
+   "direction": [
+    0.0,
+    1.0
+   ],
+   "risk": 0.5897,
+   "reason": "resting on another item: sliding it off",
+   "outcome": "ok"
+  },
+  {
+   "t": 6.288,
+   "action": "push",
+   "item": "flat_box_2",
+   "grasp": null,
+   "direction": [
+    0.0,
+    1.0
+   ],
+   "risk": 0.5897,
+   "reason": "resting on another item: sliding it off",
+   "outcome": "ok"
+  },
+  {
+   "t": 7.324,
+   "action": "push",
+   "item": "flat_box_4",
+   "grasp": null,
+   "direction": [
+    0.0,
+    -1.0
+   ],
+   "risk": 0.5897,
+   "reason": "resting on another item: sliding it off",
+   "outcome": "ok"
+  },
+  {
+   "t": 9.626,
+   "action": "push",
+   "item": "flat_box_4",
+   "grasp": null,
+   "direction": [
+    0.0,
+    1.0
+   ],
+   "risk": 0.5918,
+   "reason": "resting on another item: sliding it off",
+   "outcome": "ok"
+  },
+  {
+   "t": 11.928,
+   "action": "grasp",
+   "item": "flat_box_2",
+   "grasp": "side_pinch",
+   "direction": null,
+   "risk": 0.5137,
+   "reason": "no way to make more space: taking the safest option",
+   "outcome": "clean"
+  },
+  {
+   "t": 13.876,
+   "action": "grasp",
+   "item": "flat_box_1",
+   "grasp": "suction_center",
+   "direction": null,
+   "risk": 0.0396,
+   "reason": "clear on all sides",
+   "outcome": "clean"
+  },
+  {
+   "t": 15.848,
+   "action": "grasp",
+   "item": "flat_box_4",
+   "grasp": "side_pinch",
+   "direction": null,
+   "risk": 0.4904,
+   "reason": "no way to make more space: taking the safest option",
+   "outcome": "clean"
+  },
+  {
+   "t": 17.796,
+   "action": "grasp",
+   "item": "flat_box_3",
+   "grasp": "suction_center",
+   "direction": null,
+   "risk": 0.0392,
+   "reason": "clear on all sides",
+   "outcome": "clean"
+  }
+ ],
+ "summary": {
+  "clean": 7,
+  "double_grabs": 0,
+  "stalls": 0,
+  "moves": 11,
+  "misses": 0,
+  "items": 7
+ },
+ "video": "runs/flat_stacked_008_clearpick.mp4"
+}

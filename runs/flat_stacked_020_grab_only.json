@@ -1,0 +1,56 @@
+{
+ "scene_id": "flat_stacked_020",
+ "mode": "flat_stacked",
+ "policy": "grab_only",
+ "steps": [
+  {
+   "t": 0.0,
+   "action": "grasp",
+   "item": "flat_box_2",
+   "grasp": "suction_center",
+   "direction": null,
+   "risk": 0.9287,
+   "reason": "highest item, suction at centre",
+   "outcome": "double"
+  },
+  {
+   "t": 1.9,
+   "action": "grasp",
+   "item": "gelatin_box_1",
+   "grasp": "suction_center",
+   "direction": null,
+   "risk": 0.0418,
+   "reason": "highest item, suction at centre",
+   "outcome": "clean"
+  },
+  {
+   "t": 3.808,
+   "action": "grasp",
+   "item": "gelatin_box_2",
+   "grasp": "suction_center",
+   "direction": null,
+   "risk": 0.0431,
+   "reason": "highest item, suction at centre",
+   "outcome": "clean"
+  },
+  {
+   "t": 5.716,
+   "action": "grasp",
+   "item": "gelatin_box_3",
+   "grasp": "suction_center",
+   "direction": null,
+   "risk": 0.0395,
+   "reason": "highest item, suction at centre",
+   "outcome": "clean"
+  }
+ ],
+ "summary": {
+  "clean": 3,
+  "double_grabs": 1,
+  "stalls": 0,
+  "moves": 4,
+  "misses": 0,
+  "items": 5
+ },
+ "video": "runs/flat_stacked_020_grab_only.mp4"
+}

@@ -1,0 +1,66 @@
+{
+ "scene_id": "against_wall_014",
+ "mode": "against_wall",
+ "policy": "clearpick",
+ "steps": [
+  {
+   "t": 0.0,
+   "action": "grasp",
+   "item": "flat_box_1",
+   "grasp": "suction_center",
+   "direction": null,
+   "risk": 0.0614,
+   "reason": "clear on all sides",
+   "outcome": "clean"
+  },
+  {
+   "t": 1.972,
+   "action": "grasp",
+   "item": "potted_meat_can_1",
+   "grasp": "suction_edge",
+   "direction": null,
+   "risk": 0.0877,
+   "reason": "clear on all sides",
+   "outcome": "clean"
+  },
+  {
+   "t": 3.772,
+   "action": "grasp",
+   "item": "gelatin_box_1",
+   "grasp": "suction_edge",
+   "direction": null,
+   "risk": 0.0759,
+   "reason": "clear on all sides",
+   "outcome": "clean"
+  },
+  {
+   "t": 5.68,
+   "action": "grasp",
+   "item": "foam_brick_1",
+   "grasp": "suction_edge",
+   "direction": null,
+   "risk": 0.0968,
+   "reason": "clear on all sides",
+   "outcome": "clean"
+  },
+  {
+   "t": 7.48,
+   "action": "grasp",
+   "item": "flat_box_2",
+   "grasp": "suction_center",
+   "direction": null,
+   "risk": 0.0501,
+   "reason": "clear on all sides",
+   "outcome": "clean"
+  }
+ ],
+ "summary": {
+  "clean": 5,
+  "double_grabs": 0,
+  "stalls": 0,
+  "moves": 5,
+  "misses": 0,
+  "items": 5
+ },
+ "video": "runs/against_wall_014_clearpick.mp4"
+}

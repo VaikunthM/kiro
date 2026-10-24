@@ -1,10 +1,1090 @@
 [
  {
-  "scene_id": "flat_stacked_000",
+  "scene_id": "against_wall_001",
+  "mode": "against_wall",
+  "policy": "grab_only",
+  "json": "runs/against_wall_001_grab_only.json",
+  "video": "runs/against_wall_001_grab_only.mp4",
+  "summary": {
+   "clean": 5,
+   "double_grabs": 0,
+   "stalls": 0,
+   "moves": 5,
+   "misses": 0,
+   "items": 5
+  }
+ },
+ {
+  "scene_id": "against_wall_001",
+  "mode": "against_wall",
+  "policy": "clearpick",
+  "json": "runs/against_wall_001_clearpick.json",
+  "video": "runs/against_wall_001_clearpick.mp4",
+  "summary": {
+   "clean": 5,
+   "double_grabs": 0,
+   "stalls": 0,
+   "moves": 5,
+   "misses": 0,
+   "items": 5
+  }
+ },
+ {
+  "scene_id": "against_wall_010",
+  "mode": "against_wall",
+  "policy": "grab_only",
+  "json": "runs/against_wall_010_grab_only.json",
+  "video": "runs/against_wall_010_grab_only.mp4",
+  "summary": {
+   "clean": 5,
+   "double_grabs": 0,
+   "stalls": 0,
+   "moves": 5,
+   "misses": 0,
+   "items": 5
+  }
+ },
+ {
+  "scene_id": "against_wall_010",
+  "mode": "against_wall",
+  "policy": "clearpick",
+  "json": "runs/against_wall_010_clearpick.json",
+  "video": "runs/against_wall_010_clearpick.mp4",
+  "summary": {
+   "clean": 5,
+   "double_grabs": 0,
+   "stalls": 0,
+   "moves": 5,
+   "misses": 0,
+   "items": 5
+  }
+ },
+ {
+  "scene_id": "against_wall_011",
+  "mode": "against_wall",
+  "policy": "grab_only",
+  "json": "runs/against_wall_011_grab_only.json",
+  "video": "runs/against_wall_011_grab_only.mp4",
+  "summary": {
+   "clean": 5,
+   "double_grabs": 0,
+   "stalls": 0,
+   "moves": 5,
+   "misses": 0,
+   "items": 5
+  }
+ },
+ {
+  "scene_id": "against_wall_011",
+  "mode": "against_wall",
+  "policy": "clearpick",
+  "json": "runs/against_wall_011_clearpick.json",
+  "video": "runs/against_wall_011_clearpick.mp4",
+  "summary": {
+   "clean": 5,
+   "double_grabs": 0,
+   "stalls": 0,
+   "moves": 5,
+   "misses": 0,
+   "items": 5
+  }
+ },
+ {
+  "scene_id": "against_wall_012",
+  "mode": "against_wall",
+  "policy": "grab_only",
+  "json": "runs/against_wall_012_grab_only.json",
+  "video": "runs/against_wall_012_grab_only.mp4",
+  "summary": {
+   "clean": 5,
+   "double_grabs": 0,
+   "stalls": 0,
+   "moves": 5,
+   "misses": 0,
+   "items": 5
+  }
+ },
+ {
+  "scene_id": "against_wall_012",
+  "mode": "against_wall",
+  "policy": "clearpick",
+  "json": "runs/against_wall_012_clearpick.json",
+  "video": "runs/against_wall_012_clearpick.mp4",
+  "summary": {
+   "clean": 5,
+   "double_grabs": 0,
+   "stalls": 0,
+   "moves": 5,
+   "misses": 0,
+   "items": 5
+  }
+ },
+ {
+  "scene_id": "against_wall_013",
+  "mode": "against_wall",
+  "policy": "grab_only",
+  "json": "runs/against_wall_013_grab_only.json",
+  "video": "runs/against_wall_013_grab_only.mp4",
+  "summary": {
+   "clean": 5,
+   "double_grabs": 0,
+   "stalls": 0,
+   "moves": 5,
+   "misses": 0,
+   "items": 5
+  }
+ },
+ {
+  "scene_id": "against_wall_013",
+  "mode": "against_wall",
+  "policy": "clearpick",
+  "json": "runs/against_wall_013_clearpick.json",
+  "video": "runs/against_wall_013_clearpick.mp4",
+  "summary": {
+   "clean": 5,
+   "double_grabs": 0,
+   "stalls": 0,
+   "moves": 5,
+   "misses": 0,
+   "items": 5
+  }
+ },
+ {
+  "scene_id": "against_wall_014",
+  "mode": "against_wall",
+  "policy": "grab_only",
+  "json": "runs/against_wall_014_grab_only.json",
+  "video": "runs/against_wall_014_grab_only.mp4",
+  "summary": {
+   "clean": 5,
+   "double_grabs": 0,
+   "stalls": 0,
+   "moves": 5,
+   "misses": 0,
+   "items": 5
+  }
+ },
+ {
+  "scene_id": "against_wall_014",
+  "mode": "against_wall",
+  "policy": "clearpick",
+  "json": "runs/against_wall_014_clearpick.json",
+  "video": "runs/against_wall_014_clearpick.mp4",
+  "summary": {
+   "clean": 5,
+   "double_grabs": 0,
+   "stalls": 0,
+   "moves": 5,
+   "misses": 0,
+   "items": 5
+  }
+ },
+ {
+  "scene_id": "against_wall_015",
+  "mode": "against_wall",
+  "policy": "grab_only",
+  "json": "runs/against_wall_015_grab_only.json",
+  "video": "runs/against_wall_015_grab_only.mp4",
+  "summary": {
+   "clean": 1,
+   "double_grabs": 0,
+   "stalls": 0,
+   "moves": 4,
+   "misses": 3,
+   "items": 5
+  }
+ },
+ {
+  "scene_id": "against_wall_015",
+  "mode": "against_wall",
+  "policy": "clearpick",
+  "json": "runs/against_wall_015_clearpick.json",
+  "video": "runs/against_wall_015_clearpick.mp4",
+  "summary": {
+   "clean": 5,
+   "double_grabs": 0,
+   "stalls": 0,
+   "moves": 5,
+   "misses": 0,
+   "items": 5
+  }
+ },
+ {
+  "scene_id": "against_wall_016",
+  "mode": "against_wall",
+  "policy": "grab_only",
+  "json": "runs/against_wall_016_grab_only.json",
+  "video": "runs/against_wall_016_grab_only.mp4",
+  "summary": {
+   "clean": 5,
+   "double_grabs": 0,
+   "stalls": 0,
+   "moves": 5,
+   "misses": 0,
+   "items": 5
+  }
+ },
+ {
+  "scene_id": "against_wall_016",
+  "mode": "against_wall",
+  "policy": "clearpick",
+  "json": "runs/against_wall_016_clearpick.json",
+  "video": "runs/against_wall_016_clearpick.mp4",
+  "summary": {
+   "clean": 5,
+   "double_grabs": 0,
+   "stalls": 0,
+   "moves": 5,
+   "misses": 0,
+   "items": 5
+  }
+ },
+ {
+  "scene_id": "against_wall_017",
+  "mode": "against_wall",
+  "policy": "grab_only",
+  "json": "runs/against_wall_017_grab_only.json",
+  "video": "runs/against_wall_017_grab_only.mp4",
+  "summary": {
+   "clean": 5,
+   "double_grabs": 0,
+   "stalls": 0,
+   "moves": 5,
+   "misses": 0,
+   "items": 5
+  }
+ },
+ {
+  "scene_id": "against_wall_017",
+  "mode": "against_wall",
+  "policy": "clearpick",
+  "json": "runs/against_wall_017_clearpick.json",
+  "video": "runs/against_wall_017_clearpick.mp4",
+  "summary": {
+   "clean": 5,
+   "double_grabs": 0,
+   "stalls": 0,
+   "moves": 5,
+   "misses": 0,
+   "items": 5
+  }
+ },
+ {
+  "scene_id": "against_wall_018",
+  "mode": "against_wall",
+  "policy": "grab_only",
+  "json": "runs/against_wall_018_grab_only.json",
+  "video": "runs/against_wall_018_grab_only.mp4",
+  "summary": {
+   "clean": 5,
+   "double_grabs": 0,
+   "stalls": 0,
+   "moves": 5,
+   "misses": 0,
+   "items": 5
+  }
+ },
+ {
+  "scene_id": "against_wall_018",
+  "mode": "against_wall",
+  "policy": "clearpick",
+  "json": "runs/against_wall_018_clearpick.json",
+  "video": "runs/against_wall_018_clearpick.mp4",
+  "summary": {
+   "clean": 5,
+   "double_grabs": 0,
+   "stalls": 0,
+   "moves": 5,
+   "misses": 0,
+   "items": 5
+  }
+ },
+ {
+  "scene_id": "against_wall_019",
+  "mode": "against_wall",
+  "policy": "grab_only",
+  "json": "runs/against_wall_019_grab_only.json",
+  "video": "runs/against_wall_019_grab_only.mp4",
+  "summary": {
+   "clean": 5,
+   "double_grabs": 0,
+   "stalls": 0,
+   "moves": 5,
+   "misses": 0,
+   "items": 5
+  }
+ },
+ {
+  "scene_id": "against_wall_019",
+  "mode": "against_wall",
+  "policy": "clearpick",
+  "json": "runs/against_wall_019_clearpick.json",
+  "video": "runs/against_wall_019_clearpick.mp4",
+  "summary": {
+   "clean": 5,
+   "double_grabs": 0,
+   "stalls": 0,
+   "moves": 5,
+   "misses": 0,
+   "items": 5
+  }
+ },
+ {
+  "scene_id": "against_wall_002",
+  "mode": "against_wall",
+  "policy": "grab_only",
+  "json": "runs/against_wall_002_grab_only.json",
+  "video": "runs/against_wall_002_grab_only.mp4",
+  "summary": {
+   "clean": 5,
+   "double_grabs": 0,
+   "stalls": 0,
+   "moves": 5,
+   "misses": 0,
+   "items": 5
+  }
+ },
+ {
+  "scene_id": "against_wall_002",
+  "mode": "against_wall",
+  "policy": "clearpick",
+  "json": "runs/against_wall_002_clearpick.json",
+  "video": "runs/against_wall_002_clearpick.mp4",
+  "summary": {
+   "clean": 5,
+   "double_grabs": 0,
+   "stalls": 0,
+   "moves": 5,
+   "misses": 0,
+   "items": 5
+  }
+ },
+ {
+  "scene_id": "against_wall_020",
+  "mode": "against_wall",
+  "policy": "grab_only",
+  "json": "runs/against_wall_020_grab_only.json",
+  "video": "runs/against_wall_020_grab_only.mp4",
+  "summary": {
+   "clean": 5,
+   "double_grabs": 0,
+   "stalls": 0,
+   "moves": 5,
+   "misses": 0,
+   "items": 5
+  }
+ },
+ {
+  "scene_id": "against_wall_020",
+  "mode": "against_wall",
+  "policy": "clearpick",
+  "json": "runs/against_wall_020_clearpick.json",
+  "video": "runs/against_wall_020_clearpick.mp4",
+  "summary": {
+   "clean": 5,
+   "double_grabs": 0,
+   "stalls": 0,
+   "moves": 5,
+   "misses": 0,
+   "items": 5
+  }
+ },
+ {
+  "scene_id": "against_wall_003",
+  "mode": "against_wall",
+  "policy": "grab_only",
+  "json": "runs/against_wall_003_grab_only.json",
+  "video": "runs/against_wall_003_grab_only.mp4",
+  "summary": {
+   "clean": 3,
+   "double_grabs": 0,
+   "stalls": 0,
+   "moves": 6,
+   "misses": 3,
+   "items": 5
+  }
+ },
+ {
+  "scene_id": "against_wall_003",
+  "mode": "against_wall",
+  "policy": "clearpick",
+  "json": "runs/against_wall_003_clearpick.json",
+  "video": "runs/against_wall_003_clearpick.mp4",
+  "summary": {
+   "clean": 5,
+   "double_grabs": 0,
+   "stalls": 0,
+   "moves": 5,
+   "misses": 0,
+   "items": 5
+  }
+ },
+ {
+  "scene_id": "against_wall_004",
+  "mode": "against_wall",
+  "policy": "grab_only",
+  "json": "runs/against_wall_004_grab_only.json",
+  "video": "runs/against_wall_004_grab_only.mp4",
+  "summary": {
+   "clean": 1,
+   "double_grabs": 0,
+   "stalls": 0,
+   "moves": 4,
+   "misses": 3,
+   "items": 5
+  }
+ },
+ {
+  "scene_id": "against_wall_004",
+  "mode": "against_wall",
+  "policy": "clearpick",
+  "json": "runs/against_wall_004_clearpick.json",
+  "video": "runs/against_wall_004_clearpick.mp4",
+  "summary": {
+   "clean": 5,
+   "double_grabs": 0,
+   "stalls": 0,
+   "moves": 5,
+   "misses": 0,
+   "items": 5
+  }
+ },
+ {
+  "scene_id": "against_wall_005",
+  "mode": "against_wall",
+  "policy": "grab_only",
+  "json": "runs/against_wall_005_grab_only.json",
+  "video": "runs/against_wall_005_grab_only.mp4",
+  "summary": {
+   "clean": 6,
+   "double_grabs": 0,
+   "stalls": 0,
+   "moves": 6,
+   "misses": 0,
+   "items": 6
+  }
+ },
+ {
+  "scene_id": "against_wall_005",
+  "mode": "against_wall",
+  "policy": "clearpick",
+  "json": "runs/against_wall_005_clearpick.json",
+  "video": "runs/against_wall_005_clearpick.mp4",
+  "summary": {
+   "clean": 6,
+   "double_grabs": 0,
+   "stalls": 0,
+   "moves": 6,
+   "misses": 0,
+   "items": 6
+  }
+ },
+ {
+  "scene_id": "against_wall_006",
+  "mode": "against_wall",
+  "policy": "grab_only",
+  "json": "runs/against_wall_006_grab_only.json",
+  "video": "runs/against_wall_006_grab_only.mp4",
+  "summary": {
+   "clean": 5,
+   "double_grabs": 0,
+   "stalls": 0,
+   "moves": 5,
+   "misses": 0,
+   "items": 5
+  }
+ },
+ {
+  "scene_id": "against_wall_006",
+  "mode": "against_wall",
+  "policy": "clearpick",
+  "json": "runs/against_wall_006_clearpick.json",
+  "video": "runs/against_wall_006_clearpick.mp4",
+  "summary": {
+   "clean": 5,
+   "double_grabs": 0,
+   "stalls": 0,
+   "moves": 5,
+   "misses": 0,
+   "items": 5
+  }
+ },
+ {
+  "scene_id": "against_wall_007",
+  "mode": "against_wall",
+  "policy": "grab_only",
+  "json": "runs/against_wall_007_grab_only.json",
+  "video": "runs/against_wall_007_grab_only.mp4",
+  "summary": {
+   "clean": 5,
+   "double_grabs": 0,
+   "stalls": 0,
+   "moves": 5,
+   "misses": 0,
+   "items": 5
+  }
+ },
+ {
+  "scene_id": "against_wall_007",
+  "mode": "against_wall",
+  "policy": "clearpick",
+  "json": "runs/against_wall_007_clearpick.json",
+  "video": "runs/against_wall_007_clearpick.mp4",
+  "summary": {
+   "clean": 5,
+   "double_grabs": 0,
+   "stalls": 0,
+   "moves": 5,
+   "misses": 0,
+   "items": 5
+  }
+ },
+ {
+  "scene_id": "against_wall_008",
+  "mode": "against_wall",
+  "policy": "grab_only",
+  "json": "runs/against_wall_008_grab_only.json",
+  "video": "runs/against_wall_008_grab_only.mp4",
+  "summary": {
+   "clean": 5,
+   "double_grabs": 0,
+   "stalls": 0,
+   "moves": 5,
+   "misses": 0,
+   "items": 5
+  }
+ },
+ {
+  "scene_id": "against_wall_008",
+  "mode": "against_wall",
+  "policy": "clearpick",
+  "json": "runs/against_wall_008_clearpick.json",
+  "video": "runs/against_wall_008_clearpick.mp4",
+  "summary": {
+   "clean": 5,
+   "double_grabs": 0,
+   "stalls": 0,
+   "moves": 5,
+   "misses": 0,
+   "items": 5
+  }
+ },
+ {
+  "scene_id": "against_wall_009",
+  "mode": "against_wall",
+  "policy": "grab_only",
+  "json": "runs/against_wall_009_grab_only.json",
+  "video": "runs/against_wall_009_grab_only.mp4",
+  "summary": {
+   "clean": 5,
+   "double_grabs": 0,
+   "stalls": 0,
+   "moves": 5,
+   "misses": 0,
+   "items": 5
+  }
+ },
+ {
+  "scene_id": "against_wall_009",
+  "mode": "against_wall",
+  "policy": "clearpick",
+  "json": "runs/against_wall_009_clearpick.json",
+  "video": "runs/against_wall_009_clearpick.mp4",
+  "summary": {
+   "clean": 5,
+   "double_grabs": 0,
+   "stalls": 0,
+   "moves": 5,
+   "misses": 0,
+   "items": 5
+  }
+ },
+ {
+  "scene_id": "flat_stacked_001",
   "mode": "flat_stacked",
   "policy": "grab_only",
-  "json": "runs/flat_stacked_000_grab_only.json",
-  "video": "runs/flat_stacked_000_grab_only.mp4",
+  "json": "runs/flat_stacked_001_grab_only.json",
+  "video": "runs/flat_stacked_001_grab_only.mp4",
+  "summary": {
+   "clean": 4,
+   "double_grabs": 2,
+   "stalls": 0,
+   "moves": 6,
+   "misses": 0,
+   "items": 8
+  }
+ },
+ {
+  "scene_id": "flat_stacked_001",
+  "mode": "flat_stacked",
+  "policy": "clearpick",
+  "json": "runs/flat_stacked_001_clearpick.json",
+  "video": "runs/flat_stacked_001_clearpick.mp4",
+  "summary": {
+   "clean": 3,
+   "double_grabs": 0,
+   "stalls": 0,
+   "moves": 7,
+   "misses": 0,
+   "items": 8
+  }
+ },
+ {
+  "scene_id": "flat_stacked_010",
+  "mode": "flat_stacked",
+  "policy": "grab_only",
+  "json": "runs/flat_stacked_010_grab_only.json",
+  "video": "runs/flat_stacked_010_grab_only.mp4",
+  "summary": {
+   "clean": 4,
+   "double_grabs": 1,
+   "stalls": 0,
+   "moves": 5,
+   "misses": 0,
+   "items": 6
+  }
+ },
+ {
+  "scene_id": "flat_stacked_010",
+  "mode": "flat_stacked",
+  "policy": "clearpick",
+  "json": "runs/flat_stacked_010_clearpick.json",
+  "video": "runs/flat_stacked_010_clearpick.mp4",
+  "summary": {
+   "clean": 6,
+   "double_grabs": 0,
+   "stalls": 0,
+   "moves": 7,
+   "misses": 0,
+   "items": 6
+  }
+ },
+ {
+  "scene_id": "flat_stacked_011",
+  "mode": "flat_stacked",
+  "policy": "grab_only",
+  "json": "runs/flat_stacked_011_grab_only.json",
+  "video": "runs/flat_stacked_011_grab_only.mp4",
+  "summary": {
+   "clean": 3,
+   "double_grabs": 1,
+   "stalls": 0,
+   "moves": 4,
+   "misses": 0,
+   "items": 5
+  }
+ },
+ {
+  "scene_id": "flat_stacked_011",
+  "mode": "flat_stacked",
+  "policy": "clearpick",
+  "json": "runs/flat_stacked_011_clearpick.json",
+  "video": "runs/flat_stacked_011_clearpick.mp4",
+  "summary": {
+   "clean": 5,
+   "double_grabs": 0,
+   "stalls": 0,
+   "moves": 7,
+   "misses": 0,
+   "items": 5
+  }
+ },
+ {
+  "scene_id": "flat_stacked_012",
+  "mode": "flat_stacked",
+  "policy": "grab_only",
+  "json": "runs/flat_stacked_012_grab_only.json",
+  "video": "runs/flat_stacked_012_grab_only.mp4",
+  "summary": {
+   "clean": 4,
+   "double_grabs": 1,
+   "stalls": 0,
+   "moves": 5,
+   "misses": 0,
+   "items": 6
+  }
+ },
+ {
+  "scene_id": "flat_stacked_012",
+  "mode": "flat_stacked",
+  "policy": "clearpick",
+  "json": "runs/flat_stacked_012_clearpick.json",
+  "video": "runs/flat_stacked_012_clearpick.mp4",
+  "summary": {
+   "clean": 6,
+   "double_grabs": 0,
+   "stalls": 0,
+   "moves": 8,
+   "misses": 0,
+   "items": 6
+  }
+ },
+ {
+  "scene_id": "flat_stacked_013",
+  "mode": "flat_stacked",
+  "policy": "grab_only",
+  "json": "runs/flat_stacked_013_grab_only.json",
+  "video": "runs/flat_stacked_013_grab_only.mp4",
+  "summary": {
+   "clean": 3,
+   "double_grabs": 1,
+   "stalls": 0,
+   "moves": 4,
+   "misses": 0,
+   "items": 5
+  }
+ },
+ {
+  "scene_id": "flat_stacked_013",
+  "mode": "flat_stacked",
+  "policy": "clearpick",
+  "json": "runs/flat_stacked_013_clearpick.json",
+  "video": "runs/flat_stacked_013_clearpick.mp4",
+  "summary": {
+   "clean": 5,
+   "double_grabs": 0,
+   "stalls": 0,
+   "moves": 7,
+   "misses": 0,
+   "items": 5
+  }
+ },
+ {
+  "scene_id": "flat_stacked_014",
+  "mode": "flat_stacked",
+  "policy": "grab_only",
+  "json": "runs/flat_stacked_014_grab_only.json",
+  "video": "runs/flat_stacked_014_grab_only.mp4",
+  "summary": {
+   "clean": 3,
+   "double_grabs": 2,
+   "stalls": 0,
+   "moves": 5,
+   "misses": 0,
+   "items": 7
+  }
+ },
+ {
+  "scene_id": "flat_stacked_014",
+  "mode": "flat_stacked",
+  "policy": "clearpick",
+  "json": "runs/flat_stacked_014_clearpick.json",
+  "video": "runs/flat_stacked_014_clearpick.mp4",
+  "summary": {
+   "clean": 4,
+   "double_grabs": 1,
+   "stalls": 0,
+   "moves": 11,
+   "misses": 3,
+   "items": 7
+  }
+ },
+ {
+  "scene_id": "flat_stacked_015",
+  "mode": "flat_stacked",
+  "policy": "grab_only",
+  "json": "runs/flat_stacked_015_grab_only.json",
+  "video": "runs/flat_stacked_015_grab_only.mp4",
+  "summary": {
+   "clean": 4,
+   "double_grabs": 2,
+   "stalls": 0,
+   "moves": 6,
+   "misses": 0,
+   "items": 8
+  }
+ },
+ {
+  "scene_id": "flat_stacked_015",
+  "mode": "flat_stacked",
+  "policy": "clearpick",
+  "json": "runs/flat_stacked_015_clearpick.json",
+  "video": "runs/flat_stacked_015_clearpick.mp4",
+  "summary": {
+   "clean": 8,
+   "double_grabs": 0,
+   "stalls": 0,
+   "moves": 10,
+   "misses": 0,
+   "items": 8
+  }
+ },
+ {
+  "scene_id": "flat_stacked_016",
+  "mode": "flat_stacked",
+  "policy": "grab_only",
+  "json": "runs/flat_stacked_016_grab_only.json",
+  "video": "runs/flat_stacked_016_grab_only.mp4",
+  "summary": {
+   "clean": 4,
+   "double_grabs": 1,
+   "stalls": 0,
+   "moves": 5,
+   "misses": 0,
+   "items": 6
+  }
+ },
+ {
+  "scene_id": "flat_stacked_016",
+  "mode": "flat_stacked",
+  "policy": "clearpick",
+  "json": "runs/flat_stacked_016_clearpick.json",
+  "video": "runs/flat_stacked_016_clearpick.mp4",
+  "summary": {
+   "clean": 6,
+   "double_grabs": 0,
+   "stalls": 0,
+   "moves": 8,
+   "misses": 0,
+   "items": 6
+  }
+ },
+ {
+  "scene_id": "flat_stacked_017",
+  "mode": "flat_stacked",
+  "policy": "grab_only",
+  "json": "runs/flat_stacked_017_grab_only.json",
+  "video": "runs/flat_stacked_017_grab_only.mp4",
+  "summary": {
+   "clean": 4,
+   "double_grabs": 1,
+   "stalls": 0,
+   "moves": 5,
+   "misses": 0,
+   "items": 6
+  }
+ },
+ {
+  "scene_id": "flat_stacked_017",
+  "mode": "flat_stacked",
+  "policy": "clearpick",
+  "json": "runs/flat_stacked_017_clearpick.json",
+  "video": "runs/flat_stacked_017_clearpick.mp4",
+  "summary": {
+   "clean": 6,
+   "double_grabs": 0,
+   "stalls": 0,
+   "moves": 7,
+   "misses": 0,
+   "items": 6
+  }
+ },
+ {
+  "scene_id": "flat_stacked_018",
+  "mode": "flat_stacked",
+  "policy": "grab_only",
+  "json": "runs/flat_stacked_018_grab_only.json",
+  "video": "runs/flat_stacked_018_grab_only.mp4",
+  "summary": {
+   "clean": 3,
+   "double_grabs": 1,
+   "stalls": 0,
+   "moves": 4,
+   "misses": 0,
+   "items": 5
+  }
+ },
+ {
+  "scene_id": "flat_stacked_018",
+  "mode": "flat_stacked",
+  "policy": "clearpick",
+  "json": "runs/flat_stacked_018_clearpick.json",
+  "video": "runs/flat_stacked_018_clearpick.mp4",
+  "summary": {
+   "clean": 5,
+   "double_grabs": 0,
+   "stalls": 0,
+   "moves": 7,
+   "misses": 0,
+   "items": 5
+  }
+ },
+ {
+  "scene_id": "flat_stacked_019",
+  "mode": "flat_stacked",
+  "policy": "grab_only",
+  "json": "runs/flat_stacked_019_grab_only.json",
+  "video": "runs/flat_stacked_019_grab_only.mp4",
+  "summary": {
+   "clean": 4,
+   "double_grabs": 1,
+   "stalls": 0,
+   "moves": 5,
+   "misses": 0,
+   "items": 6
+  }
+ },
+ {
+  "scene_id": "flat_stacked_019",
+  "mode": "flat_stacked",
+  "policy": "clearpick",
+  "json": "runs/flat_stacked_019_clearpick.json",
+  "video": "runs/flat_stacked_019_clearpick.mp4",
+  "summary": {
+   "clean": 6,
+   "double_grabs": 0,
+   "stalls": 0,
+   "moves": 7,
+   "misses": 0,
+   "items": 6
+  }
+ },
+ {
+  "scene_id": "flat_stacked_002",
+  "mode": "flat_stacked",
+  "policy": "grab_only",
+  "json": "runs/flat_stacked_002_grab_only.json",
+  "video": "runs/flat_stacked_002_grab_only.mp4",
+  "summary": {
+   "clean": 3,
+   "double_grabs": 1,
+   "stalls": 0,
+   "moves": 4,
+   "misses": 0,
+   "items": 5
+  }
+ },
+ {
+  "scene_id": "flat_stacked_002",
+  "mode": "flat_stacked",
+  "policy": "clearpick",
+  "json": "runs/flat_stacked_002_clearpick.json",
+  "video": "runs/flat_stacked_002_clearpick.mp4",
+  "summary": {
+   "clean": 5,
+   "double_grabs": 0,
+   "stalls": 0,
+   "moves": 7,
+   "misses": 0,
+   "items": 5
+  }
+ },
+ {
+  "scene_id": "flat_stacked_020",
+  "mode": "flat_stacked",
+  "policy": "grab_only",
+  "json": "runs/flat_stacked_020_grab_only.json",
+  "video": "runs/flat_stacked_020_grab_only.mp4",
+  "summary": {
+   "clean": 3,
+   "double_grabs": 1,
+   "stalls": 0,
+   "moves": 4,
+   "misses": 0,
+   "items": 5
+  }
+ },
+ {
+  "scene_id": "flat_stacked_020",
+  "mode": "flat_stacked",
+  "policy": "clearpick",
+  "json": "runs/flat_stacked_020_clearpick.json",
+  "video": "runs/flat_stacked_020_clearpick.mp4",
+  "summary": {
+   "clean": 5,
+   "double_grabs": 0,
+   "stalls": 0,
+   "moves": 7,
+   "misses": 0,
+   "items": 5
+  }
+ },
+ {
+  "scene_id": "flat_stacked_003",
+  "mode": "flat_stacked",
+  "policy": "grab_only",
+  "json": "runs/flat_stacked_003_grab_only.json",
+  "video": "runs/flat_stacked_003_grab_only.mp4",
+  "summary": {
+   "clean": 4,
+   "double_grabs": 1,
+   "stalls": 0,
+   "moves": 5,
+   "misses": 0,
+   "items": 6
+  }
+ },
+ {
+  "scene_id": "flat_stacked_003",
+  "mode": "flat_stacked",
+  "policy": "clearpick",
+  "json": "runs/flat_stacked_003_clearpick.json",
+  "video": "runs/flat_stacked_003_clearpick.mp4",
+  "summary": {
+   "clean": 6,
+   "double_grabs": 0,
+   "stalls": 0,
+   "moves": 7,
+   "misses": 0,
+   "items": 6
+  }
+ },
+ {
+  "scene_id": "flat_stacked_004",
+  "mode": "flat_stacked",
+  "policy": "grab_only",
+  "json": "runs/flat_stacked_004_grab_only.json",
+  "video": "runs/flat_stacked_004_grab_only.mp4",
+  "summary": {
+   "clean": 3,
+   "double_grabs": 1,
+   "stalls": 0,
+   "moves": 4,
+   "misses": 0,
+   "items": 5
+  }
+ },
+ {
+  "scene_id": "flat_stacked_004",
+  "mode": "flat_stacked",
+  "policy": "clearpick",
+  "json": "runs/flat_stacked_004_clearpick.json",
+  "video": "runs/flat_stacked_004_clearpick.mp4",
+  "summary": {
+   "clean": 5,
+   "double_grabs": 0,
+   "stalls": 0,
+   "moves": 7,
+   "misses": 0,
+   "items": 5
+  }
+ },
+ {
+  "scene_id": "flat_stacked_005",
+  "mode": "flat_stacked",
+  "policy": "grab_only",
+  "json": "runs/flat_stacked_005_grab_only.json",
+  "video": "runs/flat_stacked_005_grab_only.mp4",
+  "summary": {
+   "clean": 3,
+   "double_grabs": 1,
+   "stalls": 0,
+   "moves": 4,
+   "misses": 0,
+   "items": 5
+  }
+ },
+ {
+  "scene_id": "flat_stacked_005",
+  "mode": "flat_stacked",
+  "policy": "clearpick",
+  "json": "runs/flat_stacked_005_clearpick.json",
+  "video": "runs/flat_stacked_005_clearpick.mp4",
+  "summary": {
+   "clean": 5,
+   "double_grabs": 0,
+   "stalls": 0,
+   "moves": 7,
+   "misses": 0,
+   "items": 5
+  }
+ },
+ {
+  "scene_id": "flat_stacked_006",
+  "mode": "flat_stacked",
+  "policy": "grab_only",
+  "json": "runs/flat_stacked_006_grab_only.json",
+  "video": "runs/flat_stacked_006_grab_only.mp4",
   "summary": {
    "clean": 5,
    "double_grabs": 1,
@@ -12,6 +1092,711 @@
    "moves": 6,
    "misses": 0,
    "items": 7
+  }
+ },
+ {
+  "scene_id": "flat_stacked_006",
+  "mode": "flat_stacked",
+  "policy": "clearpick",
+  "json": "runs/flat_stacked_006_clearpick.json",
+  "video": "runs/flat_stacked_006_clearpick.mp4",
+  "summary": {
+   "clean": 7,
+   "double_grabs": 0,
+   "stalls": 0,
+   "moves": 8,
+   "misses": 0,
+   "items": 7
+  }
+ },
+ {
+  "scene_id": "flat_stacked_007",
+  "mode": "flat_stacked",
+  "policy": "grab_only",
+  "json": "runs/flat_stacked_007_grab_only.json",
+  "video": "runs/flat_stacked_007_grab_only.mp4",
+  "summary": {
+   "clean": 5,
+   "double_grabs": 1,
+   "stalls": 0,
+   "moves": 6,
+   "misses": 0,
+   "items": 7
+  }
+ },
+ {
+  "scene_id": "flat_stacked_007",
+  "mode": "flat_stacked",
+  "policy": "clearpick",
+  "json": "runs/flat_stacked_007_clearpick.json",
+  "video": "runs/flat_stacked_007_clearpick.mp4",
+  "summary": {
+   "clean": 7,
+   "double_grabs": 0,
+   "stalls": 0,
+   "moves": 8,
+   "misses": 0,
+   "items": 7
+  }
+ },
+ {
+  "scene_id": "flat_stacked_008",
+  "mode": "flat_stacked",
+  "policy": "grab_only",
+  "json": "runs/flat_stacked_008_grab_only.json",
+  "video": "runs/flat_stacked_008_grab_only.mp4",
+  "summary": {
+   "clean": 3,
+   "double_grabs": 2,
+   "stalls": 0,
+   "moves": 5,
+   "misses": 0,
+   "items": 7
+  }
+ },
+ {
+  "scene_id": "flat_stacked_008",
+  "mode": "flat_stacked",
+  "policy": "clearpick",
+  "json": "runs/flat_stacked_008_clearpick.json",
+  "video": "runs/flat_stacked_008_clearpick.mp4",
+  "summary": {
+   "clean": 7,
+   "double_grabs": 0,
+   "stalls": 0,
+   "moves": 11,
+   "misses": 0,
+   "items": 7
+  }
+ },
+ {
+  "scene_id": "flat_stacked_009",
+  "mode": "flat_stacked",
+  "policy": "grab_only",
+  "json": "runs/flat_stacked_009_grab_only.json",
+  "video": "runs/flat_stacked_009_grab_only.mp4",
+  "summary": {
+   "clean": 4,
+   "double_grabs": 1,
+   "stalls": 0,
+   "moves": 5,
+   "misses": 0,
+   "items": 6
+  }
+ },
+ {
+  "scene_id": "flat_stacked_009",
+  "mode": "flat_stacked",
+  "policy": "clearpick",
+  "json": "runs/flat_stacked_009_clearpick.json",
+  "video": "runs/flat_stacked_009_clearpick.mp4",
+  "summary": {
+   "clean": 6,
+   "double_grabs": 0,
+   "stalls": 0,
+   "moves": 7,
+   "misses": 0,
+   "items": 6
+  }
+ },
+ {
+  "scene_id": "small_beside_big_001",
+  "mode": "small_beside_big",
+  "policy": "grab_only",
+  "json": "runs/small_beside_big_001_grab_only.json",
+  "video": "runs/small_beside_big_001_grab_only.mp4",
+  "summary": {
+   "clean": 5,
+   "double_grabs": 0,
+   "stalls": 0,
+   "moves": 5,
+   "misses": 0,
+   "items": 5
+  }
+ },
+ {
+  "scene_id": "small_beside_big_001",
+  "mode": "small_beside_big",
+  "policy": "clearpick",
+  "json": "runs/small_beside_big_001_clearpick.json",
+  "video": "runs/small_beside_big_001_clearpick.mp4",
+  "summary": {
+   "clean": 5,
+   "double_grabs": 0,
+   "stalls": 0,
+   "moves": 5,
+   "misses": 0,
+   "items": 5
+  }
+ },
+ {
+  "scene_id": "small_beside_big_010",
+  "mode": "small_beside_big",
+  "policy": "grab_only",
+  "json": "runs/small_beside_big_010_grab_only.json",
+  "video": "runs/small_beside_big_010_grab_only.mp4",
+  "summary": {
+   "clean": 5,
+   "double_grabs": 0,
+   "stalls": 0,
+   "moves": 5,
+   "misses": 0,
+   "items": 5
+  }
+ },
+ {
+  "scene_id": "small_beside_big_010",
+  "mode": "small_beside_big",
+  "policy": "clearpick",
+  "json": "runs/small_beside_big_010_clearpick.json",
+  "video": "runs/small_beside_big_010_clearpick.mp4",
+  "summary": {
+   "clean": 5,
+   "double_grabs": 0,
+   "stalls": 0,
+   "moves": 5,
+   "misses": 0,
+   "items": 5
+  }
+ },
+ {
+  "scene_id": "small_beside_big_011",
+  "mode": "small_beside_big",
+  "policy": "grab_only",
+  "json": "runs/small_beside_big_011_grab_only.json",
+  "video": "runs/small_beside_big_011_grab_only.mp4",
+  "summary": {
+   "clean": 3,
+   "double_grabs": 1,
+   "stalls": 0,
+   "moves": 4,
+   "misses": 0,
+   "items": 5
+  }
+ },
+ {
+  "scene_id": "small_beside_big_011",
+  "mode": "small_beside_big",
+  "policy": "clearpick",
+  "json": "runs/small_beside_big_011_clearpick.json",
+  "video": "runs/small_beside_big_011_clearpick.mp4",
+  "summary": {
+   "clean": 5,
+   "double_grabs": 0,
+   "stalls": 0,
+   "moves": 5,
+   "misses": 0,
+   "items": 5
+  }
+ },
+ {
+  "scene_id": "small_beside_big_012",
+  "mode": "small_beside_big",
+  "policy": "grab_only",
+  "json": "runs/small_beside_big_012_grab_only.json",
+  "video": "runs/small_beside_big_012_grab_only.mp4",
+  "summary": {
+   "clean": 5,
+   "double_grabs": 0,
+   "stalls": 0,
+   "moves": 5,
+   "misses": 0,
+   "items": 5
+  }
+ },
+ {
+  "scene_id": "small_beside_big_012",
+  "mode": "small_beside_big",
+  "policy": "clearpick",
+  "json": "runs/small_beside_big_012_clearpick.json",
+  "video": "runs/small_beside_big_012_clearpick.mp4",
+  "summary": {
+   "clean": 5,
+   "double_grabs": 0,
+   "stalls": 0,
+   "moves": 5,
+   "misses": 0,
+   "items": 5
+  }
+ },
+ {
+  "scene_id": "small_beside_big_013",
+  "mode": "small_beside_big",
+  "policy": "grab_only",
+  "json": "runs/small_beside_big_013_grab_only.json",
+  "video": "runs/small_beside_big_013_grab_only.mp4",
+  "summary": {
+   "clean": 4,
+   "double_grabs": 1,
+   "stalls": 0,
+   "moves": 5,
+   "misses": 0,
+   "items": 6
+  }
+ },
+ {
+  "scene_id": "small_beside_big_013",
+  "mode": "small_beside_big",
+  "policy": "clearpick",
+  "json": "runs/small_beside_big_013_clearpick.json",
+  "video": "runs/small_beside_big_013_clearpick.mp4",
+  "summary": {
+   "clean": 6,
+   "double_grabs": 0,
+   "stalls": 0,
+   "moves": 6,
+   "misses": 0,
+   "items": 6
+  }
+ },
+ {
+  "scene_id": "small_beside_big_014",
+  "mode": "small_beside_big",
+  "policy": "grab_only",
+  "json": "runs/small_beside_big_014_grab_only.json",
+  "video": "runs/small_beside_big_014_grab_only.mp4",
+  "summary": {
+   "clean": 3,
+   "double_grabs": 1,
+   "stalls": 0,
+   "moves": 4,
+   "misses": 0,
+   "items": 5
+  }
+ },
+ {
+  "scene_id": "small_beside_big_014",
+  "mode": "small_beside_big",
+  "policy": "clearpick",
+  "json": "runs/small_beside_big_014_clearpick.json",
+  "video": "runs/small_beside_big_014_clearpick.mp4",
+  "summary": {
+   "clean": 5,
+   "double_grabs": 0,
+   "stalls": 0,
+   "moves": 5,
+   "misses": 0,
+   "items": 5
+  }
+ },
+ {
+  "scene_id": "small_beside_big_015",
+  "mode": "small_beside_big",
+  "policy": "grab_only",
+  "json": "runs/small_beside_big_015_grab_only.json",
+  "video": "runs/small_beside_big_015_grab_only.mp4",
+  "summary": {
+   "clean": 5,
+   "double_grabs": 0,
+   "stalls": 0,
+   "moves": 5,
+   "misses": 0,
+   "items": 5
+  }
+ },
+ {
+  "scene_id": "small_beside_big_015",
+  "mode": "small_beside_big",
+  "policy": "clearpick",
+  "json": "runs/small_beside_big_015_clearpick.json",
+  "video": "runs/small_beside_big_015_clearpick.mp4",
+  "summary": {
+   "clean": 5,
+   "double_grabs": 0,
+   "stalls": 0,
+   "moves": 5,
+   "misses": 0,
+   "items": 5
+  }
+ },
+ {
+  "scene_id": "small_beside_big_016",
+  "mode": "small_beside_big",
+  "policy": "grab_only",
+  "json": "runs/small_beside_big_016_grab_only.json",
+  "video": "runs/small_beside_big_016_grab_only.mp4",
+  "summary": {
+   "clean": 3,
+   "double_grabs": 1,
+   "stalls": 0,
+   "moves": 4,
+   "misses": 0,
+   "items": 5
+  }
+ },
+ {
+  "scene_id": "small_beside_big_016",
+  "mode": "small_beside_big",
+  "policy": "clearpick",
+  "json": "runs/small_beside_big_016_clearpick.json",
+  "video": "runs/small_beside_big_016_clearpick.mp4",
+  "summary": {
+   "clean": 5,
+   "double_grabs": 0,
+   "stalls": 0,
+   "moves": 5,
+   "misses": 0,
+   "items": 5
+  }
+ },
+ {
+  "scene_id": "small_beside_big_017",
+  "mode": "small_beside_big",
+  "policy": "grab_only",
+  "json": "runs/small_beside_big_017_grab_only.json",
+  "video": "runs/small_beside_big_017_grab_only.mp4",
+  "summary": {
+   "clean": 3,
+   "double_grabs": 1,
+   "stalls": 0,
+   "moves": 4,
+   "misses": 0,
+   "items": 5
+  }
+ },
+ {
+  "scene_id": "small_beside_big_017",
+  "mode": "small_beside_big",
+  "policy": "clearpick",
+  "json": "runs/small_beside_big_017_clearpick.json",
+  "video": "runs/small_beside_big_017_clearpick.mp4",
+  "summary": {
+   "clean": 5,
+   "double_grabs": 0,
+   "stalls": 0,
+   "moves": 5,
+   "misses": 0,
+   "items": 5
+  }
+ },
+ {
+  "scene_id": "small_beside_big_018",
+  "mode": "small_beside_big",
+  "policy": "grab_only",
+  "json": "runs/small_beside_big_018_grab_only.json",
+  "video": "runs/small_beside_big_018_grab_only.mp4",
+  "summary": {
+   "clean": 3,
+   "double_grabs": 1,
+   "stalls": 0,
+   "moves": 4,
+   "misses": 0,
+   "items": 5
+  }
+ },
+ {
+  "scene_id": "small_beside_big_018",
+  "mode": "small_beside_big",
+  "policy": "clearpick",
+  "json": "runs/small_beside_big_018_clearpick.json",
+  "video": "runs/small_beside_big_018_clearpick.mp4",
+  "summary": {
+   "clean": 5,
+   "double_grabs": 0,
+   "stalls": 0,
+   "moves": 5,
+   "misses": 0,
+   "items": 5
+  }
+ },
+ {
+  "scene_id": "small_beside_big_019",
+  "mode": "small_beside_big",
+  "policy": "grab_only",
+  "json": "runs/small_beside_big_019_grab_only.json",
+  "video": "runs/small_beside_big_019_grab_only.mp4",
+  "summary": {
+   "clean": 5,
+   "double_grabs": 0,
+   "stalls": 0,
+   "moves": 5,
+   "misses": 0,
+   "items": 5
+  }
+ },
+ {
+  "scene_id": "small_beside_big_019",
+  "mode": "small_beside_big",
+  "policy": "clearpick",
+  "json": "runs/small_beside_big_019_clearpick.json",
+  "video": "runs/small_beside_big_019_clearpick.mp4",
+  "summary": {
+   "clean": 5,
+   "double_grabs": 0,
+   "stalls": 0,
+   "moves": 5,
+   "misses": 0,
+   "items": 5
+  }
+ },
+ {
+  "scene_id": "small_beside_big_002",
+  "mode": "small_beside_big",
+  "policy": "grab_only",
+  "json": "runs/small_beside_big_002_grab_only.json",
+  "video": "runs/small_beside_big_002_grab_only.mp4",
+  "summary": {
+   "clean": 5,
+   "double_grabs": 0,
+   "stalls": 0,
+   "moves": 5,
+   "misses": 0,
+   "items": 5
+  }
+ },
+ {
+  "scene_id": "small_beside_big_002",
+  "mode": "small_beside_big",
+  "policy": "clearpick",
+  "json": "runs/small_beside_big_002_clearpick.json",
+  "video": "runs/small_beside_big_002_clearpick.mp4",
+  "summary": {
+   "clean": 5,
+   "double_grabs": 0,
+   "stalls": 0,
+   "moves": 5,
+   "misses": 0,
+   "items": 5
+  }
+ },
+ {
+  "scene_id": "small_beside_big_020",
+  "mode": "small_beside_big",
+  "policy": "grab_only",
+  "json": "runs/small_beside_big_020_grab_only.json",
+  "video": "runs/small_beside_big_020_grab_only.mp4",
+  "summary": {
+   "clean": 5,
+   "double_grabs": 0,
+   "stalls": 0,
+   "moves": 5,
+   "misses": 0,
+   "items": 5
+  }
+ },
+ {
+  "scene_id": "small_beside_big_020",
+  "mode": "small_beside_big",
+  "policy": "clearpick",
+  "json": "runs/small_beside_big_020_clearpick.json",
+  "video": "runs/small_beside_big_020_clearpick.mp4",
+  "summary": {
+   "clean": 5,
+   "double_grabs": 0,
+   "stalls": 0,
+   "moves": 5,
+   "misses": 0,
+   "items": 5
+  }
+ },
+ {
+  "scene_id": "small_beside_big_003",
+  "mode": "small_beside_big",
+  "policy": "grab_only",
+  "json": "runs/small_beside_big_003_grab_only.json",
+  "video": "runs/small_beside_big_003_grab_only.mp4",
+  "summary": {
+   "clean": 3,
+   "double_grabs": 1,
+   "stalls": 0,
+   "moves": 4,
+   "misses": 0,
+   "items": 5
+  }
+ },
+ {
+  "scene_id": "small_beside_big_003",
+  "mode": "small_beside_big",
+  "policy": "clearpick",
+  "json": "runs/small_beside_big_003_clearpick.json",
+  "video": "runs/small_beside_big_003_clearpick.mp4",
+  "summary": {
+   "clean": 5,
+   "double_grabs": 0,
+   "stalls": 0,
+   "moves": 5,
+   "misses": 0,
+   "items": 5
+  }
+ },
+ {
+  "scene_id": "small_beside_big_004",
+  "mode": "small_beside_big",
+  "policy": "grab_only",
+  "json": "runs/small_beside_big_004_grab_only.json",
+  "video": "runs/small_beside_big_004_grab_only.mp4",
+  "summary": {
+   "clean": 3,
+   "double_grabs": 1,
+   "stalls": 0,
+   "moves": 4,
+   "misses": 0,
+   "items": 5
+  }
+ },
+ {
+  "scene_id": "small_beside_big_004",
+  "mode": "small_beside_big",
+  "policy": "clearpick",
+  "json": "runs/small_beside_big_004_clearpick.json",
+  "video": "runs/small_beside_big_004_clearpick.mp4",
+  "summary": {
+   "clean": 5,
+   "double_grabs": 0,
+   "stalls": 0,
+   "moves": 5,
+   "misses": 0,
+   "items": 5
+  }
+ },
+ {
+  "scene_id": "small_beside_big_005",
+  "mode": "small_beside_big",
+  "policy": "grab_only",
+  "json": "runs/small_beside_big_005_grab_only.json",
+  "video": "runs/small_beside_big_005_grab_only.mp4",
+  "summary": {
+   "clean": 3,
+   "double_grabs": 1,
+   "stalls": 0,
+   "moves": 4,
+   "misses": 0,
+   "items": 5
+  }
+ },
+ {
+  "scene_id": "small_beside_big_005",
+  "mode": "small_beside_big",
+  "policy": "clearpick",
+  "json": "runs/small_beside_big_005_clearpick.json",
+  "video": "runs/small_beside_big_005_clearpick.mp4",
+  "summary": {
+   "clean": 5,
+   "double_grabs": 0,
+   "stalls": 0,
+   "moves": 5,
+   "misses": 0,
+   "items": 5
+  }
+ },
+ {
+  "scene_id": "small_beside_big_006",
+  "mode": "small_beside_big",
+  "policy": "grab_only",
+  "json": "runs/small_beside_big_006_grab_only.json",
+  "video": "runs/small_beside_big_006_grab_only.mp4",
+  "summary": {
+   "clean": 5,
+   "double_grabs": 0,
+   "stalls": 0,
+   "moves": 5,
+   "misses": 0,
+   "items": 5
+  }
+ },
+ {
+  "scene_id": "small_beside_big_006",
+  "mode": "small_beside_big",
+  "policy": "clearpick",
+  "json": "runs/small_beside_big_006_clearpick.json",
+  "video": "runs/small_beside_big_006_clearpick.mp4",
+  "summary": {
+   "clean": 5,
+   "double_grabs": 0,
+   "stalls": 0,
+   "moves": 5,
+   "misses": 0,
+   "items": 5
+  }
+ },
+ {
+  "scene_id": "small_beside_big_007",
+  "mode": "small_beside_big",
+  "policy": "grab_only",
+  "json": "runs/small_beside_big_007_grab_only.json",
+  "video": "runs/small_beside_big_007_grab_only.mp4",
+  "summary": {
+   "clean": 3,
+   "double_grabs": 1,
+   "stalls": 0,
+   "moves": 4,
+   "misses": 0,
+   "items": 5
+  }
+ },
+ {
+  "scene_id": "small_beside_big_007",
+  "mode": "small_beside_big",
+  "policy": "clearpick",
+  "json": "runs/small_beside_big_007_clearpick.json",
+  "video": "runs/small_beside_big_007_clearpick.mp4",
+  "summary": {
+   "clean": 5,
+   "double_grabs": 0,
+   "stalls": 0,
+   "moves": 5,
+   "misses": 0,
+   "items": 5
+  }
+ },
+ {
+  "scene_id": "small_beside_big_008",
+  "mode": "small_beside_big",
+  "policy": "grab_only",
+  "json": "runs/small_beside_big_008_grab_only.json",
+  "video": "runs/small_beside_big_008_grab_only.mp4",
+  "summary": {
+   "clean": 3,
+   "double_grabs": 1,
+   "stalls": 0,
+   "moves": 4,
+   "misses": 0,
+   "items": 5
+  }
+ },
+ {
+  "scene_id": "small_beside_big_008",
+  "mode": "small_beside_big",
+  "policy": "clearpick",
+  "json": "runs/small_beside_big_008_clearpick.json",
+  "video": "runs/small_beside_big_008_clearpick.mp4",
+  "summary": {
+   "clean": 5,
+   "double_grabs": 0,
+   "stalls": 0,
+   "moves": 5,
+   "misses": 0,
+   "items": 5
+  }
+ },
+ {
+  "scene_id": "small_beside_big_009",
+  "mode": "small_beside_big",
+  "policy": "grab_only",
+  "json": "runs/small_beside_big_009_grab_only.json",
+  "video": "runs/small_beside_big_009_grab_only.mp4",
+  "summary": {
+   "clean": 2,
+   "double_grabs": 2,
+   "stalls": 0,
+   "moves": 4,
+   "misses": 0,
+   "items": 6
+  }
+ },
+ {
+  "scene_id": "small_beside_big_009",
+  "mode": "small_beside_big",
+  "policy": "clearpick",
+  "json": "runs/small_beside_big_009_clearpick.json",
+  "video": "runs/small_beside_big_009_clearpick.mp4",
+  "summary": {
+   "clean": 6,
+   "double_grabs": 0,
+   "stalls": 0,
+   "moves": 6,
+   "misses": 0,
+   "items": 6
   }
  }
 ]

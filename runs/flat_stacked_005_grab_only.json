@@ -1,0 +1,56 @@
+{
+ "scene_id": "flat_stacked_005",
+ "mode": "flat_stacked",
+ "policy": "grab_only",
+ "steps": [
+  {
+   "t": 0.0,
+   "action": "grasp",
+   "item": "foam_brick_1",
+   "grasp": "suction_center",
+   "direction": null,
+   "risk": 0.0416,
+   "reason": "highest item, suction at centre",
+   "outcome": "clean"
+  },
+  {
+   "t": 1.8,
+   "action": "grasp",
+   "item": "potted_meat_can_1",
+   "grasp": "suction_center",
+   "direction": null,
+   "risk": 0.0528,
+   "reason": "highest item, suction at centre",
+   "outcome": "clean"
+  },
+  {
+   "t": 3.6,
+   "action": "grasp",
+   "item": "flat_box_2",
+   "grasp": "suction_center",
+   "direction": null,
+   "risk": 0.93,
+   "reason": "highest item, suction at centre",
+   "outcome": "double"
+  },
+  {
+   "t": 5.5,
+   "action": "grasp",
+   "item": "gelatin_box_1",
+   "grasp": "suction_center",
+   "direction": null,
+   "risk": 0.0441,
+   "reason": "highest item, suction at centre",
+   "outcome": "clean"
+  }
+ ],
+ "summary": {
+  "clean": 3,
+  "double_grabs": 1,
+  "stalls": 0,
+  "moves": 4,
+  "misses": 0,
+  "items": 5
+ },
+ "video": "runs/flat_stacked_005_grab_only.mp4"
+}

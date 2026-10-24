@@ -1,0 +1,66 @@
+{
+ "scene_id": "against_wall_007",
+ "mode": "against_wall",
+ "policy": "clearpick",
+ "steps": [
+  {
+   "t": 0.0,
+   "action": "grasp",
+   "item": "gelatin_box_1",
+   "grasp": "suction_center",
+   "direction": null,
+   "risk": 0.0494,
+   "reason": "clear on all sides",
+   "outcome": "clean"
+  },
+  {
+   "t": 1.908,
+   "action": "grasp",
+   "item": "flat_box_1",
+   "grasp": "suction_center",
+   "direction": null,
+   "risk": 0.0514,
+   "reason": "clear on all sides",
+   "outcome": "clean"
+  },
+  {
+   "t": 3.88,
+   "action": "grasp",
+   "item": "sugar_box_1",
+   "grasp": "suction_center",
+   "direction": null,
+   "risk": 0.053,
+   "reason": "clear on all sides",
+   "outcome": "clean"
+  },
+  {
+   "t": 5.74,
+   "action": "grasp",
+   "item": "potted_meat_can_1",
+   "grasp": "suction_center",
+   "direction": null,
+   "risk": 0.0537,
+   "reason": "clear on all sides",
+   "outcome": "clean"
+  },
+  {
+   "t": 7.54,
+   "action": "grasp",
+   "item": "tomato_soup_can_1",
+   "grasp": "suction_center",
+   "direction": null,
+   "risk": 0.0469,
+   "reason": "clear on all sides",
+   "outcome": "clean"
+  }
+ ],
+ "summary": {
+  "clean": 5,
+  "double_grabs": 0,
+  "stalls": 0,
+  "moves": 5,
+  "misses": 0,
+  "items": 5
+ },
+ "video": "runs/against_wall_007_clearpick.mp4"
+}

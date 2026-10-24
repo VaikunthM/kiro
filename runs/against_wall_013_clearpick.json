@@ -1,0 +1,66 @@
+{
+ "scene_id": "against_wall_013",
+ "mode": "against_wall",
+ "policy": "clearpick",
+ "steps": [
+  {
+   "t": 0.0,
+   "action": "grasp",
+   "item": "sugar_box_1",
+   "grasp": "suction_center",
+   "direction": null,
+   "risk": 0.0493,
+   "reason": "clear on all sides",
+   "outcome": "clean"
+  },
+  {
+   "t": 1.86,
+   "action": "grasp",
+   "item": "foam_brick_1",
+   "grasp": "suction_center",
+   "direction": null,
+   "risk": 0.051,
+   "reason": "clear on all sides",
+   "outcome": "clean"
+  },
+  {
+   "t": 3.66,
+   "action": "grasp",
+   "item": "gelatin_box_1",
+   "grasp": "suction_center",
+   "direction": null,
+   "risk": 0.0555,
+   "reason": "clear on all sides",
+   "outcome": "clean"
+  },
+  {
+   "t": 5.568,
+   "action": "grasp",
+   "item": "gelatin_box_2",
+   "grasp": "suction_center",
+   "direction": null,
+   "risk": 0.0556,
+   "reason": "clear on all sides",
+   "outcome": "clean"
+  },
+  {
+   "t": 7.476,
+   "action": "grasp",
+   "item": "sugar_box_2",
+   "grasp": "suction_center",
+   "direction": null,
+   "risk": 0.0507,
+   "reason": "clear on all sides",
+   "outcome": "clean"
+  }
+ ],
+ "summary": {
+  "clean": 5,
+  "double_grabs": 0,
+  "stalls": 0,
+  "moves": 5,
+  "misses": 0,
+  "items": 5
+ },
+ "video": "runs/against_wall_013_clearpick.mp4"
+}

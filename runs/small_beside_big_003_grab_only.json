@@ -1,0 +1,56 @@
+{
+ "scene_id": "small_beside_big_003",
+ "mode": "small_beside_big",
+ "policy": "grab_only",
+ "steps": [
+  {
+   "t": 0.0,
+   "action": "grasp",
+   "item": "tomato_soup_can_1",
+   "grasp": "suction_center",
+   "direction": null,
+   "risk": 0.0475,
+   "reason": "highest item, suction at centre",
+   "outcome": "clean"
+  },
+  {
+   "t": 1.544,
+   "action": "grasp",
+   "item": "potted_meat_can_1",
+   "grasp": "suction_center",
+   "direction": null,
+   "risk": 0.743,
+   "reason": "highest item, suction at centre",
+   "outcome": "double"
+  },
+  {
+   "t": 3.344,
+   "action": "grasp",
+   "item": "potted_meat_can_2",
+   "grasp": "suction_center",
+   "direction": null,
+   "risk": 0.0392,
+   "reason": "highest item, suction at centre",
+   "outcome": "clean"
+  },
+  {
+   "t": 5.144,
+   "action": "grasp",
+   "item": "gelatin_box_1",
+   "grasp": "suction_center",
+   "direction": null,
+   "risk": 0.041,
+   "reason": "highest item, suction at centre",
+   "outcome": "clean"
+  }
+ ],
+ "summary": {
+  "clean": 3,
+  "double_grabs": 1,
+  "stalls": 0,
+  "moves": 4,
+  "misses": 0,
+  "items": 5
+ },
+ "video": "runs/small_beside_big_003_grab_only.mp4"
+}

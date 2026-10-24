@@ -1,0 +1,66 @@
+{
+ "scene_id": "small_beside_big_001",
+ "mode": "small_beside_big",
+ "policy": "grab_only",
+ "steps": [
+  {
+   "t": 0.0,
+   "action": "grasp",
+   "item": "foam_brick_1",
+   "grasp": "suction_center",
+   "direction": null,
+   "risk": 0.3993,
+   "reason": "highest item, suction at centre",
+   "outcome": "clean"
+  },
+  {
+   "t": 1.8,
+   "action": "grasp",
+   "item": "foam_brick_2",
+   "grasp": "suction_center",
+   "direction": null,
+   "risk": 0.1629,
+   "reason": "highest item, suction at centre",
+   "outcome": "clean"
+  },
+  {
+   "t": 3.6,
+   "action": "grasp",
+   "item": "sugar_box_1",
+   "grasp": "suction_center",
+   "direction": null,
+   "risk": 0.3718,
+   "reason": "highest item, suction at centre",
+   "outcome": "clean"
+  },
+  {
+   "t": 5.46,
+   "action": "grasp",
+   "item": "sugar_box_2",
+   "grasp": "suction_center",
+   "direction": null,
+   "risk": 0.0457,
+   "reason": "highest item, suction at centre",
+   "outcome": "clean"
+  },
+  {
+   "t": 7.32,
+   "action": "grasp",
+   "item": "gelatin_box_1",
+   "grasp": "suction_center",
+   "direction": null,
+   "risk": 0.0452,
+   "reason": "highest item, suction at centre",
+   "outcome": "clean"
+  }
+ ],
+ "summary": {
+  "clean": 5,
+  "double_grabs": 0,
+  "stalls": 0,
+  "moves": 5,
+  "misses": 0,
+  "items": 5
+ },
+ "video": "runs/small_beside_big_001_grab_only.mp4"
+}

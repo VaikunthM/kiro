@@ -1,0 +1,66 @@
+{
+ "scene_id": "small_beside_big_011",
+ "mode": "small_beside_big",
+ "policy": "clearpick",
+ "steps": [
+  {
+   "t": 0.0,
+   "action": "grasp",
+   "item": "potted_meat_can_2",
+   "grasp": "suction_center",
+   "direction": null,
+   "risk": 0.0424,
+   "reason": "clear on all sides",
+   "outcome": "clean"
+  },
+  {
+   "t": 1.8,
+   "action": "grasp",
+   "item": "sugar_box_1",
+   "grasp": "suction_center",
+   "direction": null,
+   "risk": 0.0513,
+   "reason": "clear on all sides",
+   "outcome": "clean"
+  },
+  {
+   "t": 3.66,
+   "action": "grasp",
+   "item": "tomato_soup_can_1",
+   "grasp": "suction_edge",
+   "direction": null,
+   "risk": 0.0646,
+   "reason": "clear on all sides",
+   "outcome": "clean"
+  },
+  {
+   "t": 5.204,
+   "action": "grasp",
+   "item": "potted_meat_can_1",
+   "grasp": "suction_edge",
+   "direction": null,
+   "risk": 0.1001,
+   "reason": "clear on all sides",
+   "outcome": "clean"
+  },
+  {
+   "t": 7.004,
+   "action": "grasp",
+   "item": "gelatin_box_1",
+   "grasp": "suction_center",
+   "direction": null,
+   "risk": 0.0458,
+   "reason": "clear on all sides",
+   "outcome": "clean"
+  }
+ ],
+ "summary": {
+  "clean": 5,
+  "double_grabs": 0,
+  "stalls": 0,
+  "moves": 5,
+  "misses": 0,
+  "items": 5
+ },
+ "video": "runs/small_beside_big_011_clearpick.mp4"
+}

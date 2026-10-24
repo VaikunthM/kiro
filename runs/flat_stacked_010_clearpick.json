@@ -1,0 +1,89 @@
+{
+ "scene_id": "flat_stacked_010",
+ "mode": "flat_stacked",
+ "policy": "clearpick",
+ "steps": [
+  {
+   "t": 0.0,
+   "action": "grasp",
+   "item": "foam_brick_1",
+   "grasp": "suction_center",
+   "direction": null,
+   "risk": 0.0394,
+   "reason": "clear on all sides",
+   "outcome": "clean"
+  },
+  {
+   "t": 1.8,
+   "action": "grasp",
+   "item": "tomato_soup_can_1",
+   "grasp": "suction_center",
+   "direction": null,
+   "risk": 0.048,
+   "reason": "clear on all sides",
+   "outcome": "clean"
+  },
+  {
+   "t": 3.344,
+   "action": "grasp",
+   "item": "gelatin_box_1",
+   "grasp": "suction_center",
+   "direction": null,
+   "risk": 0.0611,
+   "reason": "clear on all sides",
+   "outcome": "clean"
+  },
+  {
+   "t": 5.252,
+   "action": "push",
+   "item": "flat_box_3",
+   "grasp": null,
+   "direction": [
+    0.0,
+    -1.0
+   ],
+   "risk": 0.4778,
+   "reason": "resting on another item: sliding it off",
+   "outcome": "ok"
+  },
+  {
+   "t": 7.478,
+   "action": "grasp",
+   "item": "flat_box_2",
+   "grasp": "suction_edge",
+   "direction": null,
+   "risk": 0.1073,
+   "reason": "clear on all sides",
+   "outcome": "clean"
+  },
+  {
+   "t": 9.298,
+   "action": "grasp",
+   "item": "flat_box_1",
+   "grasp": "suction_edge",
+   "direction": null,
+   "risk": 0.1147,
+   "reason": "clear on all sides",
+   "outcome": "clean"
+  },
+  {
+   "t": 11.27,
+   "action": "grasp",
+   "item": "flat_box_2",
+   "grasp": "suction_center",
+   "direction": null,
+   "risk": 0.0392,
+   "reason": "clear on all sides",
+   "outcome": "clean"
+  }
+ ],
+ "summary": {
+  "clean": 6,
+  "double_grabs": 0,
+  "stalls": 0,
+  "moves": 7,
+  "misses": 0,
+  "items": 6
+ },
+ "video": "runs/flat_stacked_010_clearpick.mp4"
+}

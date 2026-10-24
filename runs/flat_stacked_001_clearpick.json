@@ -1,0 +1,98 @@
+{
+ "scene_id": "flat_stacked_001",
+ "mode": "flat_stacked",
+ "policy": "clearpick",
+ "steps": [
+  {
+   "t": 0.0,
+   "action": "grasp",
+   "item": "gelatin_box_1",
+   "grasp": "suction_center",
+   "direction": null,
+   "risk": 0.0426,
+   "reason": "clear on all sides",
+   "outcome": "clean"
+  },
+  {
+   "t": 1.908,
+   "action": "grasp",
+   "item": "potted_meat_can_1",
+   "grasp": "suction_center",
+   "direction": null,
+   "risk": 0.0483,
+   "reason": "clear on all sides",
+   "outcome": "clean"
+  },
+  {
+   "t": 3.708,
+   "action": "grasp",
+   "item": "foam_brick_1",
+   "grasp": "suction_center",
+   "direction": null,
+   "risk": 0.055,
+   "reason": "clear on all sides",
+   "outcome": "clean"
+  },
+  {
+   "t": 5.508,
+   "action": "push",
+   "item": "flat_box_2",
+   "grasp": null,
+   "direction": [
+    0.0,
+    -1.0
+   ],
+   "risk": 0.4799,
+   "reason": "resting on another item: sliding it off",
+   "outcome": "ok"
+  },
+  {
+   "t": 7.81,
+   "action": "push",
+   "item": "flat_box_2",
+   "grasp": null,
+   "direction": [
+    0.0,
+    -1.0
+   ],
+   "risk": 0.8072,
+   "reason": "resting on another item: sliding it off",
+   "outcome": "ok"
+  },
+  {
+   "t": 8.846,
+   "action": "push",
+   "item": "flat_box_5",
+   "grasp": null,
+   "direction": [
+    0.0,
+    1.0
+   ],
+   "risk": 0.8072,
+   "reason": "resting on another item: sliding it off",
+   "outcome": "ok"
+  },
+  {
+   "t": 9.806,
+   "action": "push",
+   "item": "flat_box_5",
+   "grasp": null,
+   "direction": [
+    0.0,
+    1.0
+   ],
+   "risk": 0.8072,
+   "reason": "resting on another item: sliding it off",
+   "outcome": "ok"
+  }
+ ],
+ "summary": {
+  "clean": 3,
+  "double_grabs": 0,
+  "stalls": 0,
+  "moves": 7,
+  "misses": 0,
+  "items": 8
+ },
+ "video": "runs/flat_stacked_001_clearpick.mp4"
+}

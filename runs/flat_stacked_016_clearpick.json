@@ -1,0 +1,102 @@
+{
+ "scene_id": "flat_stacked_016",
+ "mode": "flat_stacked",
+ "policy": "clearpick",
+ "steps": [
+  {
+   "t": 0.0,
+   "action": "grasp",
+   "item": "potted_meat_can_1",
+   "grasp": "suction_center",
+   "direction": null,
+   "risk": 0.0549,
+   "reason": "clear on all sides",
+   "outcome": "clean"
+  },
+  {
+   "t": 1.8,
+   "action": "grasp",
+   "item": "tomato_soup_can_1",
+   "grasp": "suction_edge",
+   "direction": null,
+   "risk": 0.0757,
+   "reason": "clear on all sides",
+   "outcome": "clean"
+  },
+  {
+   "t": 3.344,
+   "action": "grasp",
+   "item": "potted_meat_can_2",
+   "grasp": "suction_center",
+   "direction": null,
+   "risk": 0.0441,
+   "reason": "clear on all sides",
+   "outcome": "clean"
+  },
+  {
+   "t": 5.144,
+   "action": "grasp",
+   "item": "sugar_box_1",
+   "grasp": "suction_edge",
+   "direction": null,
+   "risk": 0.0773,
+   "reason": "clear on all sides",
+   "outcome": "clean"
+  },
+  {
+   "t": 7.004,
+   "action": "push",
+   "item": "flat_box_2",
+   "grasp": null,
+   "direction": [
+    0.0,
+    1.0
+   ],
+   "risk": 0.4694,
+   "reason": "resting on another item: sliding it off",
+   "outcome": "ok"
+  },
+  {
+   "t": 9.306,
+   "action": "push",
+   "item": "flat_box_2",
+   "grasp": null,
+   "direction": [
+    0.0,
+    -1.0
+   ],
+   "risk": 0.4705,
+   "reason": "resting on another item: sliding it off",
+   "outcome": "ok"
+  },
+  {
+   "t": 10.342,
+   "action": "grasp",
+   "item": "flat_box_2",
+   "grasp": "side_pinch",
+   "direction": null,
+   "risk": 0.4705,
+   "reason": "no way to make more space: taking the safest option",
+   "outcome": "clean"
+  },
+  {
+   "t": 12.29,
+   "action": "grasp",
+   "item": "flat_box_1",
+   "grasp": "suction_center",
+   "direction": null,
+   "risk": 0.0392,
+   "reason": "clear on all sides",
+   "outcome": "clean"
+  }
+ ],
+ "summary": {
+  "clean": 6,
+  "double_grabs": 0,
+  "stalls": 0,
+  "moves": 8,
+  "misses": 0,
+  "items": 6
+ },
+ "video": "runs/flat_stacked_016_clearpick.mp4"
+}

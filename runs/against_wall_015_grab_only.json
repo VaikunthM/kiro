@@ -1,0 +1,56 @@
+{
+ "scene_id": "against_wall_015",
+ "mode": "against_wall",
+ "policy": "grab_only",
+ "steps": [
+  {
+   "t": 0.0,
+   "action": "grasp",
+   "item": "tomato_soup_can_1",
+   "grasp": "suction_center",
+   "direction": null,
+   "risk": 0.0721,
+   "reason": "highest item, suction at centre",
+   "outcome": "clean"
+  },
+  {
+   "t": 1.544,
+   "action": "grasp",
+   "item": "foam_brick_1",
+   "grasp": "suction_center",
+   "direction": null,
+   "risk": 0.9996,
+   "reason": "highest item, suction at centre",
+   "outcome": "miss"
+  },
+  {
+   "t": 3.344,
+   "action": "grasp",
+   "item": "foam_brick_1",
+   "grasp": "suction_center",
+   "direction": null,
+   "risk": 0.9996,
+   "reason": "highest item, suction at centre",
+   "outcome": "miss"
+  },
+  {
+   "t": 5.144,
+   "action": "grasp",
+   "item": "foam_brick_1",
+   "grasp": "suction_center",
+   "direction": null,
+   "risk": 0.9996,
+   "reason": "highest item, suction at centre",
+   "outcome": "miss"
+  }
+ ],
+ "summary": {
+  "clean": 1,
+  "double_grabs": 0,
+  "stalls": 0,
+  "moves": 4,
+  "misses": 3,
+  "items": 5
+ },
+ "video": "runs/against_wall_015_grab_only.mp4"
+}

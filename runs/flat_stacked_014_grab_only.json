@@ -1,0 +1,66 @@
+{
+ "scene_id": "flat_stacked_014",
+ "mode": "flat_stacked",
+ "policy": "grab_only",
+ "steps": [
+  {
+   "t": 0.0,
+   "action": "grasp",
+   "item": "foam_brick_1",
+   "grasp": "suction_center",
+   "direction": null,
+   "risk": 0.4597,
+   "reason": "highest item, suction at centre",
+   "outcome": "clean"
+  },
+  {
+   "t": 1.8,
+   "action": "grasp",
+   "item": "foam_brick_2",
+   "grasp": "suction_center",
+   "direction": null,
+   "risk": 0.0453,
+   "reason": "highest item, suction at centre",
+   "outcome": "clean"
+  },
+  {
+   "t": 3.6,
+   "action": "grasp",
+   "item": "flat_box_2",
+   "grasp": "suction_center",
+   "direction": null,
+   "risk": 0.9792,
+   "reason": "highest item, suction at centre",
+   "outcome": "double"
+  },
+  {
+   "t": 5.5,
+   "action": "grasp",
+   "item": "flat_box_4",
+   "grasp": "suction_center",
+   "direction": null,
+   "risk": 0.9088,
+   "reason": "highest item, suction at centre",
+   "outcome": "double"
+  },
+  {
+   "t": 7.4,
+   "action": "grasp",
+   "item": "gelatin_box_1",
+   "grasp": "suction_center",
+   "direction": null,
+   "risk": 0.0392,
+   "reason": "highest item, suction at centre",
+   "outcome": "clean"
+  }
+ ],
+ "summary": {
+  "clean": 3,
+  "double_grabs": 2,
+  "stalls": 0,
+  "moves": 5,
+  "misses": 0,
+  "items": 7
+ },
+ "video": "runs/flat_stacked_014_grab_only.mp4"
+}

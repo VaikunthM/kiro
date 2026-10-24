@@ -1,0 +1,76 @@
+{
+ "scene_id": "flat_stacked_015",
+ "mode": "flat_stacked",
+ "policy": "grab_only",
+ "steps": [
+  {
+   "t": 0.0,
+   "action": "grasp",
+   "item": "tomato_soup_can_1",
+   "grasp": "suction_center",
+   "direction": null,
+   "risk": 0.0527,
+   "reason": "highest item, suction at centre",
+   "outcome": "clean"
+  },
+  {
+   "t": 1.544,
+   "action": "grasp",
+   "item": "flat_box_3",
+   "grasp": "suction_center",
+   "direction": null,
+   "risk": 0.9869,
+   "reason": "highest item, suction at centre",
+   "outcome": "double"
+  },
+  {
+   "t": 3.368,
+   "action": "grasp",
+   "item": "flat_box_6",
+   "grasp": "suction_center",
+   "direction": null,
+   "risk": 0.9372,
+   "reason": "highest item, suction at centre",
+   "outcome": "double"
+  },
+  {
+   "t": 5.192,
+   "action": "grasp",
+   "item": "sugar_box_1",
+   "grasp": "suction_center",
+   "direction": null,
+   "risk": 0.0542,
+   "reason": "highest item, suction at centre",
+   "outcome": "clean"
+  },
+  {
+   "t": 7.052,
+   "action": "grasp",
+   "item": "flat_box_1",
+   "grasp": "suction_center",
+   "direction": null,
+   "risk": 0.0432,
+   "reason": "highest item, suction at centre",
+   "outcome": "clean"
+  },
+  {
+   "t": 9.024,
+   "action": "grasp",
+   "item": "flat_box_4",
+   "grasp": "suction_center",
+   "direction": null,
+   "risk": 0.0392,
+   "reason": "highest item, suction at centre",
+   "outcome": "clean"
+  }
+ ],
+ "summary": {
+  "clean": 4,
+  "double_grabs": 2,
+  "stalls": 0,
+  "moves": 6,
+  "misses": 0,
+  "items": 8
+ },
+ "video": "runs/flat_stacked_015_grab_only.mp4"
+}
