@@ -1,0 +1,156 @@
+{
+ "source": "YCB Object and Model Set, Google 16k textured models (ycbbenchmarks.com), CC BY 4.0; cleaned copies from github.com/elpis-lab/ycb_dataset (MIT)",
+ "visual_only": true,
+ "types": {
+  "sugar_box": {
+   "mesh": "sugar_box/textured.obj",
+   "texture": "sugar_box/texture_map.png",
+   "size": [
+    0.175,
+    0.089,
+    0.038
+   ],
+   "scale": [
+    0.84107,
+    0.96618,
+    0.99346
+   ],
+   "quat": [
+    0.707107,
+    0.0,
+    0.707107,
+    -0.0
+   ],
+   "pos": [
+    -0.00165,
+    -0.0005,
+    0.00014
+   ],
+   "mesh_extent": [
+    0.04518,
+    0.09212,
+    0.17615
+   ]
+  },
+  "tomato_soup_can": {
+   "mesh": "tomato_soup_can/textured.obj",
+   "texture": "tomato_soup_can/texture_map.png",
+   "size": [
+    0.066,
+    0.066,
+    0.101
+   ],
+   "scale": [
+    0.97798,
+    0.97692,
+    0.99254
+   ],
+   "quat": [
+    0.707107,
+    0.0,
+    0.0,
+    -0.707107
+   ],
+   "pos": [
+    -0.00013,
+    -0.00012,
+    -0.00086
+   ],
+   "mesh_extent": [
+    0.06749,
+    0.06756,
+    0.10176
+   ]
+  },
+  "gelatin_box": {
+   "mesh": "gelatin_box/textured.obj",
+   "texture": "gelatin_box/texture_map.png",
+   "size": [
+    0.085,
+    0.073,
+    0.028
+   ],
+   "scale": [
+    1.00378,
+    0.95073,
+    0.94015
+   ],
+   "quat": [
+    0.0,
+    0.707107,
+    -0.707107,
+    0.0
+   ],
+   "pos": [
+    0.00052,
+    2e-05,
+    0.00032
+   ],
+   "mesh_extent": [
+    0.07272,
+    0.0894,
+    0.02978
+   ]
+  },
+  "potted_meat_can": {
+   "mesh": "potted_meat_can/textured.obj",
+   "texture": "potted_meat_can/texture_map.png",
+   "size": [
+    0.097,
+    0.082,
+    0.05
+   ],
+   "scale": [
+    0.87271,
+    0.9553,
+    0.98267
+   ],
+   "quat": [
+    0.5,
+    -0.5,
+    -0.5,
+    -0.5
+   ],
+   "pos": [
+    4e-05,
+    -0.00062,
+    -0.00018
+   ],
+   "mesh_extent": [
+    0.05729,
+    0.10154,
+    0.08345
+   ]
+  },
+  "foam_brick": {
+   "mesh": "foam_brick/textured.obj",
+   "texture": "foam_brick/texture_map.png",
+   "size": [
+    0.075,
+    0.05,
+    0.05
+   ],
+   "scale": [
+    0.96255,
+    0.96745,
+    0.97714
+   ],
+   "quat": [
+    0.0,
+    0.707107,
+    -0.707107,
+    0.0
+   ],
+   "pos": [
+    -0.00011,
+    -0.00014,
+    0.00056
+   ],
+   "mesh_extent": [
+    0.05195,
+    0.07752,
+    0.05117
+   ]
+  }
+ }
+}

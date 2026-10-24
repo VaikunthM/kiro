@@ -26,30 +26,39 @@ and add a Hypothesis property (not a single example) for any "for any scene/obje
   - _Design:_ "Design for remaining features > 2". _Requirements:_ 8.4 (render camera), 10.6 (recording
     in `run_scene`); default preserves 10.1–10.2 schema.
 
-- [ ] 3. Physics-based suction instead of attach-on-touch
-  - [x] 3.1 Behind a flag/constant, detect cup–object contact via MuJoCo contacts instead of
-    `_dist_point_poly` in `_plan_suction`.
-  - [ ] 3.2 Hold the contacted object with a dynamic weld/equality constraint (or a suction force) during
-    the lift and release it afterward, replacing the `follow`-pinning path for suction.
-  - [ ] 3.3 Let cling/riders emerge from contact forces; remove the `_cling` special case only after the
-    flat-stack behaviour still holds under the new model.
-  - [ ] 3.4 Add a comparison test on the known flat-stack scenes (old vs new model agree), then extend the
-    Hypothesis properties P1 (isolated → clean) and P2 (flat stack → double) to run against the physics
-    model.
-  - [ ] 3.5 Flip the default to the physics model only once P1, P2, P4, P5 and the existing suction
-    example tests pass; keep `clean`/`double`/`miss` and the `LIFT_CHECK` outcome rule unchanged.
-  - _Design:_ "Design for remaining features > 3". _Requirements:_ 3.1–3.6 (suction outcomes), 7.1–7.2
-    (validation unchanged). Highest risk — gate on the property suite.
+- [ ] 3. Physics-based suction, opt-in behind `Sim(suction="physics")`
+  - Default stays `suction="attach"` (the agreed, tested model P3's scorer mirrors); never flip it.
+  - Acceptance tests are already written: `tests/test_physics_suction.py` (red until done). Prototype
+    findings, incl. working weld code: `.kiro/specs/simulator/notes-physics-suction.md`.
+  - [ ] 3.1 Add a `suction` constructor argument (`"attach"` default, `"physics"`; anything else raises
+    `ValueError`) and expose it as `sim.suction`. In physics mode only, `build_mjcf` makes the cup geom
+    collide and adds one inactive `weld` equality (cup -> object) per object.
+  - [ ] 3.2 In physics mode, lower the colliding cup until MuJoCo's contact list (`data.contact`) reports a
+    contact with the cup geom, and take the touched bodies from those contacts instead of
+    `_dist_point_poly`. Keep the wall-seal rule (b) check before descending.
+  - [ ] 3.3 Hold the touched objects (plus `_cling` and rule (a) neighbours, which stay as rules: a weld
+    never drags the box underneath physically) by activating their welds with the current relative pose,
+    lift with physics instead of `follow`-pinning, and release the welds before `_remove`.
+  - [ ] 3.4 Make `tests/test_physics_suction.py` pass, plus the full suite; outcomes in physics mode must
+    match attach mode on the failure-rule scenes (P2, P20, P21) and riders must still ride.
+  - _Design:_ "Design for remaining features > 3". _Requirements:_ 3.1-3.8 (suction outcomes, rules a/b),
+    7.1-7.2 (validation unchanged). Contract outputs and the default model are unchanged.
 
-- [ ] 4. Optional YCB mesh support
-  - [ ] 4.1 Add an optional asset path/config and a flag to enable meshes; map an object's `type` to a
-    mesh file.
-  - [ ] 4.2 In `build_mjcf`, when a mesh for the object's `type` is present, emit a `<mesh>` asset and a
-    mesh visual geom; otherwise fall back to the current primitive from `obj_shape`.
-  - [ ] 4.3 Keep collision geometry as the primitive (or convex hull) so grasp/push stay deterministic;
-    meshes are visual-only by default.
-  - [ ] 4.4 Add `tests/` coverage: MJCF for a scene with a present mesh emits a mesh asset, and a missing
-    mesh falls back to the primitive without error; re-run the property suite to confirm physics outcomes
-    are unchanged.
+- [ ] 4. Optional YCB mesh visuals, opt-in behind `Sim(meshes=True)`
+  - Assets are in the repo: `assets/ycb/<type>/textured.obj` + `texture_map.png` for sugar_box,
+    tomato_soup_can, gelatin_box, potted_meat_can, foam_brick, and `assets/ycb/manifest.json` with the
+    per-type `scale`, `quat` and `pos` that fit each mesh exactly into the primitive's size (computed by
+    `assets/ycb/make_manifest.py`). flat_box has no mesh and stays a primitive.
+  - Acceptance tests are already written: `tests/test_meshes.py` (red until done).
+  - [ ] 4.1 Add `meshes=False` and `asset_dir=None` constructor arguments (default folder: `assets/ycb` at
+    the repo root) and a loader that reads the manifest, keeping only entries whose files exist; a missing
+    folder means no meshes and no error.
+  - [ ] 4.2 In `build_mjcf`, for each object whose `type` has a mesh: emit the `<mesh scale=...>`,
+    `<texture>` and `<material>` assets once per type, add a visual geom named `<id>_visual` with the
+    manifest `pos`/`quat`, `contype="0" conaffinity="0" mass="0"`, and set the collision primitive's alpha
+    to 0. Collision geoms, physics, `state()` and outcomes stay identical to `meshes=False`.
+  - [ ] 4.3 Highlight must tint the `<id>_visual` geom too (the primitive is invisible with meshes on).
+  - [ ] 4.4 Add `--meshes` to `run_batch` (passed through to `Sim`), make `tests/test_meshes.py` pass, plus
+    the full suite.
   - _Design:_ "Design for remaining features > 4". _Requirements:_ 1.4 (shape selection), 2.2 (`state`
-    still reports `type`/`shape`/`size`); physics outcomes unchanged (P1–P16).
+    still reports `type`/`shape`/`size`); physics outcomes unchanged (P1-P16).
