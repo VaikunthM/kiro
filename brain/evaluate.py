@@ -1,5 +1,6 @@
 """Per-mode scoreboard from runs/*.json -> scoreboard.json.   python -m brain.evaluate [runs_dir] [out]"""
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -10,6 +11,8 @@ def build(runs_dir="runs"):
         r = json.loads(p.read_text())
         if not isinstance(r, dict) or "summary" not in r or "policy" not in r:
             continue  # e.g. runs/index.json
+        if not re.fullmatch(r"[a-z_]+_(\d{3})", r.get("scene_id", "")) or r["scene_id"].endswith("_000"):
+            continue  # skip mock and test scenes such as flat_stacked_000 and flat_stacked_t01
         s = r["summary"]
         c = board.setdefault(r["mode"], {}).setdefault(
             r["policy"], {"scenes": 0, "clean": 0, "double_grabs": 0, "misses": 0, "stalls": 0, "pushes": 0, "items": 0})

@@ -208,6 +208,21 @@ def test_no_push_away_from_a_wall_the_item_is_flush_against():
     assert push_direction(state_from_scene(sc), "a") is None   # only way out is away from the wall
 
 
+def test_clearpick_tries_a_different_grasp_after_a_miss():
+    st = state_from_scene(make_scene("against_wall", 3))
+    pol = ClearPick()
+    first = pol.decide(st)
+    assert first["action"] == "grasp"
+    again = pol.decide(st)          # same state: the item is still there, so the grasp must have missed
+    assert again["action"] == "push" or (again["item"], again["grasp"]) != (first["item"], first["grasp"])
+    seen = {(first["item"], first["grasp"])}
+    for _ in range(6):               # keep missing: it never repeats a failed (item, grasp) pair
+        nxt = pol.decide(st)
+        if nxt["action"] == "grasp":
+            assert (nxt["item"], nxt["grasp"]) not in seen or len(seen) >= 3 * len(st["objects"])
+            seen.add((nxt["item"], nxt["grasp"]))
+
+
 if __name__ == "__main__":
     for name, fn in sorted(globals().items()):
         if name.startswith("test_") and callable(fn):

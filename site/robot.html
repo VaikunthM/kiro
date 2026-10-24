@@ -1,0 +1,412 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ClearPick: the robot page</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #E8ECEF;
+    --panel: #F6F8F9;
+    --ink: #13202B;
+    --ink-soft: #4A5864;
+    --line: #C3CCD3;
+    --slate: #5E6B77;
+    --tote: #1D5FD1;
+    --flag: #D9480F;
+    --ok: #1F7A57;
+    --layer0: #D3DBE2;
+    --layer1: #EAEFF3;
+    --layer2: #FFFFFF;
+    --sans: "Archivo", "Helvetica Neue", Arial, sans-serif;
+    color-scheme: light;
+  }
+  * { box-sizing: border-box; }
+  html { background: var(--paper); }
+  body {
+    margin: 0; color: var(--ink); font-family: var(--sans); font-size: 16px; line-height: 1.5;
+    font-variation-settings: "wdth" 100;
+  }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 0 16px 64px; }
+  :focus-visible { outline: 3px solid var(--tote); outline-offset: 2px; }
+  button { font: inherit; color: inherit; cursor: pointer; }
+
+  header { padding: 40px 0 8px; }
+  h1 {
+    margin: 0; font-size: clamp(2.6rem, 7vw, 5rem); line-height: 0.95; letter-spacing: -0.02em;
+    font-weight: 850; font-variation-settings: "wdth" 125;
+  }
+  .lede { max-width: 62ch; margin: 16px 0 0; font-size: 1.125rem; color: var(--ink-soft); }
+
+  h2 { margin: 48px 0 4px; font-size: 1.5rem; line-height: 1.15; font-weight: 750; font-variation-settings: "wdth" 112; }
+  .sub { margin: 0 0 20px; color: var(--ink-soft); max-width: 70ch; }
+
+  /* scoreboard bars */
+  .bars { display: grid; gap: 22px; }
+  .bar-group { display: grid; grid-template-columns: 190px 1fr; gap: 6px 20px; align-items: start; }
+  .bar-group h3 { margin: 0; font-size: 1rem; font-weight: 650; padding-top: 2px; }
+  .bar-rows { display: grid; gap: 6px; }
+  .bar-row { display: grid; grid-template-columns: 1fr 190px; gap: 12px; align-items: center; }
+  .bar-track { height: 26px; background: var(--layer1); border-radius: 3px; position: relative; }
+  .bar-fill { height: 100%; border-radius: 3px; min-width: 3px; }
+  .bar-fill.grab_only { background: var(--slate); }
+  .bar-fill.clearpick { background: var(--tote); }
+  .bar-label { font-size: 0.9rem; line-height: 1.2; }
+  .bar-label b { font-size: 1.05rem; font-variation-settings: "wdth" 112; }
+  .bar-label span { color: var(--ink-soft); display: block; }
+  .key { display: flex; gap: 20px; margin-top: 4px; font-size: 0.9rem; color: var(--ink-soft); }
+  .key i { display: inline-block; width: 12px; height: 12px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; }
+
+  /* picker */
+  .picker { background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 14px 16px; display: grid; gap: 12px; }
+  .tabs { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tab {
+    border: 1px solid var(--line); background: var(--paper); border-radius: 4px; padding: 6px 14px; font-weight: 600;
+  }
+  .tab[aria-selected="true"] { background: var(--ink); color: var(--panel); border-color: var(--ink); }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+  .chip {
+    min-width: 40px; height: 34px; border: 1px solid var(--line); background: var(--paper); border-radius: 4px;
+    font-weight: 600; font-variant-numeric: tabular-nums; position: relative;
+  }
+  .chip.better { border-bottom: 4px solid var(--tote); }
+  .chip.worse { border-bottom: 4px solid var(--flag); }
+  .chip[aria-pressed="true"] { background: var(--tote); color: #fff; border-color: var(--tote); }
+  .toggle { display: flex; align-items: center; gap: 8px; font-size: 0.95rem; }
+  .legend { font-size: 0.85rem; color: var(--ink-soft); }
+
+  .verdict { margin: 22px 0 14px; font-size: 1.25rem; font-weight: 700; font-variation-settings: "wdth" 108; max-width: 60ch; }
+  .verdict em { font-style: normal; color: var(--flag); }
+  .verdict strong { color: var(--tote); }
+
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start; }
+  .robot { background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 16px; min-width: 0; }
+  .robot h3 { margin: 0 0 8px; font-size: 1.25rem; font-weight: 800; font-variation-settings: "wdth" 118; }
+  .robot.grab_only h3 { color: var(--slate); }
+  .robot.clearpick h3 { color: var(--tote); }
+  .stats { display: flex; flex-wrap: wrap; gap: 4px 18px; margin: 0 0 12px; font-size: 0.95rem; }
+  .stats b { font-variant-numeric: tabular-nums; font-size: 1.1rem; }
+  .stats .bad b { color: var(--flag); }
+  video { width: 100%; border-radius: 4px; background: #000; margin-bottom: 12px; display: block; }
+  svg.tote { width: 100%; height: auto; display: block; margin-bottom: 12px; background: var(--paper); border-radius: 4px; }
+  .map-note { font-size: 0.82rem; color: var(--ink-soft); margin: -6px 0 12px; }
+
+  ol.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+  .step {
+    display: grid; grid-template-columns: 26px 1fr 96px 78px; gap: 2px 10px; align-items: center; width: 100%;
+    text-align: left; background: var(--paper); border: 1px solid transparent; border-radius: 4px; padding: 8px 10px;
+  }
+  .step:hover { border-color: var(--line); }
+  .step[aria-current="true"] { border-color: var(--tote); background: #fff; }
+  .step .n { font-weight: 700; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+  .step .what { font-weight: 600; min-width: 0; overflow-wrap: anywhere; }
+  .step .what small { font-weight: 400; color: var(--ink-soft); }
+  .step .reason { grid-column: 2 / -1; font-size: 0.9rem; color: var(--ink-soft); }
+  .meter { height: 8px; background: var(--layer0); border-radius: 4px; position: relative; }
+  .meter i { display: block; height: 100%; border-radius: 4px; background: var(--tote); }
+  .meter i.hot { background: var(--flag); }
+  .meter b { position: absolute; top: -3px; bottom: -3px; width: 2px; background: var(--ink); opacity: .55; }
+  .tag { font-size: 0.82rem; font-weight: 700; text-align: center; border-radius: 3px; padding: 2px 6px; }
+  .tag.clean { color: var(--ok); border: 1px solid var(--ok); }
+  .tag.moved { color: var(--ink-soft); border: 1px solid var(--line); }
+  .tag.double { background: var(--flag); color: #fff; border: 1px solid var(--flag); }
+  .tag.miss, .tag.blocked { color: var(--flag); border: 1px solid var(--flag); }
+  .empty { padding: 28px; background: var(--panel); border: 1px dashed var(--line); border-radius: 6px; }
+  code { background: var(--layer1); padding: 1px 6px; border-radius: 3px; }
+  footer { margin-top: 48px; color: var(--ink-soft); font-size: 0.9rem; max-width: 80ch; }
+
+  @media (max-width: 900px) {
+    .cols { grid-template-columns: 1fr; }
+    .bar-group { grid-template-columns: 1fr; }
+    .bar-row { grid-template-columns: 1fr 150px; }
+  }
+  @media (max-width: 520px) {
+    .step { grid-template-columns: 22px 1fr 70px; }
+    .step .tag { grid-column: 2 / -1; justify-self: start; }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .bar-fill { transition: width .5s ease-out; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>ClearPick</h1>
+    <p class="lede">A picking robot that makes space before it grabs. Both robots work the same simulated totes: Grab-only always lifts the top item, ClearPick scores every grasp first and pushes crowded items apart.</p>
+  </header>
+
+  <main id="app"></main>
+
+  <footer>
+    Simulated in MuJoCo with simplified suction and pinch rules, so the numbers show how the two strategies compare, not how a real warehouse performs. Real failure photos from Amazon's ARMBench are on the failure atlas page.
+  </footer>
+</div>
+
+<script src="data.js"></script>
+<script>
+(function () {
+  "use strict";
+  var D = window.CLEARPICK || { scoreboard: {}, modes: {}, scenes: {} };
+  var CUTOFF = 0.35;
+  var MODE_NAMES = { flat_stacked: "Flat items stacked", small_beside_big: "Small beside big", against_wall: "Against the wall" };
+  var POL = { grab_only: "Grab-only", clearpick: "ClearPick" };
+  var SVGNS = "http://www.w3.org/2000/svg";
+
+  function h(tag, attrs) {
+    var el = document.createElement(tag);
+    if (attrs) Object.keys(attrs).forEach(function (k) {
+      if (k === "class") el.className = attrs[k];
+      else if (k === "text") el.textContent = attrs[k];
+      else if (k.slice(0, 2) === "on") el.addEventListener(k.slice(2), attrs[k]);
+      else el.setAttribute(k, attrs[k]);
+    });
+    for (var i = 2; i < arguments.length; i++) {
+      var c = arguments[i];
+      if (c == null) continue;
+      el.appendChild(typeof c === "string" ? document.createTextNode(c) : c);
+    }
+    return el;
+  }
+  function s(tag, attrs) {
+    var el = document.createElementNS(SVGNS, tag);
+    if (attrs) Object.keys(attrs).forEach(function (k) { el.setAttribute(k, attrs[k]); });
+    for (var i = 2; i < arguments.length; i++) if (arguments[i]) el.appendChild(arguments[i]);
+    return el;
+  }
+  function modeName(m) { return MODE_NAMES[m] || m.replace(/_/g, " ").replace(/^./, function (c) { return c.toUpperCase(); }); }
+  function pct(x) { return (x * 100).toFixed(1) + "%"; }
+  function plural(n, w) { return n + " " + w + (n === 1 ? "" : "s"); }
+  function dbl(sc, pol) { var r = sc.runs[pol]; return r ? (r.summary.double_grabs || 0) : null; }
+  function status(id) {
+    var sc = D.scenes[id], a = dbl(sc, "grab_only"), b = dbl(sc, "clearpick");
+    if (a == null || b == null) return "same";
+    return b < a ? "better" : b > a ? "worse" : "same";
+  }
+
+  var state = { mode: null, scene: null, onlyDiff: true };
+  var app = document.getElementById("app");
+
+  /* ---------- scoreboard ---------- */
+  function scoreboard() {
+    var sb = D.scoreboard, modes = Object.keys(D.modes);
+    var maxRate = 0.05;
+    modes.forEach(function (m) { ["grab_only", "clearpick"].forEach(function (p) {
+      var c = sb[m] && sb[m][p]; if (c) maxRate = Math.max(maxRate, c.double_grab_rate);
+    }); });
+    var bars = h("div", { class: "bars" });
+    modes.forEach(function (m) {
+      var rows = h("div", { class: "bar-rows" });
+      ["grab_only", "clearpick"].forEach(function (p) {
+        var c = sb[m] && sb[m][p]; if (!c) return;
+        var picks = c.clean + c.double_grabs + c.misses;
+        var fill = h("div", { class: "bar-fill " + p });
+        fill.style.width = (c.double_grab_rate / maxRate * 100) + "%";
+        var extra = p === "clearpick" ? plural(c.pushes, "push") + " in " + plural(c.scenes, "scene")
+                                      : c.double_grabs + " of " + picks + " picks";
+        if (p === "clearpick") extra = c.double_grabs + " of " + picks + " picks, " + extra;
+        rows.appendChild(h("div", { class: "bar-row" },
+          h("div", { class: "bar-track", role: "img", "aria-label": POL[p] + " double-grab rate " + pct(c.double_grab_rate) }, fill),
+          h("div", { class: "bar-label" }, h("b", { text: POL[p] + " " + pct(c.double_grab_rate) }), h("span", { text: extra }))));
+      });
+      bars.appendChild(h("div", { class: "bar-group" }, h("h3", { text: modeName(m) }), rows));
+    });
+    return h("section", null,
+      h("h2", { text: "How often each robot lifts two items at once" }),
+      h("p", { class: "sub", text: "A double grab is the failure that costs warehouses money: one pick takes a second item along. Shorter bars are better." }),
+      bars,
+      h("div", { class: "key" },
+        h("span", null, h("i", { style: "background:var(--slate)" }), "Grab-only"),
+        h("span", null, h("i", { style: "background:var(--tote)" }), "ClearPick")));
+  }
+
+  /* ---------- picker ---------- */
+  function visibleScenes() {
+    var ids = D.modes[state.mode] || [];
+    if (!state.onlyDiff) return ids;
+    var diff = ids.filter(function (id) { return status(id) !== "same"; });
+    return diff.length ? diff : ids;
+  }
+  function picker() {
+    var modes = Object.keys(D.modes);
+    var tabs = h("div", { class: "tabs", role: "tablist", "aria-label": "Failure mode" });
+    modes.forEach(function (m) {
+      tabs.appendChild(h("button", { class: "tab", role: "tab", "aria-selected": String(m === state.mode), text: modeName(m),
+        onclick: function () { state.mode = m; state.scene = null; ensureScene(); render(); } }));
+    });
+    var all = D.modes[state.mode] || [];
+    var anyDiff = all.some(function (id) { return status(id) !== "same"; });
+    var chips = h("div", { class: "chips", role: "group", "aria-label": "Scene" });
+    visibleScenes().forEach(function (id) {
+      var num = String(parseInt(id.split("_").pop(), 10));
+      chips.appendChild(h("button", { class: "chip " + status(id), "aria-pressed": String(id === state.scene), text: num,
+        title: id, onclick: function () { state.scene = id; render(); } }));
+    });
+    var toggle = anyDiff ? h("label", { class: "toggle" },
+      h("input", { type: "checkbox", onchange: function (e) { state.onlyDiff = e.target.checked; ensureScene(); render(); } }),
+      "Only scenes where the robots differ") : null;
+    if (toggle) toggle.firstChild.checked = state.onlyDiff;
+    return h("section", null,
+      h("h2", { text: "Watch one scene, step by step" }),
+      h("p", { class: "sub", text: "Pick a failure mode and a scene. A blue bar under a scene number means ClearPick double-grabbed less there; an orange bar means it did worse." }),
+      h("div", { class: "picker" }, tabs, toggle, chips));
+  }
+  function ensureScene() {
+    var vis = visibleScenes();
+    if (!state.scene || vis.indexOf(state.scene) < 0) {
+      state.scene = vis.filter(function (id) { return status(id) === "better"; })[0] || vis[0] || null;
+    }
+  }
+
+  /* ---------- one robot ---------- */
+  function dirText(d) {
+    if (!d) return "";
+    return Math.abs(d[0]) >= Math.abs(d[1]) ? (d[0] > 0 ? "right" : "left") : (d[1] > 0 ? "up" : "down");
+  }
+  function outcomeTag(step) {
+    var o = step.outcome;
+    if (o === "double") return h("span", { class: "tag double", text: "double grab" });
+    if (o === "clean") return h("span", { class: "tag clean", text: "clean" });
+    if (o === "miss") return h("span", { class: "tag miss", text: "miss" });
+    if (o === "blocked") return h("span", { class: "tag blocked", text: "blocked" });
+    return h("span", { class: "tag moved", text: step.action === "push" ? "moved" : String(o || "") });
+  }
+  function nice(g) { return String(g || "").replace(/_/g, " "); }
+
+  function toteMap(sc, run) {
+    var W = sc.tote.size[0], Hh = sc.tote.size[1], k = 1000;
+    var svg = s("svg", { class: "tote", viewBox: "-24 -24 " + (W * k + 48) + " " + (Hh * k + 48), role: "img",
+      "aria-label": "Top-down view of the tote with the order of picks" });
+    svg.appendChild(s("defs", null, s("marker", { id: "ah-" + run.policy, viewBox: "0 0 10 10", refX: "8", refY: "5", markerWidth: "7", markerHeight: "7", orient: "auto-start-reverse" },
+      s("path", { d: "M0 0 L10 5 L0 10 z", fill: "#13202B" }))));
+    svg.appendChild(s("rect", { x: 0, y: 0, width: W * k, height: Hh * k, fill: "#DDE3E8", stroke: "#13202B", "stroke-width": 8, rx: 6 }));
+    var picked = {}, pushes = {};
+    run.steps.forEach(function (st, i) {
+      if (st.action === "grasp") picked[st.item] = { n: i + 1, outcome: st.outcome };
+      else (pushes[st.item] = pushes[st.item] || []).push({ n: i + 1, dir: st.direction });
+    });
+    var doubles = run.steps.filter(function (st) { return st.outcome === "double"; }).length;
+    var unnamed = sc.objects.filter(function (o) { return !picked[o.id]; });
+    var rodeAlong = unnamed.length === doubles && doubles > 0;
+    var bottoms = [];
+    sc.objects.forEach(function (o) { var b = Math.round((o.pos[2] - o.size[2] / 2) * 1000) / 1000; if (bottoms.indexOf(b) < 0) bottoms.push(b); });
+    bottoms.sort(function (a, b) { return a - b; });
+    var order = sc.objects.slice().sort(function (a, b) { return (a.pos[2] - a.size[2] / 2) - (b.pos[2] - b.size[2] / 2); });
+    var rects = {};
+    order.forEach(function (o) {
+      var layer = Math.min(2, bottoms.indexOf(Math.round((o.pos[2] - o.size[2] / 2) * 1000) / 1000));
+      var x = (o.pos[0] - o.size[0] / 2 + W / 2) * k, y = (Hh / 2 - o.pos[1] - o.size[1] / 2) * k;
+      var p = picked[o.id], bad = p && (p.outcome === "double" || p.outcome === "miss");
+      var rect = s("rect", { x: x, y: y, width: o.size[0] * k, height: o.size[1] * k, rx: 3,
+        fill: ["#D3DBE2", "#EAEFF3", "#FFFFFF"][layer], stroke: bad ? "#D9480F" : "#13202B", "stroke-width": bad ? 6 : 2.5 });
+      var ride = rodeAlong && !p;
+      if (ride) { rect.setAttribute("stroke", "#D9480F"); rect.setAttribute("stroke-width", 5); rect.setAttribute("stroke-dasharray", "10 6"); }
+      var t = s("title"); t.textContent = o.id + (p ? ", picked at step " + p.n : ride ? ", lifted along in a double grab" : ", not picked");
+      rect.appendChild(t);
+      svg.appendChild(rect); rects[o.id] = rect;
+      var cx = x + o.size[0] * k / 2, cy = y + o.size[1] * k / 2;
+      (pushes[o.id] || []).forEach(function (pu, j) {
+        var d = pu.dir || [0, 0], len = 80, dx = d[0] * len, dy = -d[1] * len, ox = j * 22;
+        svg.appendChild(s("line", { x1: cx + ox, y1: cy, x2: cx + ox + dx, y2: cy + dy, stroke: "#13202B", "stroke-width": 5,
+          "marker-end": "url(#ah-" + run.policy + ")", "stroke-linecap": "round" }));
+        var lbl = s("text", { x: cx + ox + dx * 0.5 + 16, y: cy + dy * 0.5 + 6, "text-anchor": "middle", "font-size": 18, "font-weight": 700, fill: "#13202B" });
+        lbl.textContent = pu.n; svg.appendChild(lbl);
+      });
+      if (p) {
+        svg.appendChild(s("circle", { cx: cx, cy: cy, r: 15, fill: bad ? "#D9480F" : "#1D5FD1" }));
+        var tx = s("text", { x: cx, y: cy + 6, "text-anchor": "middle", "font-size": 18, "font-weight": 700, fill: "#fff" });
+        tx.textContent = p.n; svg.appendChild(tx);
+      } else if (ride) {
+        svg.appendChild(s("circle", { cx: cx, cy: cy, r: 15, fill: "#fff", stroke: "#D9480F", "stroke-width": 4 }));
+        var plus = s("text", { x: cx, y: cy + 7, "text-anchor": "middle", "font-size": 22, "font-weight": 700, fill: "#D9480F" });
+        plus.textContent = "+"; svg.appendChild(plus);
+      }
+    });
+    svg._rects = rects;
+    return svg;
+  }
+
+  function robot(id, pol) {
+    var sc = D.scenes[id], run = sc.runs[pol];
+    if (!run) return h("div", { class: "robot " + pol }, h("h3", { text: POL[pol] }), h("p", { text: "No run for this scene yet." }));
+    var sm = run.summary, pushes = run.steps.filter(function (x) { return x.action === "push"; }).length;
+    var bad = (sm.double_grabs || 0) > 0;
+    var card = h("div", { class: "robot " + pol }, h("h3", { text: POL[pol] }),
+      h("div", { class: "stats" },
+        h("span", null, h("b", { text: String(sm.clean || 0) }), (sm.clean === 1 ? " clean pick" : " clean picks")),
+        h("span", { class: bad ? "bad" : "" }, h("b", { text: String(sm.double_grabs || 0) }), (sm.double_grabs === 1 ? " double grab" : " double grabs")),
+        h("span", null, h("b", { text: String(pushes) }), (pushes === 1 ? " push" : " pushes")),
+        (sm.misses ? h("span", { class: "bad" }, h("b", { text: String(sm.misses) }), (sm.misses === 1 ? " miss" : " misses")) : null)));
+    var video = null;
+    if (run.video) {
+      video = h("video", { src: run.video, controls: "", muted: "", playsinline: "", preload: "metadata", "aria-label": POL[pol] + " video" });
+      card.appendChild(video);
+    }
+    var map = sc.objects.length ? toteMap(sc, { policy: pol, steps: run.steps }) : null;
+    if (map) {
+      card.appendChild(map);
+      card.appendChild(h("p", { class: "map-note", text: "Top view at the start. Numbers show the order of picks, arrows show pushes, orange marks a double grab, and + marks an item that came along." }));
+    }
+    var list = h("ol", { class: "steps" });
+    run.steps.forEach(function (st, i) {
+      var risk = typeof st.risk === "number" ? st.risk : null;
+      var meter = h("div", { class: "meter", role: "img", "aria-label": risk == null ? "risk not scored" : "risk " + risk.toFixed(2) });
+      if (risk != null) {
+        var fill = h("i", { class: risk > CUTOFF ? "hot" : "" }); fill.style.width = (risk * 100) + "%";
+        var tick = h("b"); tick.style.left = (CUTOFF * 100) + "%";
+        meter.appendChild(fill); meter.appendChild(tick);
+      }
+      var what = st.action === "push"
+        ? h("span", { class: "what" }, "Push ", st.item, " ", h("small", { text: dirText(st.direction) }))
+        : h("span", { class: "what" }, "Grab ", st.item, " ", h("small", { text: "with " + nice(st.grasp) }));
+      var btn = h("button", { class: "step", "aria-current": "false", onclick: function () {
+        Array.prototype.forEach.call(list.querySelectorAll(".step"), function (b) { b.setAttribute("aria-current", "false"); });
+        btn.setAttribute("aria-current", "true");
+        if (map && map._rects) Object.keys(map._rects).forEach(function (k) { map._rects[k].style.filter = ""; });
+        if (map && map._rects && map._rects[st.item]) map._rects[st.item].style.filter = "drop-shadow(0 0 6px #1D5FD1)";
+        if (video && typeof st.t === "number") { try { video.currentTime = Math.max(0, st.t); } catch (e) {} }
+      } },
+        h("span", { class: "n", text: String(i + 1) }), what, meter, outcomeTag(st),
+        h("span", { class: "reason", text: st.reason || "" }));
+      list.appendChild(h("li", null, btn));
+    });
+    card.appendChild(list);
+    return card;
+  }
+
+  function compare() {
+    if (!state.scene) return h("div", { class: "empty", text: "No scenes in this mode yet." });
+    var sc = D.scenes[state.scene], a = dbl(sc, "grab_only"), b = dbl(sc, "clearpick");
+    var verdict = h("p", { class: "verdict" });
+    if (a != null && b != null) {
+      verdict.appendChild(document.createTextNode("Grab-only double-grabbed "));
+      verdict.appendChild(h("em", { text: plural(a, "time") }));
+      verdict.appendChild(document.createTextNode(" here. ClearPick: "));
+      verdict.appendChild(h("strong", { text: String(b) }));
+      verdict.appendChild(document.createTextNode("."));
+    }
+    return h("div", null, verdict, h("div", { class: "cols" }, robot(state.scene, "grab_only"), robot(state.scene, "clearpick")));
+  }
+
+  function render() {
+    app.textContent = "";
+    if (!Object.keys(D.scenes).length) {
+      app.appendChild(h("div", { class: "empty" }, h("p", { text: "No runs found yet." }),
+        h("p", null, "Run ", h("code", { text: "python -m sim.run_batch" }), " and then ", h("code", { text: "python -m brain.build_site" }), ", then reload this page.")));
+      return;
+    }
+    app.appendChild(scoreboard());
+    app.appendChild(picker());
+    app.appendChild(compare());
+  }
+
+  state.mode = Object.keys(D.modes)[0] || null;
+  ensureScene();
+  render();
+})();
+</script>
+</body>
+</html>

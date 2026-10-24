@@ -94,22 +94,32 @@ class ClearPick:
     def __init__(self, cutoff=CUTOFF):
         self.cutoff = cutoff
         self._scene, self._n, self._pushes = None, 0, {}
+        self._last, self._failed = None, {}
 
     def _reset_if_new_run(self, s):
         n = len(s["objects"])
         if s["scene_id"] != self._scene or n > self._n:
-            self._pushes = {}
+            self._pushes, self._failed, self._last = {}, {}, None
         self._scene, self._n = s["scene_id"], n
+        # the last grasp left its item in the tote: it missed, so do not repeat that grasp on that item
+        if self._last and any(o["id"] == self._last[0] for o in s["objects"]):
+            self._failed.setdefault(self._last[0], set()).add(self._last[1])
+        self._last = None
 
     def decide(self, state):
         s = normalize(state)
         if not s["objects"]:
             return None
         self._reset_if_new_run(s)
-        options = sorted((score_grasp(s, o["id"], g), o["id"], g) for o in s["objects"] for g in GRASPS)
+        options = sorted((score_grasp(s, o["id"], g), o["id"], g) for o in s["objects"] for g in GRASPS
+                         if g not in self._failed.get(o["id"], ()))
+        if not options:  # every grasp has failed on every item: start over rather than freeze
+            self._failed = {}
+            options = sorted((score_grasp(s, o["id"], g), o["id"], g) for o in s["objects"] for g in GRASPS)
         risk, item, grasp = options[0]
         if risk <= self.cutoff:
             reason = "clear on all sides" if risk < 0.15 else f"lowest-risk option ({grasp.replace('_', ' ')})"
+            self._last = (item, grasp)
             return {"action": "grasp", "item": item, "grasp": grasp, "risk": risk, "reason": reason}
         cands = []
         for o in s["objects"]:
@@ -124,6 +134,7 @@ class ClearPick:
             why = ("too close to the wall for a suction cup to seal: using the safest grasp"
                    if max(fi["seal_center"], fi["seal_edge"]) > 0.4 and "suction" not in grasp
                    else "no way to make more space: taking the safest option")
+            self._last = (item, grasp)
             return {"action": "grasp", "item": item, "grasp": grasp, "risk": risk, "reason": why}
         _, pid, f = max(cands, key=lambda c: c[0])
         self._pushes[pid] = self._pushes.get(pid, 0) + 1
