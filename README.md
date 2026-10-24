@@ -190,4 +190,7 @@ Each run writes `runs/<scene_id>_<policy>.json` (every step with its risk, reaso
 
 ## Demo and write-up
 
-_Links to the hosted pages, the demo video, and the Kiro write-up go here._
+- Robot page (live): https://cozy-basbousa-340617.netlify.app/robot
+- Failure atlas (live): https://cozy-basbousa-340617.netlify.app/atlas
+- Demo video: _link from P2_
+- Kiro write-up: _link from P1_
