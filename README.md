@@ -138,6 +138,8 @@ python -m pytest -q tests -m "not slow"                              # fast test
 
 Each run writes `runs/<scene_id>_<policy>.json` (every step with its risk, reason and outcome) and the matching `.mp4`; `runs/index.json` lists them all. `--no-video` skips rendering, `--mode` and `--limit` run a subset.
 
+`--meshes` swaps in textured YCB meshes (visual only), `--camera demo` frames the tote for 16:9 video, and `Sim(suction="physics")` holds items with a MuJoCo weld instead of attach-on-touch. Defaults and outcomes are unchanged.
+
 ## Demo and write-up
 
 _Links to the hosted pages, the demo video, and the Kiro write-up go here._
