@@ -54,6 +54,8 @@ def main():
                 continue
             raw = j.get("label", "")
             subs = j.get("sublabel") or []
+            if isinstance(subs, str):
+                subs = [subs]
             raw_labels[raw] += 1
             for s in subs:
                 raw_subs[str(s)] += 1
