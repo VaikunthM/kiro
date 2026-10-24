@@ -47,12 +47,16 @@ def push_direction(state, item_id):
             w = 1 / (max(gap, 0.0) + 0.01)
             vx += dx / dist * w
             vy += dy / dist * w
-    if f["wall"] > 0:  # toward the tote centre, weighted by how close the wall is
-        dist = math.hypot(me["pos"][0], me["pos"][1]) or 1e-6
-        vx += -me["pos"][0] / dist * 60 * f["wall"]
-        vy += -me["pos"][1] / dist * 60 * f["wall"]
+    # an item flush against a wall cannot move along that axis: toward the wall is blocked, and away from it
+    # needs room for the pusher behind the item
+    for axis, lim in ((0, tx), (1, ty)):
+        if min(lim - me["hi"][axis], lim + me["lo"][axis]) < 0.012:
+            if axis == 0:
+                vx = 0.0
+            else:
+                vy = 0.0
     n = math.hypot(vx, vy)
-    return [1.0, 0.0] if n < 1e-9 else [round(vx / n, 3), round(vy / n, 3)]
+    return None if n < 1e-9 else [round(vx / n, 3), round(vy / n, 3)]
 
 
 def _o(a, b, axis):
@@ -112,12 +116,15 @@ class ClearPick:
             f = features(s, o["id"])
             if f["above"] > 0.2 or self._pushes.get(o["id"], 0) >= MAX_PUSHES_PER_ITEM:
                 continue
-            crowd = f["below"] * 1.5 + f["crowd"] + 0.5 * f["wall"] + f["small_nb"] + f["big_nb"]
-            if crowd > 0.05:
+            crowd = f["below"] * 1.5 + f["crowd"] + f["small_nb"] + f["big_nb"]
+            if crowd > 0.05 and push_direction(s, o["id"]) is not None:
                 cands.append((crowd, o["id"], f))
         if not cands:
-            return {"action": "grasp", "item": item, "grasp": grasp, "risk": risk,
-                    "reason": "no way to make more space: taking the safest option"}
+            fi = features(s, item)
+            why = ("too close to the wall for a suction cup to seal: using the safest grasp"
+                   if max(fi["seal_center"], fi["seal_edge"]) > 0.4 and "suction" not in grasp
+                   else "no way to make more space: taking the safest option")
+            return {"action": "grasp", "item": item, "grasp": grasp, "risk": risk, "reason": why}
         _, pid, f = max(cands, key=lambda c: c[0])
         self._pushes[pid] = self._pushes.get(pid, 0) + 1
         return {"action": "push", "item": pid, "grasp": None, "direction": push_direction(s, pid),

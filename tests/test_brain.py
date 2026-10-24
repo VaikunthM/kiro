@@ -174,6 +174,40 @@ def test_clearpick_beats_grab_only_in_wiring_check():
     assert c < g and pushes > 0, (c, g, pushes)
 
 
+def _one(size, pos, mode="against_wall"):
+    sc = {"scene_id": f"{mode}_900", "mode": mode, "seed": 0, "tote": {"size": TOTE},
+          "objects": [{"id": "a", "size": size, "pos": pos}]}
+    return state_from_scene(sc)
+
+
+def test_wall_seal_rule_hurts_centre_suction_but_not_edge_suction():
+    # foam brick flush to the +x wall, its wide side (7.5 cm) facing the wall: centre cup is 3.75 cm out, edge cup can slide away
+    st = _one([0.075, 0.05, 0.05], [0.1625, 0.0, 0.025])
+    assert score_grasp(st, "a", "suction_center") > score_grasp(st, "a", "suction_edge") + 0.1
+    # narrow side (5 cm) facing the wall: neither cup can get 3.5 cm away, both fail
+    narrow = _one([0.075, 0.05, 0.05], [0.0, 0.125, 0.025])
+    assert score_grasp(narrow, "a", "suction_center") > 0.9 and score_grasp(narrow, "a", "suction_edge") > 0.9
+    mid = _one([0.075, 0.05, 0.05], [0.0, 0.0, 0.025])
+    assert score_grasp(mid, "a", "suction_center") < 0.1
+
+
+def test_close_side_neighbour_hurts_centre_suction_only():
+    sc = {"scene_id": "small_beside_big_900", "mode": "small_beside_big", "seed": 0, "tote": {"size": TOTE},
+          "objects": [{"id": "a", "size": [0.075, 0.05, 0.05], "pos": [-0.05, 0.0, 0.025]},
+                      {"id": "b", "size": [0.097, 0.082, 0.05], "pos": [0.041, 0.0, 0.025]}]}
+    st = state_from_scene(sc)
+    assert score_grasp(st, "a", "suction_center") > 0.5
+    assert score_grasp(st, "a", "suction_edge") < score_grasp(st, "a", "suction_center") - 0.2
+
+
+def test_no_push_away_from_a_wall_the_item_is_flush_against():
+    from brain.strategy import push_direction
+    sc = {"scene_id": "against_wall_901", "mode": "against_wall", "seed": 0, "tote": {"size": TOTE},
+          "objects": [{"id": "a", "size": [0.085, 0.073, 0.028], "pos": [0.0, 0.1135, 0.014]},   # flush to +y wall
+                      {"id": "b", "size": [0.085, 0.073, 0.028], "pos": [0.0, 0.03, 0.014]}]}     # neighbour toward the centre
+    assert push_direction(state_from_scene(sc), "a") is None   # only way out is away from the wall
+
+
 if __name__ == "__main__":
     for name, fn in sorted(globals().items()):
         if name.startswith("test_") and callable(fn):
