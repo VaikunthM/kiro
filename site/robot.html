@@ -105,6 +105,7 @@
   .step .what { font-weight: 600; min-width: 0; overflow-wrap: anywhere; }
   .step .what small { font-weight: 400; color: var(--ink-soft); }
   .step .reason { grid-column: 2 / -1; font-size: 0.9rem; color: var(--ink-soft); }
+  .step .out { grid-column: 2 / -1; font-size: 0.85rem; color: var(--ink); font-weight: 600; }
   .meter { height: 8px; background: var(--layer0); border-radius: 4px; position: relative; }
   .meter i { display: block; height: 100%; border-radius: 4px; background: var(--tote); }
   .meter i.hot { background: var(--flag); }
@@ -372,6 +373,9 @@
       } },
         h("span", { class: "n", text: String(i + 1) }), what, meter, outcomeTag(st),
         h("span", { class: "reason", text: st.reason || "" }));
+      if (st.action === "grasp" && Array.isArray(st.removed) && (st.removed.length !== 1 || st.removed[0] !== st.item)) {
+        btn.appendChild(h("span", { class: "out", text: st.removed.length ? "Left the tote: " + st.removed.join(", ") : "Nothing left the tote" }));
+      }
       list.appendChild(h("li", null, btn));
     });
     card.appendChild(list);
