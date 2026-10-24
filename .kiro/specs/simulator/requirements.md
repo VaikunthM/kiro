@@ -29,6 +29,13 @@ grasp types, and the outcome strings) is a team contract and must not change wit
 - **Picked / removed**: an object that was lifted; it leaves the tote and disappears from `state()`.
 - **Cling (flat-stack multi-pick)**: a flat attached item drags up a flat item it rests on when their
   footprints overlap by at least `CLING_MIN_OVERLAP`, both thinner than `CLING_MAX_THICKNESS`.
+- **Neighbour drag (rule a)**: under `suction_center`, a side neighbour whose nearest edge is within
+  `NEIGHBOUR_DRAG_GAP` (1 cm) of the target and that shares at least half the shorter item's height
+  band is dragged up with the target. A simplified snag rule agreed with P3 and mirrored in
+  `brain.score.score_grasp`.
+- **Wall seal (rule b)**: a suction cup cannot seal when its centre is within
+  `CUP_RADIUS + WALL_SEAL_MARGIN` (3.5 cm) of a tote wall. Also agreed with P3 and mirrored in
+  `score_grasp`.
 
 ---
 
@@ -92,6 +99,12 @@ touch" model, so that single picks and flat-stack multi-picks are reproducible.
    along and count toward the outcome.
 6. WHEN exactly one object rises more than `LIFT_CHECK` THEN the outcome SHALL be `clean`; WHEN two or
    more rise THEN the outcome SHALL be `double`; WHEN none rise THEN the outcome SHALL be `miss`.
+7. WHEN `grasp(item, "suction_center")` is called AND a side neighbour's nearest edge is within
+   `NEIGHBOUR_DRAG_GAP` (1 cm) of the target AND that neighbour shares at least half the shorter
+   item's height band THEN the simulator SHALL also lift that neighbour, yielding `double` (rule a).
+8. WHEN a suction grasp's cup centre lies within `CUP_RADIUS + WALL_SEAL_MARGIN` (3.5 cm) of a tote
+   wall THEN the cup SHALL fail to seal and the outcome SHALL be `miss`; `suction_edge` SHALL pick the
+   side of the item with the most clearance from both walls and neighbours (rule b).
 
 ## Requirement 4: Side-pinch grasp
 

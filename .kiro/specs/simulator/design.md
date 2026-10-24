@@ -51,6 +51,12 @@ Key components:
 - **Outcome rule** — `grasp` snapshots each in-tote object's z, performs the move, then counts objects
   that rose more than `LIFT_CHECK`. 0 → `miss`, 1 → `clean`, 2+ → `double`. `push` always returns `ok`
   and records whether the item actually moved via `last_push_blocked`.
+- **Simplified suction rules (agreed with P3, mirrored in `brain.score.score_grasp`)** — two snag/seal
+  rules layered on the attach-on-touch model: (a) `suction_center` also lifts any side neighbour whose
+  nearest edge is within `NEIGHBOUR_DRAG_GAP` (1 cm) of the target and that shares at least half the
+  shorter item's height band, giving a `double`; (b) a suction cup whose centre is within
+  `CUP_RADIUS + WALL_SEAL_MARGIN` (3.5 cm) of a tote wall cannot seal and the grasp is a `miss`, while
+  `suction_edge` picks the side with the most clearance from both walls and neighbours.
 - **Recording** — `record(path)` seeds the frame buffer and sets the recording flag; frames are captured
   every `_frame_every` steps; `record(None)` appends a short tail, writes the `.mp4`, and returns the
   frame count.
@@ -78,6 +84,14 @@ tests, matching the existing `@pytest.mark.slow` tests.
   is in `{"clean", "double", "miss"}` and never raises except for the documented `ValueError`s.
 - **P5 — Lift count agrees with removals.** The number of objects removed from `state()` by a grasp
   equals the integer implied by its outcome (clean→1, double→2+, miss→0).
+
+- **P20 — Near side neighbour makes a double (rule a).** For a target under `suction_center` with a
+  side neighbour whose nearest edge is within `NEIGHBOUR_DRAG_GAP` and that shares at least half the
+  shorter item's height band, the outcome is `double`; moving the neighbour just beyond the gap makes
+  it `clean`.
+- **P21 — Cup too close to a wall misses (rule b).** For any suction grasp whose cup centre is within
+  `CUP_RADIUS + WALL_SEAL_MARGIN` of a tote wall, the outcome is `miss`; `suction_edge` chooses the
+  side with the most clearance from walls and neighbours.
 
 **State / geometry properties**
 - **P6 — Bbox contains the centre and is JSON-serialisable.** For any object at any in-bounds pose, each

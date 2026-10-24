@@ -27,6 +27,11 @@ Grasp mechanics (attach-on-touch, deliberately simple and deterministic):
            attaches. A flat attached item (thinner than CLING_MAX_THICKNESS) also drags up a flat item it
            rests on when they overlap by CLING_MIN_OVERLAP or more: the ARMBench "flat items stacked"
            multi-pick. Anything resting on a lifted item rides along by physics.
+           Simplified rules agreed with P3 (mirrored in score_grasp):
+           (a) suction_center also lifts any side neighbour whose edge is within NEIGHBOUR_DRAG_GAP (1 cm)
+               and that shares at least half the shorter item's height band -> "double".
+           (b) suction with the cup centre within CUP_RADIUS + WALL_SEAL_MARGIN (3.5 cm) of a tote wall
+               can't seal -> "miss". suction_edge picks the side with most clearance from walls and neighbours.
   pinch    Fingers close across the item's shorter horizontal side. If a finger can't get down (wall or
            another object in the way) it is a miss; every object between the fingers at the item's
            height is lifted.
@@ -53,10 +58,12 @@ CUP_RADIUS = 0.02
 TOUCH_TOL = 0.006
 CLING_MAX_THICKNESS = 0.045
 CLING_MIN_OVERLAP = 0.5
+NEIGHBOUR_DRAG_GAP = 0.01   # (a) suction_center also lifts a side neighbour this close (simplified snag)
+WALL_SEAL_MARGIN = 0.015    # (b) suction misses when the cup rim is closer than this to a tote wall
 FINGER_T, FINGER_W, JAW_CLEAR = 0.012, 0.03, 0.006
 LIFT_ABOVE_WALL, LIFT_CHECK = 0.10, 0.10  # tools lift to wall height + 10 cm
 TOOL_SPEED = 0.4           # m/s for approach and lift
-PUSH_DIST, PUSH_SPEED = 0.10, 0.15
+PUSH_DIST, PUSH_SPEED = 0.14, 0.15     # long enough that a pushed item ends > NEIGHBOUR_DRAG_GAP from its old neighbour
 PUSHER_HALF = (0.008, 0.035, 0.010)   # thickness along push, width across, half-height
 PARK = np.array([1.0, 1.0, 0.6])
 FPS = 30
@@ -148,6 +155,13 @@ def _overlap_fraction(small, big, n=12):
                 total += 1
                 inside += _point_in_poly(p, big)
     return inside / max(total, 1)
+
+
+def _poly_gap(p, q):
+    """Smallest distance between two convex polygons (0 when they touch or overlap)."""
+    if _polys_overlap(p, q):
+        return 0.0
+    return min(min(_dist_point_poly(v, q) for v in p), min(_dist_point_poly(v, p) for v in q))
 
 
 def _area(poly):
@@ -448,10 +462,12 @@ class Sim:
 
     def _lift(self, tool, offsets):
         follow = (tool, offsets) if offsets else None
+        # lift to wall height + 10 cm, or high enough to clear LIFT_CHECK for items taller than the wall
+        top = max(self._lift_z, self.data.mocap_pos[self._mocap[tool]][2] + LIFT_CHECK + 0.03)
         if tool == "finger_a":  # move both fingers together; objects follow finger_a
             a0 = self.data.mocap_pos[self._mocap["finger_a"]].copy()
             b0 = self.data.mocap_pos[self._mocap["finger_b"]].copy()
-            dz = self._lift_z - a0[2]
+            dz = top - a0[2]
             n = max(1, int(abs(dz) / (TOOL_SPEED * self.model.opt.timestep)))
             vel = np.array([0, 0, dz / (n * self.model.opt.timestep)])
             for k in range(1, n + 1):
@@ -460,19 +476,34 @@ class Sim:
                 self._physics_step(follow, vel)
         else:
             p = self.data.mocap_pos[self._mocap[tool]].copy()
-            self._move(tool, [p[0], p[1], self._lift_z], follow=follow)
+            self._move(tool, [p[0], p[1], top], follow=follow)
 
     def _suction_point(self, item_id, grasp_type):
         pos = self.data.body(item_id).xpos[:2].copy()
         if grasp_type == "suction_center":
             return pos
-        # off-centre: pick the side of the item with the most clearance from its neighbours
+        # off-centre: pick the side of the item with the most clearance from its neighbours and the walls
         (ax, sx), (ay, sy) = self._horizontal_axes(item_id)
         cands = [pos + s * 0.35 * e * a for a, e in ((ax, sx), (ay, sy)) for s in (1, -1)]
         others = [self._footprint(o) for o in self._others(item_id)]
-        if not others:
-            return cands[0]
-        return max(cands, key=lambda p: min(_dist_point_poly(p, f) for f in others))
+        return max(cands, key=lambda p: min([self._wall_clearance(p)] + [_dist_point_poly(p, f) for f in others]))
+
+    def _wall_clearance(self, pt):
+        """Distance from a point on the tote floor plan to the nearest inner wall."""
+        return float(np.min(self._inner_bounds() - np.abs(np.asarray(pt)[:2])))
+
+    def _side_neighbours(self, item_id):
+        """Rule (a): neighbours whose edge is within NEIGHBOUR_DRAG_GAP and that share at least half the
+        shorter item's height band (beside the item, not stacked on or under it)."""
+        f = self._footprint(item_id)
+        lo, hi = self._zrange(item_id)
+        out = []
+        for o in self._others(item_id):
+            olo, ohi = self._zrange(o)
+            shared = min(hi, ohi) - max(lo, olo)
+            if shared >= 0.5 * min(hi - lo, ohi - olo) and _poly_gap(f, self._footprint(o)) <= NEIGHBOUR_DRAG_GAP:
+                out.append(o)
+        return out
 
     def _plan_suction(self, item_id, grasp_type):
         pt = self._suction_point(item_id, grasp_type)
@@ -486,8 +517,13 @@ class Sim:
             self._move("cup", [pt[0], pt[1], 0.0])
             return [], "cup", 0.0
         touch_z = max(z for z, _ in touched)
+        if self._wall_clearance(pt) < CUP_RADIUS + WALL_SEAL_MARGIN:  # rule (b): cup can't seal by the wall
+            self._move("cup", [pt[0], pt[1], touch_z])
+            return [], "cup", touch_z
         attached = [o for z, o in touched if z >= touch_z - TOUCH_TOL]
         attached += self._cling(attached)
+        if grasp_type == "suction_center" and item_id in attached:  # rule (a): side neighbour snags along
+            attached += [o for o in self._side_neighbours(item_id) if o not in attached]
         self._move("cup", [pt[0], pt[1], touch_z])
         return attached, "cup", touch_z
 
