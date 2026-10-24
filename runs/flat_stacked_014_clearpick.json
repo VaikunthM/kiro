@@ -11,7 +11,10 @@
    "direction": null,
    "risk": 0.0463,
    "reason": "clear on all sides",
-   "outcome": "clean"
+   "outcome": "clean",
+   "removed": [
+    "gelatin_box_1"
+   ]
   },
   {
    "t": 1.908,
@@ -21,7 +24,10 @@
    "direction": null,
    "risk": 0.0468,
    "reason": "clear on all sides",
-   "outcome": "clean"
+   "outcome": "clean",
+   "removed": [
+    "foam_brick_2"
+   ]
   },
   {
    "t": 3.708,
@@ -31,7 +37,10 @@
    "direction": null,
    "risk": 0.0872,
    "reason": "clear on all sides",
-   "outcome": "clean"
+   "outcome": "clean",
+   "removed": [
+    "foam_brick_1"
+   ]
   },
   {
    "t": 5.508,
@@ -44,7 +53,8 @@
    ],
    "risk": 0.6945,
    "reason": "resting on another item: sliding it off",
-   "outcome": "ok"
+   "outcome": "ok",
+   "removed": []
   },
   {
    "t": 7.81,
@@ -54,7 +64,10 @@
    "direction": null,
    "risk": 0.2583,
    "reason": "lowest-risk option (suction edge)",
-   "outcome": "clean"
+   "outcome": "clean",
+   "removed": [
+    "flat_box_3"
+   ]
   },
   {
    "t": 9.782,
@@ -67,7 +80,8 @@
    ],
    "risk": 0.5515,
    "reason": "resting on another item: sliding it off",
-   "outcome": "ok"
+   "outcome": "ok",
+   "removed": []
   },
   {
    "t": 10.818,
@@ -80,7 +94,8 @@
    ],
    "risk": 0.5515,
    "reason": "resting on another item: sliding it off",
-   "outcome": "ok"
+   "outcome": "ok",
+   "removed": []
   },
   {
    "t": 11.854,
@@ -90,7 +105,11 @@
    "direction": null,
    "risk": 0.5515,
    "reason": "no way to make more space: taking the safest option",
-   "outcome": "double"
+   "outcome": "double",
+   "removed": [
+    "flat_box_1",
+    "flat_box_2"
+   ]
   },
   {
    "t": 13.754,
@@ -100,7 +119,8 @@
    "direction": null,
    "risk": 0.8721,
    "reason": "too close to the wall for a suction cup to seal: using the safest grasp",
-   "outcome": "miss"
+   "outcome": "miss",
+   "removed": []
   },
   {
    "t": 15.526,
@@ -110,7 +130,8 @@
    "direction": null,
    "risk": 0.9933,
    "reason": "no way to make more space: taking the safest option",
-   "outcome": "miss"
+   "outcome": "miss",
+   "removed": []
   },
   {
    "t": 17.55,
@@ -120,7 +141,8 @@
    "direction": null,
    "risk": 0.9961,
    "reason": "no way to make more space: taking the safest option",
-   "outcome": "miss"
+   "outcome": "miss",
+   "removed": []
   }
  ],
  "summary": {

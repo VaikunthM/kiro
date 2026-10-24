@@ -11,7 +11,11 @@
    "direction": null,
    "risk": 0.768,
    "reason": "highest item, suction at centre",
-   "outcome": "double"
+   "outcome": "double",
+   "removed": [
+    "potted_meat_can_1",
+    "tomato_soup_can_1"
+   ]
   },
   {
    "t": 1.544,
@@ -21,7 +25,11 @@
    "direction": null,
    "risk": 0.7064,
    "reason": "highest item, suction at centre",
-   "outcome": "double"
+   "outcome": "double",
+   "removed": [
+    "potted_meat_can_2",
+    "tomato_soup_can_2"
+   ]
   },
   {
    "t": 3.088,
@@ -31,7 +39,10 @@
    "direction": null,
    "risk": 0.0392,
    "reason": "highest item, suction at centre",
-   "outcome": "clean"
+   "outcome": "clean",
+   "removed": [
+    "foam_brick_1"
+   ]
   },
   {
    "t": 4.888,
@@ -41,7 +52,10 @@
    "direction": null,
    "risk": 0.0425,
    "reason": "highest item, suction at centre",
-   "outcome": "clean"
+   "outcome": "clean",
+   "removed": [
+    "potted_meat_can_3"
+   ]
   }
  ],
  "summary": {

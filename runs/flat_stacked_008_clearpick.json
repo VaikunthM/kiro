@@ -11,7 +11,10 @@
    "direction": null,
    "risk": 0.0397,
    "reason": "clear on all sides",
-   "outcome": "clean"
+   "outcome": "clean",
+   "removed": [
+    "tomato_soup_can_1"
+   ]
   },
   {
    "t": 1.544,
@@ -21,7 +24,10 @@
    "direction": null,
    "risk": 0.0767,
    "reason": "clear on all sides",
-   "outcome": "clean"
+   "outcome": "clean",
+   "removed": [
+    "gelatin_box_1"
+   ]
   },
   {
    "t": 3.452,
@@ -31,7 +37,10 @@
    "direction": null,
    "risk": 0.0795,
    "reason": "clear on all sides",
-   "outcome": "clean"
+   "outcome": "clean",
+   "removed": [
+    "foam_brick_1"
+   ]
   },
   {
    "t": 5.252,
@@ -44,7 +53,8 @@
    ],
    "risk": 0.5897,
    "reason": "resting on another item: sliding it off",
-   "outcome": "ok"
+   "outcome": "ok",
+   "removed": []
   },
   {
    "t": 6.288,
@@ -57,7 +67,8 @@
    ],
    "risk": 0.5897,
    "reason": "resting on another item: sliding it off",
-   "outcome": "ok"
+   "outcome": "ok",
+   "removed": []
   },
   {
    "t": 7.324,
@@ -70,7 +81,8 @@
    ],
    "risk": 0.5897,
    "reason": "resting on another item: sliding it off",
-   "outcome": "ok"
+   "outcome": "ok",
+   "removed": []
   },
   {
    "t": 9.626,
@@ -83,7 +95,8 @@
    ],
    "risk": 0.5918,
    "reason": "resting on another item: sliding it off",
-   "outcome": "ok"
+   "outcome": "ok",
+   "removed": []
   },
   {
    "t": 11.928,
@@ -93,7 +106,10 @@
    "direction": null,
    "risk": 0.5137,
    "reason": "no way to make more space: taking the safest option",
-   "outcome": "clean"
+   "outcome": "clean",
+   "removed": [
+    "flat_box_2"
+   ]
   },
   {
    "t": 13.876,
@@ -103,7 +119,10 @@
    "direction": null,
    "risk": 0.0396,
    "reason": "clear on all sides",
-   "outcome": "clean"
+   "outcome": "clean",
+   "removed": [
+    "flat_box_1"
+   ]
   },
   {
    "t": 15.848,
@@ -113,7 +132,10 @@
    "direction": null,
    "risk": 0.4904,
    "reason": "no way to make more space: taking the safest option",
-   "outcome": "clean"
+   "outcome": "clean",
+   "removed": [
+    "flat_box_4"
+   ]
   },
   {
    "t": 17.796,
@@ -123,7 +145,10 @@
    "direction": null,
    "risk": 0.0392,
    "reason": "clear on all sides",
-   "outcome": "clean"
+   "outcome": "clean",
+   "removed": [
+    "flat_box_3"
+   ]
   }
  ],
  "summary": {

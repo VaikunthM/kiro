@@ -11,7 +11,10 @@
    "direction": null,
    "risk": 0.0422,
    "reason": "clear on all sides",
-   "outcome": "clean"
+   "outcome": "clean",
+   "removed": [
+    "sugar_box_1"
+   ]
   },
   {
    "t": 1.86,
@@ -21,7 +24,10 @@
    "direction": null,
    "risk": 0.0438,
    "reason": "clear on all sides",
-   "outcome": "clean"
+   "outcome": "clean",
+   "removed": [
+    "gelatin_box_1"
+   ]
   },
   {
    "t": 3.768,
@@ -31,7 +37,10 @@
    "direction": null,
    "risk": 0.0442,
    "reason": "clear on all sides",
-   "outcome": "clean"
+   "outcome": "clean",
+   "removed": [
+    "gelatin_box_2"
+   ]
   },
   {
    "t": 5.676,
@@ -44,7 +53,8 @@
    ],
    "risk": 0.4351,
    "reason": "resting on another item: sliding it off",
-   "outcome": "ok"
+   "outcome": "ok",
+   "removed": []
   },
   {
    "t": 7.902,
@@ -54,7 +64,10 @@
    "direction": null,
    "risk": 0.1063,
    "reason": "clear on all sides",
-   "outcome": "clean"
+   "outcome": "clean",
+   "removed": [
+    "flat_box_3"
+   ]
   },
   {
    "t": 9.718,
@@ -64,7 +77,10 @@
    "direction": null,
    "risk": 0.1154,
    "reason": "clear on all sides",
-   "outcome": "clean"
+   "outcome": "clean",
+   "removed": [
+    "flat_box_1"
+   ]
   },
   {
    "t": 11.69,
@@ -74,7 +90,10 @@
    "direction": null,
    "risk": 0.0392,
    "reason": "clear on all sides",
-   "outcome": "clean"
+   "outcome": "clean",
+   "removed": [
+    "flat_box_2"
+   ]
   }
  ],
  "summary": {

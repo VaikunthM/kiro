@@ -11,7 +11,10 @@
    "direction": null,
    "risk": 0.0564,
    "reason": "highest item, suction at centre",
-   "outcome": "clean"
+   "outcome": "clean",
+   "removed": [
+    "potted_meat_can_1"
+   ]
   },
   {
    "t": 1.8,
@@ -21,7 +24,10 @@
    "direction": null,
    "risk": 0.0472,
    "reason": "highest item, suction at centre",
-   "outcome": "clean"
+   "outcome": "clean",
+   "removed": [
+    "potted_meat_can_2"
+   ]
   },
   {
    "t": 3.6,
@@ -31,7 +37,10 @@
    "direction": null,
    "risk": 0.0392,
    "reason": "highest item, suction at centre",
-   "outcome": "clean"
+   "outcome": "clean",
+   "removed": [
+    "potted_meat_can_3"
+   ]
   },
   {
    "t": 5.4,
@@ -41,7 +50,10 @@
    "direction": null,
    "risk": 0.0591,
    "reason": "highest item, suction at centre",
-   "outcome": "clean"
+   "outcome": "clean",
+   "removed": [
+    "sugar_box_1"
+   ]
   },
   {
    "t": 7.26,
@@ -51,7 +63,10 @@
    "direction": null,
    "risk": 0.0417,
    "reason": "highest item, suction at centre",
-   "outcome": "clean"
+   "outcome": "clean",
+   "removed": [
+    "gelatin_box_1"
+   ]
   }
  ],
  "summary": {

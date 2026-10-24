@@ -11,7 +11,10 @@
    "direction": null,
    "risk": 0.0539,
    "reason": "highest item, suction at centre",
-   "outcome": "clean"
+   "outcome": "clean",
+   "removed": [
+    "potted_meat_can_1"
+   ]
   },
   {
    "t": 1.8,
@@ -21,7 +24,8 @@
    "direction": null,
    "risk": 0.9942,
    "reason": "highest item, suction at centre",
-   "outcome": "miss"
+   "outcome": "miss",
+   "removed": []
   },
   {
    "t": 3.6,
@@ -31,7 +35,8 @@
    "direction": null,
    "risk": 0.9942,
    "reason": "highest item, suction at centre",
-   "outcome": "miss"
+   "outcome": "miss",
+   "removed": []
   },
   {
    "t": 5.4,
@@ -41,7 +46,8 @@
    "direction": null,
    "risk": 0.9942,
    "reason": "highest item, suction at centre",
-   "outcome": "miss"
+   "outcome": "miss",
+   "removed": []
   }
  ],
  "summary": {

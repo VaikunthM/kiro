@@ -11,7 +11,10 @@
    "direction": null,
    "risk": 0.0392,
    "reason": "clear on all sides",
-   "outcome": "clean"
+   "outcome": "clean",
+   "removed": [
+    "potted_meat_can_2"
+   ]
   },
   {
    "t": 1.8,
@@ -21,7 +24,10 @@
    "direction": null,
    "risk": 0.0427,
    "reason": "clear on all sides",
-   "outcome": "clean"
+   "outcome": "clean",
+   "removed": [
+    "foam_brick_1"
+   ]
   },
   {
    "t": 3.6,
@@ -31,7 +37,10 @@
    "direction": null,
    "risk": 0.043,
    "reason": "clear on all sides",
-   "outcome": "clean"
+   "outcome": "clean",
+   "removed": [
+    "tomato_soup_can_2"
+   ]
   },
   {
    "t": 5.144,
@@ -41,7 +50,10 @@
    "direction": null,
    "risk": 0.0949,
    "reason": "clear on all sides",
-   "outcome": "clean"
+   "outcome": "clean",
+   "removed": [
+    "potted_meat_can_1"
+   ]
   },
   {
    "t": 6.944,
@@ -51,7 +63,10 @@
    "direction": null,
    "risk": 0.0399,
    "reason": "clear on all sides",
-   "outcome": "clean"
+   "outcome": "clean",
+   "removed": [
+    "tomato_soup_can_1"
+   ]
   }
  ],
  "summary": {

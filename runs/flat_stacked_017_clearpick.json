@@ -11,7 +11,10 @@
    "direction": null,
    "risk": 0.0732,
    "reason": "clear on all sides",
-   "outcome": "clean"
+   "outcome": "clean",
+   "removed": [
+    "potted_meat_can_1"
+   ]
   },
   {
    "t": 1.8,
@@ -21,7 +24,10 @@
    "direction": null,
    "risk": 0.0752,
    "reason": "clear on all sides",
-   "outcome": "clean"
+   "outcome": "clean",
+   "removed": [
+    "gelatin_box_2"
+   ]
   },
   {
    "t": 3.708,
@@ -31,7 +37,10 @@
    "direction": null,
    "risk": 0.0456,
    "reason": "clear on all sides",
-   "outcome": "clean"
+   "outcome": "clean",
+   "removed": [
+    "gelatin_box_1"
+   ]
   },
   {
    "t": 5.616,
@@ -44,7 +53,8 @@
    ],
    "risk": 0.4843,
    "reason": "resting on another item: sliding it off",
-   "outcome": "ok"
+   "outcome": "ok",
+   "removed": []
   },
   {
    "t": 7.842,
@@ -54,7 +64,10 @@
    "direction": null,
    "risk": 0.1042,
    "reason": "clear on all sides",
-   "outcome": "clean"
+   "outcome": "clean",
+   "removed": [
+    "flat_box_3"
+   ]
   },
   {
    "t": 9.65,
@@ -64,7 +77,10 @@
    "direction": null,
    "risk": 0.113,
    "reason": "clear on all sides",
-   "outcome": "clean"
+   "outcome": "clean",
+   "removed": [
+    "flat_box_1"
+   ]
   },
   {
    "t": 11.622,
@@ -74,7 +90,10 @@
    "direction": null,
    "risk": 0.0392,
    "reason": "clear on all sides",
-   "outcome": "clean"
+   "outcome": "clean",
+   "removed": [
+    "flat_box_2"
+   ]
   }
  ],
  "summary": {

@@ -11,7 +11,10 @@
    "direction": null,
    "risk": 0.0911,
    "reason": "highest item, suction at centre",
-   "outcome": "clean"
+   "outcome": "clean",
+   "removed": [
+    "foam_brick_1"
+   ]
   },
   {
    "t": 1.8,
@@ -21,7 +24,10 @@
    "direction": null,
    "risk": 0.0479,
    "reason": "highest item, suction at centre",
-   "outcome": "clean"
+   "outcome": "clean",
+   "removed": [
+    "gelatin_box_1"
+   ]
   },
   {
    "t": 3.708,
@@ -31,7 +37,10 @@
    "direction": null,
    "risk": 0.0961,
    "reason": "highest item, suction at centre",
-   "outcome": "clean"
+   "outcome": "clean",
+   "removed": [
+    "gelatin_box_2"
+   ]
   },
   {
    "t": 5.616,
@@ -41,7 +50,10 @@
    "direction": null,
    "risk": 0.8277,
    "reason": "highest item, suction at centre",
-   "outcome": "clean"
+   "outcome": "clean",
+   "removed": [
+    "gelatin_box_3"
+   ]
   },
   {
    "t": 7.524,
@@ -51,7 +63,10 @@
    "direction": null,
    "risk": 0.0392,
    "reason": "highest item, suction at centre",
-   "outcome": "clean"
+   "outcome": "clean",
+   "removed": [
+    "gelatin_box_4"
+   ]
   }
  ],
  "summary": {

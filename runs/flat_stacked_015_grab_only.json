@@ -11,7 +11,10 @@
    "direction": null,
    "risk": 0.0527,
    "reason": "highest item, suction at centre",
-   "outcome": "clean"
+   "outcome": "clean",
+   "removed": [
+    "tomato_soup_can_1"
+   ]
   },
   {
    "t": 1.544,
@@ -21,7 +24,11 @@
    "direction": null,
    "risk": 0.9869,
    "reason": "highest item, suction at centre",
-   "outcome": "double"
+   "outcome": "double",
+   "removed": [
+    "flat_box_2",
+    "flat_box_3"
+   ]
   },
   {
    "t": 3.368,
@@ -31,7 +38,11 @@
    "direction": null,
    "risk": 0.9372,
    "reason": "highest item, suction at centre",
-   "outcome": "double"
+   "outcome": "double",
+   "removed": [
+    "flat_box_5",
+    "flat_box_6"
+   ]
   },
   {
    "t": 5.192,
@@ -41,7 +52,10 @@
    "direction": null,
    "risk": 0.0542,
    "reason": "highest item, suction at centre",
-   "outcome": "clean"
+   "outcome": "clean",
+   "removed": [
+    "sugar_box_1"
+   ]
   },
   {
    "t": 7.052,
@@ -51,7 +65,10 @@
    "direction": null,
    "risk": 0.0432,
    "reason": "highest item, suction at centre",
-   "outcome": "clean"
+   "outcome": "clean",
+   "removed": [
+    "flat_box_1"
+   ]
   },
   {
    "t": 9.024,
@@ -61,7 +78,10 @@
    "direction": null,
    "risk": 0.0392,
    "reason": "highest item, suction at centre",
-   "outcome": "clean"
+   "outcome": "clean",
+   "removed": [
+    "flat_box_4"
+   ]
   }
  ],
  "summary": {

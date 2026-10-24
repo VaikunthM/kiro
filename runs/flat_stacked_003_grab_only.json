@@ -11,7 +11,11 @@
    "direction": null,
    "risk": 0.85,
    "reason": "highest item, suction at centre",
-   "outcome": "double"
+   "outcome": "double",
+   "removed": [
+    "flat_box_2",
+    "flat_box_3"
+   ]
   },
   {
    "t": 1.824,
@@ -21,7 +25,10 @@
    "direction": null,
    "risk": 0.0418,
    "reason": "highest item, suction at centre",
-   "outcome": "clean"
+   "outcome": "clean",
+   "removed": [
+    "sugar_box_1"
+   ]
   },
   {
    "t": 3.684,
@@ -31,7 +38,10 @@
    "direction": null,
    "risk": 0.0438,
    "reason": "highest item, suction at centre",
-   "outcome": "clean"
+   "outcome": "clean",
+   "removed": [
+    "gelatin_box_1"
+   ]
   },
   {
    "t": 5.592,
@@ -41,7 +51,10 @@
    "direction": null,
    "risk": 0.0441,
    "reason": "highest item, suction at centre",
-   "outcome": "clean"
+   "outcome": "clean",
+   "removed": [
+    "gelatin_box_2"
+   ]
   },
   {
    "t": 7.5,
@@ -51,7 +64,10 @@
    "direction": null,
    "risk": 0.0392,
    "reason": "highest item, suction at centre",
-   "outcome": "clean"
+   "outcome": "clean",
+   "removed": [
+    "flat_box_1"
+   ]
   }
  ],
  "summary": {

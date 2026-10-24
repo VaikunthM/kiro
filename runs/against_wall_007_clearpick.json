@@ -11,7 +11,10 @@
    "direction": null,
    "risk": 0.0494,
    "reason": "clear on all sides",
-   "outcome": "clean"
+   "outcome": "clean",
+   "removed": [
+    "gelatin_box_1"
+   ]
   },
   {
    "t": 1.908,
@@ -21,7 +24,10 @@
    "direction": null,
    "risk": 0.0514,
    "reason": "clear on all sides",
-   "outcome": "clean"
+   "outcome": "clean",
+   "removed": [
+    "flat_box_1"
+   ]
   },
   {
    "t": 3.88,
@@ -31,7 +37,10 @@
    "direction": null,
    "risk": 0.053,
    "reason": "clear on all sides",
-   "outcome": "clean"
+   "outcome": "clean",
+   "removed": [
+    "sugar_box_1"
+   ]
   },
   {
    "t": 5.74,
@@ -41,7 +50,10 @@
    "direction": null,
    "risk": 0.0537,
    "reason": "clear on all sides",
-   "outcome": "clean"
+   "outcome": "clean",
+   "removed": [
+    "potted_meat_can_1"
+   ]
   },
   {
    "t": 7.54,
@@ -51,7 +63,10 @@
    "direction": null,
    "risk": 0.0469,
    "reason": "clear on all sides",
-   "outcome": "clean"
+   "outcome": "clean",
+   "removed": [
+    "tomato_soup_can_1"
+   ]
   }
  ],
  "summary": {

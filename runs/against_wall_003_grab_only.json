@@ -11,7 +11,10 @@
    "direction": null,
    "risk": 0.0395,
    "reason": "highest item, suction at centre",
-   "outcome": "clean"
+   "outcome": "clean",
+   "removed": [
+    "tomato_soup_can_1"
+   ]
   },
   {
    "t": 1.544,
@@ -21,7 +24,10 @@
    "direction": null,
    "risk": 0.1315,
    "reason": "highest item, suction at centre",
-   "outcome": "clean"
+   "outcome": "clean",
+   "removed": [
+    "tomato_soup_can_2"
+   ]
   },
   {
    "t": 3.088,
@@ -31,7 +37,10 @@
    "direction": null,
    "risk": 0.0474,
    "reason": "highest item, suction at centre",
-   "outcome": "clean"
+   "outcome": "clean",
+   "removed": [
+    "foam_brick_1"
+   ]
   },
   {
    "t": 4.888,
@@ -41,7 +50,8 @@
    "direction": null,
    "risk": 0.9937,
    "reason": "highest item, suction at centre",
-   "outcome": "miss"
+   "outcome": "miss",
+   "removed": []
   },
   {
    "t": 6.688,
@@ -51,7 +61,8 @@
    "direction": null,
    "risk": 0.9937,
    "reason": "highest item, suction at centre",
-   "outcome": "miss"
+   "outcome": "miss",
+   "removed": []
   },
   {
    "t": 8.488,
@@ -61,7 +72,8 @@
    "direction": null,
    "risk": 0.9937,
    "reason": "highest item, suction at centre",
-   "outcome": "miss"
+   "outcome": "miss",
+   "removed": []
   }
  ],
  "summary": {

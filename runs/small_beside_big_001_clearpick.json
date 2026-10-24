@@ -11,7 +11,10 @@
    "direction": null,
    "risk": 0.0732,
    "reason": "clear on all sides",
-   "outcome": "clean"
+   "outcome": "clean",
+   "removed": [
+    "sugar_box_2"
+   ]
   },
   {
    "t": 1.86,
@@ -21,7 +24,10 @@
    "direction": null,
    "risk": 0.0904,
    "reason": "clear on all sides",
-   "outcome": "clean"
+   "outcome": "clean",
+   "removed": [
+    "foam_brick_2"
+   ]
   },
   {
    "t": 3.66,
@@ -31,7 +37,10 @@
    "direction": null,
    "risk": 0.0972,
    "reason": "clear on all sides",
-   "outcome": "clean"
+   "outcome": "clean",
+   "removed": [
+    "sugar_box_1"
+   ]
   },
   {
    "t": 5.52,
@@ -41,7 +50,10 @@
    "direction": null,
    "risk": 0.0392,
    "reason": "clear on all sides",
-   "outcome": "clean"
+   "outcome": "clean",
+   "removed": [
+    "foam_brick_1"
+   ]
   },
   {
    "t": 7.32,
@@ -51,7 +63,10 @@
    "direction": null,
    "risk": 0.0452,
    "reason": "clear on all sides",
-   "outcome": "clean"
+   "outcome": "clean",
+   "removed": [
+    "gelatin_box_1"
+   ]
   }
  ],
  "summary": {
