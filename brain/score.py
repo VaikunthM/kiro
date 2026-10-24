@@ -81,6 +81,7 @@ def features(state, item_id):
     tx, ty = s["tote"]["size"][0] / 2, s["tote"]["size"][1] / 2
     wall_dist = min(tx - me["hi"][0], tx + me["lo"][0], ty - me["hi"][1], ty + me["lo"][1])
     flat = _clamp((0.3 - me["size"][2] / max(me["size"][0], me["size"][1])) / 0.3)
+    above = _clamp(above * 3)  # anything resting on the item rides along when it is lifted
     return {"below": below, "above": above, "flat_below": flat * below,
             "crowd": 0.0 if gap_min == math.inf else _clamp(1 - gap_min / 0.03),
             "wall": _clamp(1 - wall_dist / 0.03), "big_nb": big, "small_nb": small, "flat": flat}

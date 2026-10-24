@@ -6,6 +6,7 @@ from .score import GRASPS, features, score_grasp
 
 CUTOFF = 0.35
 MAX_PUSHES_PER_ITEM = 2
+PUSH_PREDICT = 0.06   # assumed push distance (m) when predicting overlap; check with brain.diagnose
 
 
 def push_direction(state, item_id):
@@ -15,21 +16,26 @@ def push_direction(state, item_id):
     me = objs[item_id]
     f = features(s, item_id)
     tx, ty = s["tote"]["size"][0] / 2, s["tote"]["size"][1] / 2
-    if f["below"] > 0:  # slide it off whatever is under it, along its short side
-        under = next((o for o in objs.values() if o["id"] != item_id
-                      and abs(me["lo"][2] - o["hi"][2]) < 0.01
-                      and min(me["hi"][0], o["hi"][0]) > max(me["lo"][0], o["lo"][0])
-                      and min(me["hi"][1], o["hi"][1]) > max(me["lo"][1], o["lo"][1])), None)
-        axis = 0 if me["size"][0] < me["size"][1] else 1
-        lim = (tx, ty)[axis]
-        off = me["pos"][axis] - (under["pos"][axis] if under else 0.0)
-        sign = 1 if off > 0 else -1 if off < 0 else (-1 if me["pos"][axis] > 0 else 1)
-        room = lim - abs(me["pos"][axis]) - me["size"][axis] / 2
-        if room < 0.03 and me["pos"][axis] * sign > 0:
-            sign = -sign
-        d = [0.0, 0.0]
-        d[axis] = float(sign)
-        return d
+    if f["below"] > 0:  # slide it off whatever is under it: pick the direction that leaves the least overlap
+        under = max((o for o in objs.values() if o["id"] != item_id and abs(me["lo"][2] - o["hi"][2]) < 0.01),
+                    key=lambda o: _o(me, o, 0) * _o(me, o, 1) if _o(me, o, 0) > 0 and _o(me, o, 1) > 0 else -1,
+                    default=None)
+        if under is not None:
+            lims = (tx, ty)
+            best = None
+            for axis in (0, 1):
+                for sign in (1, -1):
+                    room = lims[axis] - me["hi"][axis] if sign > 0 else lims[axis] + me["lo"][axis]
+                    move = max(0.0, min(PUSH_PREDICT, room))
+                    lo_a, hi_a = me["lo"][axis] + sign * move, me["hi"][axis] + sign * move
+                    ov_a = max(0.0, min(hi_a, under["hi"][axis]) - max(lo_a, under["lo"][axis]))
+                    ov_b = max(0.0, _o(me, under, 1 - axis))
+                    key = (round(ov_a * ov_b, 6), me["size"][axis])
+                    if best is None or key < best[0]:
+                        best = (key, axis, sign)
+            d = [0.0, 0.0]
+            d[best[1]] = float(best[2])
+            return d
     vx = vy = 0.0
     for o in objs.values():
         if o["id"] == item_id:
