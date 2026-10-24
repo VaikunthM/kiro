@@ -166,7 +166,9 @@ def test_overhead_pick_removal_still_excludes_the_item(sim):
 
 def test_many_parked_items_all_stay_out_of_both_frames(sim):
     # _remove lays picked items on a 6-wide grid; confirm no slot drifts into either camera's frame.
-    items = [box(f"o{i}", [0.05, 0.05, 0.04], [-0.14 + 0.045 * i, -0.1, 0.02]) for i in range(7)]
+    # 3 cm apart and away from the walls, so rule (a) (neighbour within 1 cm) and rule (b) (wall seal) don't apply
+    grid = [(x, y) for y in (-0.06, 0.06) for x in (-0.12, -0.04, 0.04, 0.12)][:7]
+    items = [box(f"o{i}", [0.05, 0.05, 0.04], [x, y, 0.02]) for i, (x, y) in enumerate(grid)]
     sim.load(scene(*items))
     for it in items:
         sim.grasp(it["id"], "suction_center")

@@ -11,7 +11,7 @@ its videos. The shared contracts steering doc is the source of truth for every i
 the contract wins; raise it rather than changing the contract.
 
 ## Where to look (don't go hunting)
-- The simulator API and mechanics are in the module docstring: #[[file:sim/sim.py:1-34]]
+- The simulator API and mechanics are in the module docstring: #[[file:sim/sim.py:1-39]]
 - Behaviour is pinned down by `tests/`. Planning documents live in `docs/` and are not needed for code
   tasks; never try to parse `.docx` files.
 
