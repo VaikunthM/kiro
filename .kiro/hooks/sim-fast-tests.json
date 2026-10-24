@@ -10,7 +10,8 @@
         "type": "command",
         "command": "conda run -n hackachusetts python -m pytest -q -m \"not slow\""
       },
-      "timeout": 180
+      "timeout": 180,
+      "enabled": true
     }
   ]
 }

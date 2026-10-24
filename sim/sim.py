@@ -280,6 +280,7 @@ class Sim:
         self._renderer = None
         self.frames, self._record_path, self._recording = [], None, False
         self.last_push_blocked = False
+        self.highlight = set()  # ids a grasp is acting on, for the render path to mark; render-only
 
     # ---- load / step / state ----
     def load(self, scene, settle_s: float = 1.0):
@@ -303,6 +304,7 @@ class Sim:
         self._renderer = mujoco.Renderer(self.model, self.height, self.width)
         self.frames, self._record_path, self._recording = [], None, False
         self.last_push_blocked = False
+        self.highlight = set()
         self.step(settle_s)
         self._t0 = float(self.data.time)
         self._lift_z = self.tote["size"][2] + LIFT_ABOVE_WALL
@@ -420,6 +422,9 @@ class Sim:
         else:
             attached, tool, touch_z = self._plan_suction(item_id, grasp_type)
 
+        # render-only: mark the target plus any clung/ridden ids for the duration of the move
+        self.highlight = {item_id, *attached}
+
         if attached:
             tpos = self.data.mocap_pos[self._mocap[tool]].copy()
             offsets = {o: self.data.body(o).xpos.copy() - tpos for o in attached}
@@ -436,6 +441,7 @@ class Sim:
             self._remove(o)
         self._park()
         self.step(0.3)
+        self.highlight = set()  # move is over; stop marking these ids
         if len(lifted) == 0:
             return "miss"
         return "clean" if len(lifted) == 1 else "double"
@@ -603,13 +609,35 @@ class Sim:
         return "ok"
 
     # ---- rendering / video ----
+    HIGHLIGHT_RGBA = np.array([0.15, 0.95, 0.35, 1.0])  # green overlay for the item being picked
+    HIGHLIGHT_MIX = 0.65  # blend toward HIGHLIGHT_RGBA; render-only, leaves the model untouched
+
     def render(self, path=None, camera: str = None) -> np.ndarray:
         self._renderer.update_scene(self.data, camera=camera or self.camera)
+        self._tint_highlighted()
         img = self._renderer.render()
         if path:
             import imageio.v3 as iio
             iio.imwrite(path, img)
         return img
+
+    def _tint_highlighted(self):
+        """Tint the renderer-scene RGBA of any geom belonging to a highlighted object id.
+        Render-only: it edits the MjvScene geoms, never the model, state(), or physics."""
+        if not self.highlight:
+            return
+        gids = {self.model.geom(oid).id for oid in self.highlight if oid in self.objs}
+        if not gids:
+            return
+        geom_obj = int(mujoco.mjtObj.mjOBJ_GEOM)
+        scn = self._renderer.scene
+        mix = self.HIGHLIGHT_MIX
+        for g in scn.geoms[: scn.ngeom]:
+            if g.objtype == geom_obj and g.objid in gids:
+                base = np.array(g.rgba, dtype=float)
+                tint = (1 - mix) * base + mix * self.HIGHLIGHT_RGBA
+                tint[3] = base[3]  # keep original alpha
+                g.rgba[:] = tint
 
     def record(self, path) -> int:
         """record(path) starts capturing frames for an .mp4 at path; record(None) stops and saves it.

@@ -20,11 +20,11 @@ from sim.sim import Sim
 MAX_STALLS_IN_A_ROW = 3
 
 
-def run_scene(scene, policy_name, decide, out_dir, video=True, width=640, height=480):
+def run_scene(scene, policy_name, decide, out_dir, video=True, width=640, height=480, camera="overhead"):
     """Run one policy on one scene until the tote is empty, the policy stops, or it stalls out."""
     out_dir = Path(out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
-    sim = Sim(width=width, height=height)
+    sim = Sim(width=width, height=height, camera=camera)
     state = sim.load(scene)
     stem = f"{scene['scene_id']}_{policy_name}"
     if video:
@@ -74,7 +74,7 @@ def run_scene(scene, policy_name, decide, out_dir, video=True, width=640, height
 
 
 def run_batch(scenes_root, policies, out_dir, video=True, width=640, height=480, mode=None, limit=None,
-              scene_files=None):
+              scene_files=None, camera="overhead"):
     """policies: {name: decide_fn}. Returns and writes the index of all runs."""
     out_dir = Path(out_dir)
     if scene_files is None:
@@ -89,7 +89,8 @@ def run_batch(scenes_root, policies, out_dir, video=True, width=640, height=480,
     for f in scene_files:
         scene = json.loads(Path(f).read_text())
         for name, decide in policies.items():
-            run = run_scene(scene, name, decide, out_dir, video=video, width=width, height=height)
+            run = run_scene(scene, name, decide, out_dir, video=video, width=width, height=height,
+                            camera=camera)
             index.append({"scene_id": run["scene_id"], "mode": run["mode"], "policy": name,
                           "json": f"{out_dir.name}/{run['scene_id']}_{name}.json",
                           "video": run["video"], "summary": run["summary"]})
@@ -120,6 +121,8 @@ if __name__ == "__main__":
     ap.add_argument("--policies", nargs="+", default=["grab_only", "clearpick"])
     ap.add_argument("--out", default="runs")
     ap.add_argument("--no-video", action="store_true")
+    ap.add_argument("--camera", choices=["overhead", "angled"], default="overhead",
+                    help="render camera for videos (default: overhead)")
     ap.add_argument("--size", nargs=2, type=int, default=[640, 480], metavar=("W", "H"))
     a = ap.parse_args()
     pols = {}
@@ -129,4 +132,4 @@ if __name__ == "__main__":
         except ModuleNotFoundError:
             print(f"[run_batch] skipping {p}: policies/{p}.py not found yet")
     run_batch(a.scenes, pols, a.out, video=not a.no_video, width=a.size[0], height=a.size[1],
-              mode=a.mode, limit=a.limit, scene_files=[a.scene] if a.scene else None)
+              mode=a.mode, limit=a.limit, scene_files=[a.scene] if a.scene else None, camera=a.camera)

@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Failure Atlas</title>
+<script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+<style>
+  :root { --bg:#f7f7f5; --card:#fff; --ink:#1d1d1f; --muted:#6b6b70; --line:#e3e3e0; --accent:#2563eb; --sim:#15803d; --real:#9a3412; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#141416; --card:#1e1e22; --ink:#ececf0; --muted:#9a9aa3; --line:#2e2e34; --accent:#60a5fa; --sim:#4ade80; --real:#fb923c; }
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; font:15px/1.45 system-ui,-apple-system,Segoe UI,sans-serif; background:var(--bg); color:var(--ink); }
+  header { padding:20px 24px 8px; display:flex; flex-wrap:wrap; align-items:baseline; gap:12px 24px; }
+  h1 { margin:0; font-size:24px; }
+  header p { margin:0; color:var(--muted); flex:1; min-width:240px; }
+  nav a { color:var(--accent); text-decoration:none; margin-left:14px; font-weight:600; }
+  main { display:grid; grid-template-columns: minmax(0,1.6fr) minmax(280px,1fr); gap:16px; padding:12px 24px; }
+  @media (max-width:860px){ main { grid-template-columns:1fr; padding:12px 16px; } header{padding:16px 16px 8px;} }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px; }
+  #map { height:560px; }
+  #panel h2 { margin:0 0 6px; font-size:20px; }
+  .badge { display:inline-block; font-size:12px; font-weight:600; padding:2px 8px; border-radius:99px; border:1px solid currentColor; margin-bottom:10px; }
+  .sim { color:var(--sim); } .real { color:var(--real); }
+  .kv { display:grid; grid-template-columns:auto 1fr; gap:4px 12px; margin:8px 0 14px; }
+  .kv span:nth-child(odd){ color:var(--muted); }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(88px,1fr)); gap:6px; }
+  .grid img { width:100%; aspect-ratio:1; object-fit:cover; border-radius:6px; border:1px solid var(--line); }
+  #preview { width:100%; max-height:220px; object-fit:contain; border-radius:8px; margin-bottom:10px; display:none; }
+  .muted { color:var(--muted); }
+  #list { padding:0 24px 12px; display:flex; flex-wrap:wrap; gap:8px; }
+  @media (max-width:860px){ #list{padding:0 16px 12px;} }
+  #list button { font:inherit; font-size:13px; border:1px solid var(--line); background:var(--card); color:var(--ink); border-radius:99px; padding:5px 12px; cursor:pointer; }
+  #list button.on { border-color:var(--accent); color:var(--accent); font-weight:600; }
+  #stats { margin:0 24px 32px; }
+  @media (max-width:860px){ #stats{margin:0 16px 24px;} }
+  table { border-collapse:collapse; width:100%; font-size:14px; }
+  th, td { text-align:left; padding:6px 8px; border-bottom:1px solid var(--line); }
+  th { color:var(--muted); font-weight:600; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Failure Atlas</h1>
+  <p id="sub">Real failed picks from Amazon's ARMBench, grouped by what went wrong.</p>
+  <nav><a href="atlas.html">Atlas</a><a href="robot.html">Robot</a></nav>
+</header>
+<div id="list"></div>
+<main>
+  <div class="card"><div id="map"></div></div>
+  <aside class="card" id="panel"><img id="preview" alt=""><div id="detail" class="muted">Click a cluster on the map or above to see its failures.</div></aside>
+</main>
+<section class="card" id="stats"></section>
+
+<script>
+const pct = v => v == null ? 'n/a' : (v * 100).toFixed(0) + '%';
+fetch('atlas.json').then(r => r.json()).then(A => {
+  const byId = Object.fromEntries(A.clusters.map(c => [c.id, c]));
+  const total = A.clusters.reduce((s, c) => s + c.count, 0);
+  document.getElementById('sub').textContent =
+    `${total.toLocaleString()} real failed picks from Amazon's ARMBench, grouped into ${A.clusters.length} failure modes. Green modes are recreated in simulation.`;
+
+  const traces = A.clusters.map(c => {
+    const pts = A.points.filter(p => p.cluster === c.id);
+    return { type: 'scattergl', mode: 'markers', name: c.name, x: pts.map(p => p.x), y: pts.map(p => p.y),
+      customdata: pts.map(p => [p.image, c.id]), hovertemplate: c.name + '<extra></extra>',
+      marker: { size: 6, opacity: 0.75, line: { width: c.simulated ? 0.5 : 0 } } };
+  });
+  const dark = matchMedia('(prefers-color-scheme: dark)').matches;
+  const layout = { margin: { l: 10, r: 10, t: 10, b: 10 }, showlegend: false, hovermode: 'closest',
+    paper_bgcolor: 'rgba(0,0,0,0)', plot_bgcolor: 'rgba(0,0,0,0)',
+    xaxis: { visible: false }, yaxis: { visible: false }, font: { color: dark ? '#ececf0' : '#1d1d1f' } };
+  const map = document.getElementById('map');
+  Plotly.newPlot(map, traces, layout, { displayModeBar: false, responsive: true });
+
+  const list = document.getElementById('list');
+  A.clusters.forEach(c => {
+    const b = document.createElement('button');
+    b.textContent = `${c.name} · ${pct(c.share)}`; b.dataset.id = c.id;
+    b.onclick = () => select(c.id); list.appendChild(b);
+  });
+
+  const preview = document.getElementById('preview');
+  map.on('plotly_hover', e => { preview.src = e.points[0].customdata[0]; preview.style.display = 'block'; });
+  map.on('plotly_click', e => select(e.points[0].customdata[1]));
+
+  function select(id) {
+    const c = byId[id];
+    list.querySelectorAll('button').forEach(b => b.classList.toggle('on', b.dataset.id === id));
+    Plotly.restyle(map, { 'marker.opacity': A.clusters.map(k => k.id === id ? 0.95 : 0.12) });
+    preview.src = c.examples[0]; preview.style.display = 'block';
+    document.getElementById('detail').innerHTML = `
+      <h2>${c.name}</h2>
+      <span class="badge ${c.simulated ? 'sim' : 'real'}">${c.simulated ? 'Recreated in simulation' : 'Real data only'}</span>
+      <div class="kv">
+        <span>Failures</span><span>${c.count.toLocaleString()} (${pct(c.share)} of all)</span>
+        <span>Main label</span><span>${c.defect.replace('_', ' ')}</span>
+        <span>Classifier catches</span><span>${pct(c.detection_rate)} of held-out failures${c.n_test ? ` (n=${c.n_test})` : ''}</span>
+        <span>Right failure type</span><span>${pct(c.type_accuracy)}</span>
+      </div>
+      <div class="grid">${c.examples.map(src => `<img src="${src}" alt="" loading="lazy">`).join('')}</div>`;
+  }
+
+  const k = A.classifier;
+  document.getElementById('stats').innerHTML = `
+    <h2 style="margin:0 0 6px;font-size:18px">Real-data results</h2>
+    <p class="muted" style="margin:0 0 12px">${k.model}. Trained on ${k.train.toLocaleString()} images, tested on ${k.test.toLocaleString()} held-out images.</p>
+    <table><tr><th>Measure</th><th>Result</th></tr>
+      <tr><td>Failure vs clean pick</td><td>${pct(k.accuracy_failure_vs_clean)}</td></tr>
+      <tr><td>Exact type (${k.classes.join(', ').replaceAll('_', ' ')})</td><td>${pct(k.accuracy_3class)}</td></tr>
+      ${Object.entries(k.recall).map(([c, v]) => `<tr><td>Recall: ${c.replace('_', ' ')}</td><td>${pct(v)}</td></tr>`).join('')}
+    </table>`;
+  const firstSim = A.clusters.find(c => c.simulated) || A.clusters[0];
+  select(firstSim.id);
+}).catch(err => {
+  document.getElementById('detail').textContent = 'Could not load atlas.json. Run "python -m http.server" inside site/ and open http://localhost:8000/atlas.html';
+});
+</script>
+</body>
+</html>
