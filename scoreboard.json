@@ -26,14 +26,14 @@
  "flat_stacked": {
   "clearpick": {
    "scenes": 20,
-   "clean": 113,
-   "double_grabs": 1,
+   "clean": 116,
+   "double_grabs": 2,
    "misses": 3,
    "stalls": 0,
    "pushes": 38,
    "items": 121,
-   "double_grab_rate": 0.009,
-   "clean_rate": 0.966
+   "double_grab_rate": 0.017,
+   "clean_rate": 0.959
   },
   "grab_only": {
    "scenes": 20,
