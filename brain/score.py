@@ -27,7 +27,7 @@ BASE = {
     "offcenter": {"bias": -2.8, "below": 2.2, "above": 4.0, "flat_below": 0.8, "crowd": 0.3, "crowd_near": 0.3,
                   "seal": 8.0, "wall": 0.2, "big_nb": 0.3, "small_nb": 0.2, "flat": 0.2},
     "pinch":     {"bias": -2.6, "below": 1.0, "above": 3.0, "flat_below": 0.0, "crowd": 3.2, "crowd_near": 0.0,
-                  "seal": 0.0, "wall": 2.4, "big_nb": 1.4, "small_nb": 2.0, "flat": 1.8},
+                  "seal": 0.0, "wall": 3.3, "big_nb": 1.4, "small_nb": 2.0, "flat": 1.8},
 }
 MODE_SCALE = {
     "flat_stacked":     {"below": 1.5, "flat_below": 1.5},
