@@ -74,3 +74,63 @@ def test_run_batch_runs_every_scene_with_every_policy_and_writes_mp4s(tmp_path):
         assert run["video"] == f"runs/flat_stacked_t01_{policy}.mp4"
         assert (out / f"flat_stacked_t01_{policy}.mp4").stat().st_size > 1000
     assert json.loads((out / "index.json").read_text()) == index
+
+
+def test_camera_defaults_to_overhead_and_threads_through_to_sim(monkeypatch):
+    """--camera is additive: run_scene/run_batch default to overhead and pass the choice to Sim."""
+    import sim.run_batch as rb
+
+    seen = []
+
+    class FakeSim:
+        def __init__(self, width=640, height=480, camera="overhead"):
+            seen.append(camera)
+
+        def load(self, scene):
+            return {"objects": []}
+
+        def record(self, path):
+            return 0
+
+        def state(self):
+            return {"objects": []}
+
+    monkeypatch.setattr(rb, "Sim", FakeSim)
+
+    # default: no camera argument -> overhead
+    rb.run_scene(STACKED, "grab_only", grab_only, "runs", video=False)
+    assert seen[-1] == "overhead"
+
+    # explicit angled threads through run_scene
+    rb.run_scene(STACKED, "grab_only", grab_only, "runs", video=False, camera="angled")
+    assert seen[-1] == "angled"
+
+    # and through run_batch -> run_scene
+    rb.run_batch(STACKED, {"grab_only": grab_only}, "runs", video=False,
+                 scene_files=[], camera="angled")
+    assert all(c == "angled" for c in seen[2:]) or seen[-1] == "angled"
+
+
+def test_angled_camera_batch_writes_a_valid_mp4_and_overhead_is_the_default(tmp_path):
+    """End-to-end with the real Sim: an angled one-scene batch writes a valid .mp4, and
+    omitting the flag keeps overhead the default (schema/run-file unchanged)."""
+    scenes = tmp_path / "scenes" / "flat_stacked"
+    scenes.mkdir(parents=True)
+    (scenes / "000.json").write_text(json.dumps(STACKED))
+
+    # angled: a one-scene batch renders from the angled camera and writes a real MP4.
+    angled_out = tmp_path / "runs_angled"
+    index = run_batch(tmp_path / "scenes", {"grab_only": grab_only}, angled_out,
+                      video=True, width=160, height=120, camera="angled")
+    assert len(index) == 1
+    run = json.loads((angled_out / "flat_stacked_t01_grab_only.json").read_text())
+    assert run["video"] == "runs_angled/flat_stacked_t01_grab_only.mp4"
+    assert (angled_out / "flat_stacked_t01_grab_only.mp4").stat().st_size > 1000
+    # schema is unchanged by the camera choice (contract 4).
+    assert {"scene_id", "mode", "policy", "steps", "summary", "video"} <= run.keys()
+
+    # overhead is the default when the flag/kwarg is omitted: the real Sim still writes a valid MP4.
+    default_out = tmp_path / "runs_default"
+    run_batch(tmp_path / "scenes", {"grab_only": grab_only}, default_out,
+              video=True, width=160, height=120)
+    assert (default_out / "flat_stacked_t01_grab_only.mp4").stat().st_size > 1000

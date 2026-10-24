@@ -4,7 +4,7 @@
  "policy": "grab_only",
  "steps": [
   {
-   "t": 1.3,
+   "t": 0.0,
    "action": "grasp",
    "item": "soup_can_1",
    "grasp": "suction_center",
@@ -14,27 +14,7 @@
    "outcome": "clean"
   },
   {
-   "t": 3.34,
-   "action": "grasp",
-   "item": "gelatin_box_1",
-   "grasp": "suction_center",
-   "direction": null,
-   "risk": null,
-   "reason": "highest item, suction at centre",
-   "outcome": "double_grab"
-  },
-  {
-   "t": 5.58,
-   "action": "grasp",
-   "item": "cracker_box_1",
-   "grasp": "suction_center",
-   "direction": null,
-   "risk": null,
-   "reason": "highest item, suction at centre",
-   "outcome": "clean"
-  },
-  {
-   "t": 7.82,
+   "t": 1.544,
    "action": "grasp",
    "item": "meat_can_1",
    "grasp": "suction_center",
@@ -44,7 +24,7 @@
    "outcome": "clean"
   },
   {
-   "t": 10.12,
+   "t": 3.344,
    "action": "grasp",
    "item": "foam_brick_1",
    "grasp": "suction_center",
@@ -54,9 +34,29 @@
    "outcome": "clean"
   },
   {
-   "t": 12.42,
+   "t": 5.144,
    "action": "grasp",
    "item": "sugar_box_1",
+   "grasp": "suction_center",
+   "direction": null,
+   "risk": null,
+   "reason": "highest item, suction at centre",
+   "outcome": "clean"
+  },
+  {
+   "t": 7.004,
+   "action": "grasp",
+   "item": "box_2",
+   "grasp": "suction_center",
+   "direction": null,
+   "risk": null,
+   "reason": "highest item, suction at centre",
+   "outcome": "double"
+  },
+  {
+   "t": 8.904,
+   "action": "grasp",
+   "item": "gelatin_box_1",
    "grasp": "suction_center",
    "direction": null,
    "risk": null,
@@ -68,7 +68,9 @@
   "clean": 5,
   "double_grabs": 1,
   "stalls": 0,
-  "moves": 6
+  "moves": 6,
+  "misses": 0,
+  "items": 7
  },
  "video": "runs/flat_stacked_000_grab_only.mp4"
 }
