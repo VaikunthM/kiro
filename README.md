@@ -14,7 +14,7 @@ Warehouse picking robots fail in a few repeating ways: a suction cup grabs two i
 
 ```
 python3 -m venv .venv && source .venv/bin/activate
-pip install "mujoco<3.3" numpy imageio imageio-ffmpeg pytest hypothesis
+pip install -r requirements-sim.txt                 # mujoco, numpy, imageio, pytest, hypothesis
 python tests/test_brain.py                          # brain tests, no dependencies
 python -m sim.run_batch --limit 20 --no-video       # run both robots on every scene
 python -m brain.evaluate                            # scoreboard table -> scoreboard.json
@@ -87,9 +87,56 @@ A lower double-grab rate for ClearPick than Grab-only is the headline result. Mo
 
 _P1: describe the dataset, the failure clusters, and how to open `p1/site/atlas.html`._
 
-## Simulator (P2)
+## Simulator
 
-_P2: describe the MuJoCo setup, the failure rules, and how videos are recorded._
+A MuJoCo tote (0.40 × 0.30 × 0.15 m) that loads any scene JSON, lets a policy grasp and push, and records what happened. Objects are boxes and cylinders at YCB sizes; the tote has an overhead and an angled camera.
+
+`Sim` in `sim/sim.py` is the only interface the robots use:
+
+```
+sim.load(scene)                  scene dict or path; settles physics for 1 s
+sim.state()                      every item still in the tote: id, type, size, pos, bbox
+sim.grasp(item, grasp_type)      -> "clean" | "double" | "miss"
+sim.push(item, [dx, dy])         10 cm sweep with the tool held low; always "ok"
+sim.record(path) / record(None)  start / stop and save an .mp4
+```
+
+The outcome of a grasp is whatever physically left the tote: one item that rose more than 10 cm is `clean`, two or more is `double`, none is `miss`.
+
+### Failure rules
+
+Suction attaches whatever the cup touches. On top of that, three simplified rules reproduce the failures in the atlas. `score_grasp` mirrors them; it never calls the simulator.
+
+| Rule | Mode | What happens |
+|---|---|---|
+| Cling | `flat_stacked` | a flat item lifts the flat item under it when they overlap by half or more |
+| Neighbour drag | `small_beside_big` | centre suction also lifts a side neighbour within 1 cm |
+| Wall seal | `against_wall` | suction misses when the cup centre is within 3.5 cm of a wall |
+
+Edge suction picks the side of the item furthest from walls and neighbours, which is how ClearPick gets around the last two.
+
+### Files
+
+```
+sim/sim.py                 the simulator: scene loading, grasp/push, outcomes, rendering
+sim/run_batch.py           runs every scene with every policy -> runs/*.json + .mp4
+sim/validate_scenes.py     checks scene files load, stay in the tote and don't overlap
+sim/reference_policies.py  stand-in grab_only used by the tests
+scenes/mock/               one hand-made scene for quick checks
+assets/ycb/                optional YCB mesh visuals (credits in its README)
+tests/test_sim.py, test_failure_rules.py, test_run_batch.py, test_validate_scenes.py
+```
+
+### Running and recording
+
+```
+python -m sim.validate_scenes                                        # check every scene first
+python -m sim.run_batch --size 480 360                               # all scenes, both robots, with video
+python -m sim.run_batch --scene scenes/flat_stacked/15.json --camera angled --size 1280 720 --out demo_clips
+python -m pytest -q tests -m "not slow"                              # fast tests; drop -m for the property tests
+```
+
+Each run writes `runs/<scene_id>_<policy>.json` (every step with its risk, reason and outcome) and the matching `.mp4`; `runs/index.json` lists them all. `--no-video` skips rendering, `--mode` and `--limit` run a subset.
 
 ## Demo and write-up
 
