@@ -3,147 +3,240 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ClearPick: the robot page</title>
+<title>ClearPick robots</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&display=swap" rel="stylesheet">
 <style>
   :root {
-    --paper: #E8ECEF;
-    --panel: #F6F8F9;
-    --ink: #13202B;
-    --ink-soft: #4A5864;
-    --line: #C3CCD3;
-    --slate: #5E6B77;
-    --tote: #1D5FD1;
-    --flag: #D9480F;
-    --ok: #1F7A57;
-    --layer0: #D3DBE2;
-    --layer1: #EAEFF3;
-    --layer2: #FFFFFF;
+    --bg: #0C161D;        /* warehouse at night */
+    --panel: #111F28;
+    --raise: #172A35;
+    --line: #25404D;
+    --ink: #E4EEF2;
+    --ink-soft: #8EA6B1;
+    --go: #8797A1;        /* Grab-only: plain steel */
+    --cp: #3DD5E8;        /* ClearPick: scanner cyan */
+    --fault: #FF6A2B;     /* safety orange */
+    --hazard: #F4C21B;    /* floor-tape yellow, only on failure stamps */
+    --ok: #62D89A;
     --sans: "Archivo", "Helvetica Neue", Arial, sans-serif;
-    color-scheme: light;
+    color-scheme: dark;
   }
   * { box-sizing: border-box; }
-  html { background: var(--paper); }
+  html { background: var(--bg); }
   body {
     margin: 0; color: var(--ink); font-family: var(--sans); font-size: 16px; line-height: 1.5;
     font-variation-settings: "wdth" 100;
+    background:
+      linear-gradient(rgba(61,213,232,.035) 1px, transparent 1px) 0 0 / 40px 40px,
+      linear-gradient(90deg, rgba(61,213,232,.035) 1px, transparent 1px) 0 0 / 40px 40px,
+      var(--bg);
+    min-height: 100vh;
   }
-  .wrap { max-width: 1180px; margin: 0 auto; padding: 0 16px 64px; }
-  :focus-visible { outline: 3px solid var(--tote); outline-offset: 2px; }
+  .wrap { max-width: 1240px; margin: 0 auto; padding: 0 16px 64px; }
+  :focus-visible { outline: 2px solid var(--cp); outline-offset: 2px; }
   button { font: inherit; color: inherit; cursor: pointer; }
+  a { color: var(--cp); }
 
-  header { padding: 40px 0 8px; }
+  .topnav { display: flex; gap: 4px; padding: 18px 0 0; font-size: .95rem; }
+  .topnav a { color: var(--ink-soft); text-decoration: none; padding: 6px 12px; border-radius: 4px; font-weight: 600; }
+  .topnav a:hover { color: var(--ink); background: var(--raise); }
+  .topnav a[aria-current="page"] { color: var(--ink); box-shadow: inset 0 -2px 0 var(--cp); border-radius: 0; }
+
+  header { padding: 28px 0 8px; }
   h1 {
-    margin: 0; font-size: clamp(2.6rem, 7vw, 5rem); line-height: 0.95; letter-spacing: -0.02em;
-    font-weight: 850; font-variation-settings: "wdth" 125;
+    margin: 0; font-size: clamp(2.8rem, 8vw, 5.6rem); line-height: .9; letter-spacing: -0.025em;
+    font-weight: 880; font-variation-settings: "wdth" 125;
   }
   .lede { max-width: 62ch; margin: 16px 0 0; font-size: 1.125rem; color: var(--ink-soft); }
+  .lede b { color: var(--ink); font-weight: 650; }
 
-  h2 { margin: 48px 0 4px; font-size: 1.5rem; line-height: 1.15; font-weight: 750; font-variation-settings: "wdth" 112; }
-  .sub { margin: 0 0 20px; color: var(--ink-soft); max-width: 70ch; }
+  h2 { margin: 0 0 6px; font-size: 1.4rem; line-height: 1.15; font-weight: 760; font-variation-settings: "wdth" 115; }
+  .sub { margin: 0 0 18px; color: var(--ink-soft); max-width: 70ch; }
 
-  /* scoreboard bars */
-  .bars { display: grid; gap: 22px; }
-  .bar-group { display: grid; grid-template-columns: 190px 1fr; gap: 6px 20px; align-items: start; }
-  .bar-group h3 { margin: 0; font-size: 1rem; font-weight: 650; padding-top: 2px; }
-  .bar-rows { display: grid; gap: 6px; }
-  .bar-row { display: grid; grid-template-columns: 1fr 190px; gap: 12px; align-items: center; }
-  .bar-track { height: 26px; background: var(--layer1); border-radius: 3px; position: relative; }
-  .bar-fill { height: 100%; border-radius: 3px; min-width: 3px; }
-  .bar-fill.grab_only { background: var(--slate); }
-  .bar-fill.clearpick { background: var(--tote); }
-  .bar-label { font-size: 0.9rem; line-height: 1.2; }
-  .bar-label b { font-size: 1.05rem; font-variation-settings: "wdth" 112; }
-  .bar-label span { color: var(--ink-soft); display: block; }
-  .key { display: flex; gap: 20px; margin-top: 4px; font-size: 0.9rem; color: var(--ink-soft); }
+  /* hero score */
+  .score { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); gap: 32px; margin: 36px 0 48px;
+           border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 28px 0; }
+  .tally { display: grid; grid-template-columns: auto auto 1fr; align-items: end; gap: 0 20px; }
+  .tally .who { grid-column: span 1; font-weight: 700; font-variation-settings: "wdth" 115; font-size: 1.05rem; }
+  .tally .num {
+    font-size: clamp(4rem, 11vw, 8.5rem); line-height: .82; font-weight: 900; font-variation-settings: "wdth" 125;
+    font-variant-numeric: tabular-nums; letter-spacing: -0.04em;
+  }
+  .tally .go .num { color: var(--fault); }
+  .tally .cp .num { color: var(--cp); text-shadow: 0 0 32px rgba(61,213,232,.35); }
+  .tally .go .who { color: var(--go); } .tally .cp .who { color: var(--cp); }
+  .tally .arrow { font-size: clamp(2rem, 5vw, 3.5rem); color: var(--ink-soft); padding-bottom: .4em; font-weight: 300; }
+  .tally-note { grid-column: 1 / -1; margin: 14px 0 0; color: var(--ink-soft); max-width: 46ch; }
+
+  .bars { display: grid; gap: 16px; }
+  .bar-group h3 { margin: 0 0 6px; font-size: .98rem; font-weight: 650; }
+  .bar-row { display: grid; grid-template-columns: 1fr 15.5rem; gap: 12px; align-items: center; margin-bottom: 4px; }
+  .bar-track { height: 14px; background: var(--raise); border-radius: 2px; position: relative; }
+  .bar-fill { height: 100%; border-radius: 2px; min-width: 3px; }
+  .bar-fill.grab_only { background: var(--go); }
+  .bar-fill.clearpick { background: var(--cp); box-shadow: 0 0 12px rgba(61,213,232,.5); }
+  .bar-label { font-size: .86rem; line-height: 1.2; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+  .bar-label b { color: var(--ink); font-weight: 650; }
+  .key { display: flex; gap: 20px; margin-top: 8px; font-size: .86rem; color: var(--ink-soft); }
   .key i { display: inline-block; width: 12px; height: 12px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; }
 
   /* picker */
   .picker { background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 14px 16px; display: grid; gap: 12px; }
   .tabs { display: flex; flex-wrap: wrap; gap: 6px; }
-  .tab {
-    border: 1px solid var(--line); background: var(--paper); border-radius: 4px; padding: 6px 14px; font-weight: 600;
-  }
-  .tab[aria-selected="true"] { background: var(--ink); color: var(--panel); border-color: var(--ink); }
+  .tab { border: 1px solid var(--line); background: transparent; border-radius: 4px; padding: 6px 14px; font-weight: 600; color: var(--ink-soft); }
+  .tab:hover { color: var(--ink); border-color: var(--ink-soft); }
+  .tab[aria-selected="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
   .chips { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
   .chip {
-    min-width: 40px; height: 34px; border: 1px solid var(--line); background: var(--paper); border-radius: 4px;
+    min-width: 40px; height: 34px; border: 1px solid var(--line); background: var(--bg); border-radius: 4px; color: var(--ink-soft);
     font-weight: 600; font-variant-numeric: tabular-nums; position: relative;
   }
-  .chip.better { border-bottom: 4px solid var(--tote); }
-  .chip.worse { border-bottom: 4px solid var(--flag); }
-  .chip[aria-pressed="true"] { background: var(--tote); color: #fff; border-color: var(--tote); }
-  .toggle { display: flex; align-items: center; gap: 8px; font-size: 0.95rem; }
-  .legend { font-size: 0.85rem; color: var(--ink-soft); }
+  .chip:hover { color: var(--ink); }
+  .chip.better { border-bottom: 3px solid var(--cp); }
+  .chip.worse { border-bottom: 3px solid var(--fault); }
+  .chip[aria-pressed="true"] { background: var(--cp); color: var(--bg); border-color: var(--cp); }
+  .row { display: flex; flex-wrap: wrap; gap: 10px 24px; align-items: center; justify-content: space-between; }
+  .toggle { display: flex; align-items: center; gap: 8px; font-size: .95rem; color: var(--ink-soft); }
+  .toggle input { accent-color: var(--cp); }
 
-  .verdict { margin: 22px 0 14px; font-size: 1.25rem; font-weight: 700; font-variation-settings: "wdth" 108; max-width: 60ch; }
-  .verdict em { font-style: normal; color: var(--flag); }
-  .verdict strong { color: var(--tote); }
+  .verdict-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 24px; margin: 22px 0 14px; }
+  .verdict { margin: 0; font-size: 1.3rem; font-weight: 720; font-variation-settings: "wdth" 110; max-width: 62ch; line-height: 1.3; }
+  .verdict em { font-style: normal; color: var(--fault); }
+  .verdict strong { color: var(--cp); }
+  .verdict small { display: block; font-size: 1rem; font-weight: 500; color: var(--ink-soft); font-variation-settings: "wdth" 100; }
+  .play {
+    background: var(--cp); color: var(--bg); border: 0; border-radius: 4px; padding: 10px 18px; font-weight: 750;
+    font-variation-settings: "wdth" 112; white-space: nowrap;
+  }
+  .play:hover { filter: brightness(1.1); }
 
   .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start; }
   .robot { background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 16px; min-width: 0; }
-  .robot h3 { margin: 0 0 8px; font-size: 1.25rem; font-weight: 800; font-variation-settings: "wdth" 118; }
-  .robot.grab_only h3 { color: var(--slate); }
-  .robot.clearpick h3 { color: var(--tote); }
-  .stats { display: flex; flex-wrap: wrap; gap: 4px 18px; margin: 0 0 12px; font-size: 0.95rem; }
-  .stats b { font-variant-numeric: tabular-nums; font-size: 1.1rem; }
-  .stats .bad b { color: var(--flag); }
-  video { width: 100%; border-radius: 4px; background: #000; margin-bottom: 12px; display: block; }
-  svg.tote { width: 100%; height: auto; display: block; margin-bottom: 12px; background: var(--paper); border-radius: 4px; }
-  .map-note { font-size: 0.82rem; color: var(--ink-soft); margin: -6px 0 12px; }
+  .robot.clearpick { border-color: rgba(61,213,232,.45); box-shadow: 0 0 0 1px rgba(61,213,232,.12), 0 0 40px rgba(61,213,232,.06); }
+  .robot h3 { margin: 0 0 8px; font-size: 1.35rem; font-weight: 820; font-variation-settings: "wdth" 122; }
+  .robot.grab_only h3 { color: var(--go); }
+  .robot.clearpick h3 { color: var(--cp); }
+  .stats { display: flex; flex-wrap: wrap; gap: 4px 18px; margin: 0 0 12px; font-size: .95rem; color: var(--ink-soft); }
+  .stats b { font-variant-numeric: tabular-nums; font-size: 1.1rem; color: var(--ink); }
+  .stats .bad b { color: var(--fault); }
+
+  .screen { position: relative; margin-bottom: 12px; border-radius: 4px; overflow: hidden; background: #000; border: 1px solid var(--line); }
+  video { width: 100%; display: block; background: #000; }
+  .live {
+    position: absolute; left: 10px; top: 10px; padding: 4px 10px; border-radius: 3px; background: rgba(12,22,29,.82);
+    font-size: .85rem; font-weight: 650; font-variant-numeric: tabular-nums; pointer-events: none; color: var(--ink);
+  }
+  .live b { font-size: 1.05rem; }
+  .live.hit b { color: var(--fault); }
+  .stamp {
+    position: absolute; left: 50%; top: 42%; transform: translate(-50%, -50%) rotate(-4deg); pointer-events: none;
+    font-weight: 900; font-variation-settings: "wdth" 125; font-size: clamp(1.4rem, 3.4vw, 2.6rem); line-height: 1;
+    padding: 12px 22px; border-radius: 4px; white-space: nowrap; opacity: 0;
+  }
+  .stamp.double, .stamp.miss {
+    color: #fff; background: var(--fault);
+    border: 6px solid transparent;
+    border-image: repeating-linear-gradient(-45deg, var(--hazard) 0 10px, #111 10px 20px) 6;
+    box-shadow: 0 10px 40px rgba(255,106,43,.45);
+  }
+  .stamp.clean { color: var(--bg); background: var(--cp); font-size: clamp(1.1rem, 2.4vw, 1.7rem); }
+  .stamp.push { color: var(--ink); background: rgba(12,22,29,.85); border: 2px solid var(--ink-soft); font-size: clamp(1rem, 2.2vw, 1.5rem); }
+  .stamp.show { animation: stamp 1.5s ease-out forwards; }
+  @keyframes stamp {
+    0% { opacity: 0; transform: translate(-50%, -50%) rotate(-4deg) scale(1.6); }
+    12% { opacity: 1; transform: translate(-50%, -50%) rotate(-4deg) scale(1); }
+    75% { opacity: 1; }
+    100% { opacity: 0; }
+  }
+  .screen.flash::after { content: ""; position: absolute; inset: 0; box-shadow: inset 0 0 0 4px var(--fault); animation: flash .6s ease-out forwards; pointer-events: none; }
+  @keyframes flash { from { opacity: 1; } to { opacity: 0; } }
+
+  svg.tote { width: 100%; height: auto; display: block; margin-bottom: 8px; background: var(--bg); border-radius: 4px; }
+  .map-note { font-size: .82rem; color: var(--ink-soft); margin: 0 0 12px; }
 
   ol.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
   .step {
-    display: grid; grid-template-columns: 26px 1fr 96px 78px; gap: 2px 10px; align-items: center; width: 100%;
-    text-align: left; background: var(--paper); border: 1px solid transparent; border-radius: 4px; padding: 8px 10px;
+    display: grid; grid-template-columns: 26px 1fr 96px 84px; gap: 2px 10px; align-items: center; width: 100%;
+    text-align: left; background: var(--bg); border: 1px solid transparent; border-left: 3px solid transparent; border-radius: 4px; padding: 8px 10px;
   }
   .step:hover { border-color: var(--line); }
-  .step[aria-current="true"] { border-color: var(--tote); background: #fff; }
+  .step[aria-current="true"] { border-color: var(--line); border-left-color: var(--cp); background: var(--raise); }
   .step .n { font-weight: 700; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
   .step .what { font-weight: 600; min-width: 0; overflow-wrap: anywhere; }
   .step .what small { font-weight: 400; color: var(--ink-soft); }
-  .step .reason { grid-column: 2 / -1; font-size: 0.9rem; color: var(--ink-soft); }
-  .step .out { grid-column: 2 / -1; font-size: 0.85rem; color: var(--ink); font-weight: 600; }
-  .meter { height: 8px; background: var(--layer0); border-radius: 4px; position: relative; }
-  .meter i { display: block; height: 100%; border-radius: 4px; background: var(--tote); }
-  .meter i.hot { background: var(--flag); }
-  .meter b { position: absolute; top: -3px; bottom: -3px; width: 2px; background: var(--ink); opacity: .55; }
-  .tag { font-size: 0.82rem; font-weight: 700; text-align: center; border-radius: 3px; padding: 2px 6px; }
-  .tag.clean { color: var(--ok); border: 1px solid var(--ok); }
+  .step .reason { grid-column: 2 / -1; font-size: .88rem; color: var(--ink-soft); }
+  .step .out { grid-column: 2 / -1; font-size: .85rem; color: var(--fault); font-weight: 650; }
+  .meter { height: 6px; background: var(--raise); border-radius: 3px; position: relative; }
+  .meter i { display: block; height: 100%; border-radius: 3px; background: var(--cp); }
+  .meter i.hot { background: var(--fault); }
+  .meter b { position: absolute; top: -3px; bottom: -3px; width: 2px; background: var(--ink); opacity: .5; }
+  .tag { font-size: .8rem; font-weight: 700; text-align: center; border-radius: 3px; padding: 2px 6px; }
+  .tag.clean { color: var(--ok); border: 1px solid rgba(98,216,154,.6); }
   .tag.moved { color: var(--ink-soft); border: 1px solid var(--line); }
-  .tag.double { background: var(--flag); color: #fff; border: 1px solid var(--flag); }
-  .tag.miss, .tag.blocked { color: var(--flag); border: 1px solid var(--flag); }
+  .tag.double { background: var(--fault); color: #fff; border: 1px solid var(--fault); }
+  .tag.miss, .tag.blocked { color: var(--fault); border: 1px solid var(--fault); }
   .empty { padding: 28px; background: var(--panel); border: 1px dashed var(--line); border-radius: 6px; }
-  code { background: var(--layer1); padding: 1px 6px; border-radius: 3px; }
-  footer { margin-top: 48px; color: var(--ink-soft); font-size: 0.9rem; max-width: 80ch; }
+  code { background: var(--raise); padding: 1px 6px; border-radius: 3px; }
+  footer { margin-top: 48px; color: var(--ink-soft); font-size: .9rem; max-width: 80ch; }
+
+  /* what the robot is thinking, in step with the video */
+  .think { background: var(--bg); border: 1px solid var(--line); border-radius: 4px; padding: 12px 14px 14px; margin: -4px 0 12px; }
+  .think-head { display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; font-size: .95rem; }
+  .think-step { color: var(--ink-soft); font-variant-numeric: tabular-nums; font-size: .85rem; }
+  .think-q { font-weight: 700; overflow-wrap: anywhere; }
+  .gauge { position: relative; height: 12px; background: var(--raise); border-radius: 6px; margin: 22px 0 10px; }
+  .gauge i { position: absolute; left: 0; top: 0; bottom: 0; width: 0; border-radius: 6px; background: var(--cp); }
+  .think.over .gauge i { background: var(--fault); box-shadow: 0 0 14px rgba(255,106,43,.55); }
+  .gauge .limit { position: absolute; top: -6px; bottom: -6px; width: 3px; margin-left: -1px; background: var(--ink); border-radius: 2px; }
+  .gauge .limit span { position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); margin-bottom: 2px;
+                       font-size: .75rem; color: var(--ink-soft); white-space: nowrap; }
+  .gauge .val { position: absolute; top: 100%; margin-top: 3px; transform: translateX(-50%); font-size: .8rem; font-weight: 700;
+                font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .think.over .gauge .limit { background: var(--fault); }
+  .think.over .gauge .limit span { color: var(--fault); font-weight: 700; }
+  .think-v { margin: 16px 0 0; font-size: .98rem; line-height: 1.4; }
+  .think-v b { font-weight: 750; }
+  .think.over .think-v b { color: var(--fault); }
+  .think.under .think-v b { color: var(--cp); }
+  @media (prefers-reduced-motion: no-preference) {
+    .gauge i { transition: width .55s cubic-bezier(.2,.8,.2,1); }
+    .gauge .val { transition: left .55s cubic-bezier(.2,.8,.2,1); }
+    .gauge .limit { transition: background-color .2s .4s; }
+  }
 
   @media (max-width: 900px) {
+    .score { grid-template-columns: 1fr; }
     .cols { grid-template-columns: 1fr; }
-    .bar-group { grid-template-columns: 1fr; }
-    .bar-row { grid-template-columns: 1fr 150px; }
+    .bar-row { grid-template-columns: 1fr 12rem; }
   }
   @media (max-width: 520px) {
     .step { grid-template-columns: 22px 1fr 70px; }
     .step .tag { grid-column: 2 / -1; justify-self: start; }
+    .bar-row { grid-template-columns: 1fr; }
   }
   @media (prefers-reduced-motion: no-preference) {
     .bar-fill { transition: width .5s ease-out; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .stamp.show { animation: none; opacity: 1; }
+    .screen.flash::after { animation: none; opacity: 0; }
   }
 </style>
 </head>
 <body>
 <div class="wrap">
+  <nav class="topnav" aria-label="Pages"><a href="atlas.html">Failure atlas</a><a href="robot.html" aria-current="page">Robots</a></nav>
   <header>
     <h1>ClearPick</h1>
-    <p class="lede">A picking robot that makes space before it grabs. Both robots work the same simulated totes: Grab-only always lifts the top item, ClearPick scores every grasp first and pushes crowded items apart.</p>
+    <p class="lede">A picking robot that makes space before it grabs. Both robots clear the same simulated totes. <b>Grab-only</b> always lifts the top item. <b>ClearPick</b> scores every grasp first and pushes crowded items apart.</p>
   </header>
 
   <main id="app"></main>
 
   <footer>
-    Simulated in MuJoCo with simplified suction and pinch rules, so the numbers show how the two strategies compare, not how a real warehouse performs. Real failure photos from Amazon's ARMBench are on the failure atlas page.
+    Simulated in MuJoCo with simplified suction and pinch rules, so the numbers show how the two strategies compare, not how a real warehouse performs. The failure types come from real failed picks in Amazon's ARMBench; see the <a href="atlas.html">failure atlas</a>.
   </footer>
 </div>
 
@@ -154,8 +247,11 @@
   var D = window.CLEARPICK || { scoreboard: {}, modes: {}, scenes: {} };
   var CUTOFF = 0.35;
   var MODE_NAMES = { flat_stacked: "Flat items stacked", small_beside_big: "Small item beside a large one", against_wall: "Item against the tote wall" };
+  var FEATURED = { flat_stacked: "flat_stacked_015", small_beside_big: "small_beside_big_009", against_wall: "against_wall_015" };
   var POL = { grab_only: "Grab-only", clearpick: "ClearPick" };
   var SVGNS = "http://www.w3.org/2000/svg";
+  var C = { bg: "#0C161D", ink: "#E4EEF2", soft: "#8EA6B1", line: "#5E7884", cp: "#3DD5E8", fault: "#FF6A2B",
+            layers: ["#1A2D38", "#24414F", "#2F5567"] };
 
   function h(tag, attrs) {
     var el = document.createElement(tag);
@@ -179,50 +275,65 @@
     return el;
   }
   function modeName(m) { return MODE_NAMES[m] || m.replace(/_/g, " ").replace(/^./, function (c) { return c.toUpperCase(); }); }
-  function failRate(c) { var n = c.clean + c.double_grabs + c.misses; return n ? (c.double_grabs + c.misses) / n : 0; }
+  function fails(c) { return (c.double_grabs || 0) + (c.misses || 0); }
+  function picks(c) { return (c.clean || 0) + fails(c); }
+  function failRate(c) { var n = picks(c); return n ? fails(c) / n : 0; }
   function pct(x) { return (x * 100).toFixed(1) + "%"; }
-  function plural(n, w) { return n + " " + w + (n === 1 ? "" : "s"); }
-  function dbl(sc, pol) { var r = sc.runs[pol]; return r ? (r.summary.double_grabs || 0) + (r.summary.misses || 0) : null; }
+  function plural(n, w) { return n + " " + w + (n === 1 ? "" : (/(sh|ch|s)$/.test(w) ? "es" : "s")); }
+  function isFail(o) { return o === "double" || o === "miss"; }
+
+  /* how a run went: failed picks, and items it never got out of the tote */
+  function runResult(sc, pol) {
+    var r = sc.runs[pol]; if (!r) return null;
+    var f = fails(r.summary), items = r.summary.items || sc.objects.length, out = 0, known = true;
+    r.steps.forEach(function (st) { if (Array.isArray(st.removed)) out += st.removed.length; else known = false; });
+    if (!known) out = (r.summary.clean || 0) + 2 * (r.summary.double_grabs || 0);
+    return { fails: f, left: Math.max(0, items - out) };
+  }
   function status(id) {
-    var sc = D.scenes[id], a = dbl(sc, "grab_only"), b = dbl(sc, "clearpick");
-    if (a == null || b == null) return "same";
-    return b < a ? "better" : b > a ? "worse" : "same";
+    var sc = D.scenes[id], a = runResult(sc, "grab_only"), b = runResult(sc, "clearpick");
+    if (!a || !b) return "same";
+    var ba = a.fails + a.left, bb = b.fails + b.left;
+    return bb < ba ? "better" : bb > ba ? "worse" : "same";
   }
 
   var state = { mode: null, scene: null, onlyDiff: true };
   var app = document.getElementById("app");
 
-  /* ---------- scoreboard ---------- */
-  function scoreboard() {
+  /* ---------- hero: the whole result in two numbers ---------- */
+  function score() {
     var sb = D.scoreboard, modes = Object.keys(D.modes);
-    var maxRate = 0.05;
+    var tot = { grab_only: 0, clearpick: 0 }, scenes = 0, maxRate = 0.05;
     modes.forEach(function (m) { ["grab_only", "clearpick"].forEach(function (p) {
-      var c = sb[m] && sb[m][p]; if (c) maxRate = Math.max(maxRate, failRate(c));
+      var c = sb[m] && sb[m][p]; if (!c) return;
+      tot[p] += fails(c); maxRate = Math.max(maxRate, failRate(c));
+      if (p === "grab_only") scenes += c.scenes || 0;
     }); });
+
+    var tally = h("div", { class: "tally" },
+      h("div", { class: "go" }, h("div", { class: "who", text: "Grab-only" }), h("div", { class: "num", text: String(tot.grab_only) })),
+      h("div", { class: "arrow", "aria-hidden": "true", text: "→" }),
+      h("div", { class: "cp" }, h("div", { class: "who", text: "ClearPick" }), h("div", { class: "num", text: String(tot.clearpick) })),
+      h("p", { class: "tally-note", text: "Failed picks across " + scenes + " simulated totes. A failed pick is a double grab (a second item comes along) or a miss (the cup cannot seal)." }));
+
     var bars = h("div", { class: "bars" });
     modes.forEach(function (m) {
-      var rows = h("div", { class: "bar-rows" });
+      var g = h("div", { class: "bar-group" }, h("h3", { text: modeName(m) }));
       ["grab_only", "clearpick"].forEach(function (p) {
         var c = sb[m] && sb[m][p]; if (!c) return;
-        var picks = c.clean + c.double_grabs + c.misses;
-        var fill = h("div", { class: "bar-fill " + p });
-        fill.style.width = (failRate(c) / maxRate * 100) + "%";
-        var extra = p === "clearpick" ? plural(c.pushes, "push") + " in " + plural(c.scenes, "scene")
-                                      : (c.double_grabs + c.misses) + " of " + picks + " picks failed";
-        if (p === "clearpick") extra = (c.double_grabs + c.misses) + " of " + picks + " picks failed, " + extra;
-        rows.appendChild(h("div", { class: "bar-row" },
-          h("div", { class: "bar-track", role: "img", "aria-label": POL[p] + " failure rate " + pct(failRate(c)) }, fill),
-          h("div", { class: "bar-label" }, h("b", { text: POL[p] + " " + pct(failRate(c)) }), h("span", { text: extra }))));
+        var fill = h("div", { class: "bar-fill " + p }); fill.style.width = (failRate(c) / maxRate * 100) + "%";
+        var lbl = h("div", { class: "bar-label" }, h("b", { text: POL[p] + " " + pct(failRate(c)) }),
+          "  " + fails(c) + " of " + picks(c) + " picks" + (p === "clearpick" && c.pushes ? ", " + plural(c.pushes, "push") : ""));
+        g.appendChild(h("div", { class: "bar-row" },
+          h("div", { class: "bar-track", role: "img", "aria-label": POL[p] + " failure rate " + pct(failRate(c)) }, fill), lbl));
       });
-      bars.appendChild(h("div", { class: "bar-group" }, h("h3", { text: modeName(m) }), rows));
+      bars.appendChild(g);
     });
-    return h("section", null,
-      h("h2", { text: "How often each robot fails a pick" }),
-      h("p", { class: "sub", text: "A failed pick is a double grab (one pick takes a second item along) or a miss (the cup cannot seal and nothing is lifted). Shorter bars are better." }),
-      bars,
-      h("div", { class: "key" },
-        h("span", null, h("i", { style: "background:var(--slate)" }), "Grab-only"),
-        h("span", null, h("i", { style: "background:var(--tote)" }), "ClearPick")));
+    var key = h("div", { class: "key" },
+      h("span", null, h("i", { style: "background:var(--go)" }), "Grab-only"),
+      h("span", null, h("i", { style: "background:var(--cp)" }), "ClearPick"),
+      h("span", { text: "Shorter is better" }));
+    return h("section", { class: "score", "aria-label": "Results" }, tally, h("div", null, bars, key));
   }
 
   /* ---------- picker ---------- */
@@ -234,10 +345,10 @@
   }
   function picker() {
     var modes = Object.keys(D.modes);
-    var tabs = h("div", { class: "tabs", role: "tablist", "aria-label": "Failure mode" });
+    var tabs = h("div", { class: "tabs", role: "tablist", "aria-label": "Failure type" });
     modes.forEach(function (m) {
       tabs.appendChild(h("button", { class: "tab", role: "tab", "aria-selected": String(m === state.mode), text: modeName(m),
-        onclick: function () { state.mode = m; state.scene = null; ensureScene(); render(); } }));
+        onclick: function () { state.mode = m; state.scene = null; try { history.replaceState(null, "", "#" + m); } catch (e) {} ensureScene(); render(); } }));
     });
     var all = D.modes[state.mode] || [];
     var anyDiff = all.some(function (id) { return status(id) !== "same"; });
@@ -252,14 +363,15 @@
       "Only scenes where the robots differ") : null;
     if (toggle) toggle.firstChild.checked = state.onlyDiff;
     return h("section", null,
-      h("h2", { text: "Watch one scene, step by step" }),
-      h("p", { class: "sub", text: "Pick a failure mode and a scene. A blue bar under a scene number means ClearPick failed fewer picks there; an orange bar means it did worse." }),
+      h("h2", { text: "Watch both robots clear the same tote" }),
+      h("p", { class: "sub", text: "Pick a failure type and a scene. A cyan line under a scene number means ClearPick did better there; orange means it did worse." }),
       h("div", { class: "picker" }, tabs, toggle, chips));
   }
   function ensureScene() {
     var vis = visibleScenes();
     if (!state.scene || vis.indexOf(state.scene) < 0) {
-      state.scene = vis.filter(function (id) { return status(id) === "better"; })[0] || vis[0] || null;
+      var f = FEATURED[state.mode];
+      state.scene = (f && vis.indexOf(f) >= 0) ? f : (vis.filter(function (id) { return status(id) === "better"; })[0] || vis[0] || null);
     }
   }
 
@@ -276,88 +388,163 @@
     if (o === "blocked") return h("span", { class: "tag blocked", text: "blocked" });
     return h("span", { class: "tag moved", text: step.action === "push" ? "moved" : String(o || "") });
   }
+  function stampFor(st) {
+    if (st.outcome === "double") return { cls: "double", text: "Double grab!" };
+    if (st.outcome === "miss") return { cls: "miss", text: "Missed" };
+    if (st.outcome === "clean") return { cls: "clean", text: "Clean pick" };
+    if (st.action === "push") return { cls: "push", text: "Push " + dirText(st.direction) };
+    return null;
+  }
   function nice(g) { return String(g || "").replace(/_/g, " "); }
 
   function toteMap(sc, run) {
     var W = sc.tote.size[0], Hh = sc.tote.size[1], k = 1000;
-    var svg = s("svg", { class: "tote", viewBox: "-24 -24 " + (W * k + 48) + " " + (Hh * k + 48), role: "img",
+    var svg = s("svg", { class: "tote", viewBox: "-28 -28 " + (W * k + 56) + " " + (Hh * k + 56), role: "img",
       "aria-label": "Top-down view of the tote with the order of picks" });
-    svg.appendChild(s("defs", null, s("marker", { id: "ah-" + run.policy, viewBox: "0 0 10 10", refX: "8", refY: "5", markerWidth: "7", markerHeight: "7", orient: "auto-start-reverse" },
-      s("path", { d: "M0 0 L10 5 L0 10 z", fill: "#13202B" }))));
-    svg.appendChild(s("rect", { x: 0, y: 0, width: W * k, height: Hh * k, fill: "#DDE3E8", stroke: "#13202B", "stroke-width": 8, rx: 6 }));
+    svg.appendChild(s("defs", null, s("marker", { id: "ah-" + run.policy, viewBox: "0 0 10 10", refX: "8", refY: "5", markerWidth: "6", markerHeight: "6", orient: "auto-start-reverse" },
+      s("path", { d: "M0 0 L10 5 L0 10 z", fill: C.ink }))));
+    svg.appendChild(s("rect", { x: 0, y: 0, width: W * k, height: Hh * k, fill: "#0F1F28", stroke: C.line, "stroke-width": 8, rx: 6 }));
     var picked = {}, pushes = {};
     run.steps.forEach(function (st, i) {
       if (st.action === "grasp") picked[st.item] = { n: i + 1, outcome: st.outcome };
       else (pushes[st.item] = pushes[st.item] || []).push({ n: i + 1, dir: st.direction });
     });
-    var doubles = run.steps.filter(function (st) { return st.outcome === "double"; }).length;
-    var unnamed = sc.objects.filter(function (o) { return !picked[o.id]; });
-    var rodeAlong = unnamed.length === doubles && doubles > 0;
+    var along = {};
+    run.steps.forEach(function (st) {
+      if (st.action === "grasp" && Array.isArray(st.removed)) st.removed.forEach(function (id) { if (id !== st.item) along[id] = true; });
+    });
+    var hasRemoved = run.steps.some(function (st) { return Array.isArray(st.removed); });
+    if (!hasRemoved) {
+      var doubles = run.steps.filter(function (st) { return st.outcome === "double"; }).length;
+      var unnamed = sc.objects.filter(function (o) { return !picked[o.id]; });
+      if (unnamed.length === doubles && doubles > 0) unnamed.forEach(function (o) { along[o.id] = true; });
+    }
     var bottoms = [];
     sc.objects.forEach(function (o) { var b = Math.round((o.pos[2] - o.size[2] / 2) * 1000) / 1000; if (bottoms.indexOf(b) < 0) bottoms.push(b); });
     bottoms.sort(function (a, b) { return a - b; });
     var order = sc.objects.slice().sort(function (a, b) { return (a.pos[2] - a.size[2] / 2) - (b.pos[2] - b.size[2] / 2); });
-    var rects = {};
+    var rects = {}, labels = [];
     order.forEach(function (o) {
       var layer = Math.min(2, bottoms.indexOf(Math.round((o.pos[2] - o.size[2] / 2) * 1000) / 1000));
       var x = (o.pos[0] - o.size[0] / 2 + W / 2) * k, y = (Hh / 2 - o.pos[1] - o.size[1] / 2) * k;
-      var p = picked[o.id], bad = p && (p.outcome === "double" || p.outcome === "miss");
+      var p = picked[o.id], bad = p && isFail(p.outcome), ride = !p && along[o.id];
       var rect = s("rect", { x: x, y: y, width: o.size[0] * k, height: o.size[1] * k, rx: 3,
-        fill: ["#D3DBE2", "#EAEFF3", "#FFFFFF"][layer], stroke: bad ? "#D9480F" : "#13202B", "stroke-width": bad ? 6 : 2.5 });
-      var ride = rodeAlong && !p;
-      if (ride) { rect.setAttribute("stroke", "#D9480F"); rect.setAttribute("stroke-width", 5); rect.setAttribute("stroke-dasharray", "10 6"); }
-      var t = s("title"); t.textContent = o.id + (p ? ", picked at step " + p.n : ride ? ", lifted along in a double grab" : ", not picked");
+        fill: C.layers[layer], stroke: bad ? C.fault : C.soft, "stroke-width": bad ? 6 : 2.5 });
+      if (ride) { rect.setAttribute("stroke", C.fault); rect.setAttribute("stroke-width", 5); rect.setAttribute("stroke-dasharray", "10 6"); }
+      var t = s("title"); t.textContent = o.id + (p ? ", picked at step " + p.n : ride ? ", lifted along in a double grab" : ", still in the tote");
       rect.appendChild(t);
       svg.appendChild(rect); rects[o.id] = rect;
       var cx = x + o.size[0] * k / 2, cy = y + o.size[1] * k / 2;
-      (pushes[o.id] || []).forEach(function (pu, j) {
-        var d = pu.dir || [0, 0], len = 80, dx = d[0] * len, dy = -d[1] * len, ox = j * 22;
-        svg.appendChild(s("line", { x1: cx + ox, y1: cy, x2: cx + ox + dx, y2: cy + dy, stroke: "#13202B", "stroke-width": 5,
-          "marker-end": "url(#ah-" + run.policy + ")", "stroke-linecap": "round" }));
-        var lbl = s("text", { x: cx + ox + dx * 0.5 + 16, y: cy + dy * 0.5 + 6, "text-anchor": "middle", "font-size": 18, "font-weight": 700, fill: "#13202B" });
-        lbl.textContent = pu.n; svg.appendChild(lbl);
-      });
+      var ps = pushes[o.id] || [];
+      if (ps.length) {
+        var d0 = ps[0].dir || [0, 0], len = 80;
+        ps.forEach(function (pu, j) {
+          var d = pu.dir || [0, 0], dx = d[0] * len, dy = -d[1] * len;
+          var off = (j - (ps.length - 1) / 2) * 16, ox = d[1] * off, oy = d[0] * off;   /* side by side, across the arrow */
+          svg.appendChild(s("line", { x1: cx + ox, y1: cy + oy, x2: cx + ox + dx, y2: cy + oy + dy, stroke: C.ink, "stroke-width": 5,
+            "marker-end": "url(#ah-" + run.policy + ")", "stroke-linecap": "round" }));
+        });
+        /* one label per item, past the arrow tips, so step numbers never sit on top of each other */
+        labels.push({ x: cx + d0[0] * (len + 34), y: cy - d0[1] * (len + 34) + 7, text: ps.map(function (pu) { return pu.n; }).join(", ") });
+      }
       if (p) {
-        svg.appendChild(s("circle", { cx: cx, cy: cy, r: 15, fill: bad ? "#D9480F" : "#1D5FD1" }));
-        var tx = s("text", { x: cx, y: cy + 6, "text-anchor": "middle", "font-size": 18, "font-weight": 700, fill: "#fff" });
+        svg.appendChild(s("circle", { cx: cx, cy: cy, r: 16, fill: bad ? C.fault : C.cp }));
+        var tx = s("text", { x: cx, y: cy + 6, "text-anchor": "middle", "font-size": 18, "font-weight": 800, fill: bad ? "#fff" : C.bg });
         tx.textContent = p.n; svg.appendChild(tx);
       } else if (ride) {
-        svg.appendChild(s("circle", { cx: cx, cy: cy, r: 15, fill: "#fff", stroke: "#D9480F", "stroke-width": 4 }));
-        var plus = s("text", { x: cx, y: cy + 7, "text-anchor": "middle", "font-size": 22, "font-weight": 700, fill: "#D9480F" });
+        svg.appendChild(s("circle", { cx: cx, cy: cy, r: 15, fill: C.bg, stroke: C.fault, "stroke-width": 4 }));
+        var plus = s("text", { x: cx, y: cy + 7, "text-anchor": "middle", "font-size": 22, "font-weight": 800, fill: C.fault });
         plus.textContent = "+"; svg.appendChild(plus);
       }
     });
+    labels.forEach(function (l) {
+      var t = s("text", { x: l.x, y: l.y, "text-anchor": "middle", "font-size": 20, "font-weight": 800, fill: C.ink,
+        stroke: C.bg, "stroke-width": 6, "paint-order": "stroke", "stroke-linejoin": "round" });
+      t.textContent = l.text; svg.appendChild(t);
+    });
     svg._rects = rects;
     return svg;
+  }
+
+  var players = [];
+
+  /* the decision behind one move: risk of the grab against the limit, and what the robot does about it */
+  function showThinking(el, st, i, n, pol) {
+    var r = typeof st.risk === "number" ? st.risk : null, over = r != null && r > CUTOFF;
+    var rs = r == null ? "" : r.toFixed(2), lim = CUTOFF.toFixed(2), why = st.reason ? st.reason.replace(/^./, function (c) { return c.toLowerCase(); }) : "";
+    var q, v;
+    if (st.action === "push") {
+      q = "Best grab it could make right now";
+      v = [h("b", { text: "Too risky." }), " Risk " + rs + " is over the " + lim + " limit, so push " + st.item + " " + dirText(st.direction) + " first" + (why ? " (" + why + ")." : ".")];
+    } else if (pol === "grab_only") {
+      q = "Grab " + st.item + " with " + nice(st.grasp);
+      v = over ? [h("b", { text: "Risky, grabs anyway." }), " Risk " + rs + " is over the limit, but Grab-only never checks: it always lifts the top item."]
+               : [h("b", { text: "Looks safe." }), " Risk " + rs + ". Grab-only lifts the top item without checking."];
+    } else {
+      q = "Grab " + st.item + " with " + nice(st.grasp);
+      v = over ? [h("b", { text: "Over the limit, no push left." }), " Risk " + rs + (why ? ": " + why + "." : ".")]
+               : [h("b", { text: "Safe to grab." }), " Risk " + rs + " is under the " + lim + " limit" + (why ? ": " + why + "." : ".")];
+    }
+    el.className = "think " + (r == null ? "" : over ? "over" : "under");
+    el.textContent = "";
+    el.appendChild(h("div", { class: "think-head" }, h("span", { class: "think-step", text: "Move " + (i + 1) + " of " + n }), h("span", { class: "think-q", text: q })));
+    if (r != null) {
+      var fill = h("i"), val = h("span", { class: "val", text: "risk " + rs });
+      var limit = h("b", { class: "limit" }, h("span", { text: "limit " + lim }));
+      limit.style.left = (CUTOFF * 100) + "%";
+      el.appendChild(h("div", { class: "gauge", role: "img", "aria-label": "risk " + rs + ", limit " + lim }, fill, limit, val));
+      fill.style.width = "0%"; val.style.left = "0%";
+      void fill.offsetWidth;   /* start from zero so the needle visibly climbs past (or stops short of) the limit */
+      var w = Math.min(1, Math.max(0.02, r)) * 100;
+      fill.style.width = w + "%"; val.style.left = Math.min(92, Math.max(6, w)) + "%";
+    }
+    el.appendChild(h("p", { class: "think-v" }, v[0], v[1]));
   }
 
   function robot(id, pol) {
     var sc = D.scenes[id], run = sc.runs[pol];
     if (!run) return h("div", { class: "robot " + pol }, h("h3", { text: POL[pol] }), h("p", { text: "No run for this scene yet." }));
     var sm = run.summary, pushes = run.steps.filter(function (x) { return x.action === "push"; }).length;
-    var bad = (sm.double_grabs || 0) > 0;
+    var res = runResult(sc, pol);
     var card = h("div", { class: "robot " + pol }, h("h3", { text: POL[pol] }),
       h("div", { class: "stats" },
         h("span", null, h("b", { text: String(sm.clean || 0) }), (sm.clean === 1 ? " clean pick" : " clean picks")),
-        h("span", { class: bad ? "bad" : "" }, h("b", { text: String(sm.double_grabs || 0) }), (sm.double_grabs === 1 ? " double grab" : " double grabs")),
+        h("span", { class: sm.double_grabs ? "bad" : "" }, h("b", { text: String(sm.double_grabs || 0) }), (sm.double_grabs === 1 ? " double grab" : " double grabs")),
+        (sm.misses ? h("span", { class: "bad" }, h("b", { text: String(sm.misses) }), (sm.misses === 1 ? " miss" : " misses")) : null),
         h("span", null, h("b", { text: String(pushes) }), (pushes === 1 ? " push" : " pushes")),
-        (sm.misses ? h("span", { class: "bad" }, h("b", { text: String(sm.misses) }), (sm.misses === 1 ? " miss" : " misses")) : null)));
-    var video = null;
+        (res.left ? h("span", { class: "bad" }, h("b", { text: String(res.left) }), " left in the tote") : null)));
+
+    var video = null, live = null, stamp = null, screen = null;
     if (run.video) {
-      video = h("video", { src: run.video, controls: "", muted: "", playsinline: "", preload: "metadata", "aria-label": POL[pol] + " video" });
-      card.appendChild(video);
+      video = h("video", { src: run.video, controls: "", playsinline: "", preload: "auto", "aria-label": POL[pol] + " video" });
+      video.muted = true;
+      live = h("div", { class: "live", "aria-live": "off" });
+      stamp = h("div", { class: "stamp", "aria-hidden": "true" });
+      screen = h("div", { class: "screen" }, video, live, stamp);
+      card.appendChild(screen);
     }
+    var think = run.steps.length ? h("div", { class: "think", "aria-live": "polite" }) : null;
+    if (think) card.appendChild(think);
     var map = sc.objects.length ? toteMap(sc, { policy: pol, steps: run.steps }) : null;
     if (map) {
       card.appendChild(map);
-      card.appendChild(h("p", { class: "map-note", text: "Top view at the start. Numbers show the order of picks, arrows show pushes, orange marks a double grab, and + marks an item that came along." }));
+      card.appendChild(h("p", { class: "map-note", text: "Top view at the start. Numbers are the order of picks, arrows are pushes, orange is a failed pick, + is an item that came along." }));
     }
-    var list = h("ol", { class: "steps" });
+    var list = h("ol", { class: "steps" }), buttons = [];
+    var marked = -1;
+    function mark(i) {
+      if (think && i !== marked && run.steps[i]) showThinking(think, run.steps[i], i, run.steps.length, pol);
+      marked = i;
+      buttons.forEach(function (b, j) { b.setAttribute("aria-current", String(j === i)); });
+      if (map && map._rects) Object.keys(map._rects).forEach(function (k) { map._rects[k].style.filter = ""; });
+      var st = run.steps[i];
+      if (st && map && map._rects && map._rects[st.item]) map._rects[st.item].style.filter = "drop-shadow(0 0 8px " + C.cp + ")";
+    }
     run.steps.forEach(function (st, i) {
       var risk = typeof st.risk === "number" ? st.risk : null;
       var meter = h("div", { class: "meter", role: "img", "aria-label": risk == null ? "risk not scored" : "risk " + risk.toFixed(2) });
       if (risk != null) {
-        var fill = h("i", { class: risk > CUTOFF ? "hot" : "" }); fill.style.width = (risk * 100) + "%";
+        var fill = h("i", { class: risk > CUTOFF ? "hot" : "" }); fill.style.width = (Math.min(1, risk) * 100) + "%";
         var tick = h("b"); tick.style.left = (CUTOFF * 100) + "%";
         meter.appendChild(fill); meter.appendChild(tick);
       }
@@ -365,10 +552,7 @@
         ? h("span", { class: "what" }, "Push ", st.item, " ", h("small", { text: dirText(st.direction) }))
         : h("span", { class: "what" }, "Grab ", st.item, " ", h("small", { text: "with " + nice(st.grasp) }));
       var btn = h("button", { class: "step", "aria-current": "false", onclick: function () {
-        Array.prototype.forEach.call(list.querySelectorAll(".step"), function (b) { b.setAttribute("aria-current", "false"); });
-        btn.setAttribute("aria-current", "true");
-        if (map && map._rects) Object.keys(map._rects).forEach(function (k) { map._rects[k].style.filter = ""; });
-        if (map && map._rects && map._rects[st.item]) map._rects[st.item].style.filter = "drop-shadow(0 0 6px #1D5FD1)";
+        mark(i);
         if (video && typeof st.t === "number") { try { video.currentTime = Math.max(0, st.t); } catch (e) {} }
       } },
         h("span", { class: "n", text: String(i + 1) }), what, meter, outcomeTag(st),
@@ -376,24 +560,77 @@
       if (st.action === "grasp" && Array.isArray(st.removed) && (st.removed.length !== 1 || st.removed[0] !== st.item)) {
         btn.appendChild(h("span", { class: "out", text: st.removed.length ? "Left the tote: " + st.removed.join(", ") : "Nothing left the tote" }));
       }
+      buttons.push(btn);
       list.appendChild(h("li", null, btn));
     });
     card.appendChild(list);
+    if (think) mark(0);
+
+    /* follow the video: highlight the current step, stamp each result as it lands, count failures */
+    if (video) {
+      var times = run.steps.map(function (st) { return typeof st.t === "number" ? st.t : null; });
+      var shown = -1;
+      function doneBy(t, ended) {
+        var n = 0;
+        for (var i = 0; i < run.steps.length; i++) {
+          var next = i + 1 < times.length ? times[i + 1] : null;
+          if (ended || (next != null && t >= next)) n = i + 1;
+        }
+        return n;
+      }
+      function current(t) { var c = 0; times.forEach(function (x, i) { if (x != null && t >= x) c = i; }); return c; }
+      function paint(ended) {
+        var t = video.currentTime, done = doneBy(t, ended), f = 0;
+        for (var i = 0; i < done; i++) if (isFail(run.steps[i].outcome)) f++;
+        live.textContent = ""; live.appendChild(document.createTextNode("Failed picks ")); live.appendChild(h("b", { text: String(f) }));
+        live.classList.toggle("hit", f > 0);
+        if (!video.paused || ended) {
+          if (done - 1 > shown) {
+            var st = run.steps[done - 1], sp = stampFor(st);
+            if (sp) {
+              stamp.className = "stamp " + sp.cls; stamp.textContent = sp.text;
+              void stamp.offsetWidth; stamp.classList.add("show");
+              if (isFail(st.outcome)) { screen.classList.remove("flash"); void screen.offsetWidth; screen.classList.add("flash"); }
+            }
+          }
+          mark(ended ? run.steps.length - 1 : current(t));
+        }
+        shown = done - 1;
+      }
+      video.addEventListener("timeupdate", function () { paint(false); });
+      video.addEventListener("ended", function () { paint(true); });
+      function resync() { shown = doneBy(video.currentTime, false) - 1; }   /* a jump is not a new result: no stamp */
+      video.addEventListener("seeking", resync);
+      video.addEventListener("seeked", function () { resync(); paint(false); });
+      video.addEventListener("loadedmetadata", function () { paint(false); });
+      paint(false);
+      players.push(video);
+    }
     return card;
   }
 
   function compare() {
-    if (!state.scene) return h("div", { class: "empty", text: "No scenes in this mode yet." });
-    var sc = D.scenes[state.scene], a = dbl(sc, "grab_only"), b = dbl(sc, "clearpick");
+    if (!state.scene) return h("div", { class: "empty", text: "No scenes for this failure type yet." });
+    var sc = D.scenes[state.scene], a = runResult(sc, "grab_only"), b = runResult(sc, "clearpick");
     var verdict = h("p", { class: "verdict" });
-    if (a != null && b != null) {
+    if (a && b) {
       verdict.appendChild(document.createTextNode("Grab-only failed "));
-      verdict.appendChild(h("em", { text: plural(a, "pick") }));
-      verdict.appendChild(document.createTextNode(" here. ClearPick: "));
-      verdict.appendChild(h("strong", { text: String(b) }));
+      verdict.appendChild(h("em", { text: plural(a.fails, "pick") }));
+      verdict.appendChild(document.createTextNode(" here. ClearPick failed "));
+      verdict.appendChild(h("strong", { text: String(b.fails) }));
       verdict.appendChild(document.createTextNode("."));
+      var notes = [];
+      if (a.left) notes.push("Grab-only gave up with " + plural(a.left, "item") + " still in the tote.");
+      if (b.left) notes.push("ClearPick stopped with " + plural(b.left, "item") + " still in the tote.");
+      if (notes.length) verdict.appendChild(h("small", { text: notes.join(" ") }));
     }
-    return h("div", null, verdict, h("div", { class: "cols" }, robot(state.scene, "grab_only"), robot(state.scene, "clearpick")));
+    players = [];
+    var cols = h("div", { class: "cols" }, robot(state.scene, "grab_only"), robot(state.scene, "clearpick"));
+    var play = players.length ? h("button", { class: "play", onclick: function () {
+      players.forEach(function (v) { try { v.pause(); v.currentTime = 0; } catch (e) {} });
+      players.forEach(function (v) { var p = v.play(); if (p && p.catch) p.catch(function () {}); });
+    } }, "▶ Play both") : null;
+    return h("div", null, h("div", { class: "verdict-row" }, verdict, play), cols);
   }
 
   function render() {
@@ -403,12 +640,13 @@
         h("p", null, "Run ", h("code", { text: "python -m sim.run_batch" }), " and then ", h("code", { text: "python -m brain.build_site" }), ", then reload this page.")));
       return;
     }
-    app.appendChild(scoreboard());
+    app.appendChild(score());
     app.appendChild(picker());
     app.appendChild(compare());
   }
 
-  state.mode = Object.keys(D.modes)[0] || null;
+  var fromHash = (location.hash || "").slice(1);
+  state.mode = D.modes[fromHash] ? fromHash : (Object.keys(D.modes)[0] || null);
   ensureScene();
   render();
 })();

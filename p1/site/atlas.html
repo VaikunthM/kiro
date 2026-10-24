@@ -4,56 +4,113 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Failure Atlas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&display=swap" rel="stylesheet">
 <style>
-  :root { --bg:#f7f7f5; --card:#fff; --ink:#1d1d1f; --muted:#6b6b70; --line:#e3e3e0; --accent:#2563eb; --sim:#15803d; --real:#9a3412; }
-  @media (prefers-color-scheme: dark) {
-    :root { --bg:#141416; --card:#1e1e22; --ink:#ececf0; --muted:#9a9aa3; --line:#2e2e34; --accent:#60a5fa; --sim:#4ade80; --real:#fb923c; }
+  :root {
+    --bg:#0C161D; --card:#111F28; --raise:#172A35; --ink:#E4EEF2; --muted:#8EA6B1; --line:#25404D;
+    --accent:#3DD5E8; --sim:#3DD5E8; --real:#8EA6B1; --fault:#FF6A2B;
+    color-scheme: dark;
   }
   * { box-sizing:border-box; }
-  body { margin:0; font:15px/1.45 system-ui,-apple-system,Segoe UI,sans-serif; background:var(--bg); color:var(--ink); }
-  header { padding:20px 24px 8px; display:flex; flex-wrap:wrap; align-items:baseline; gap:12px 24px; }
-  h1 { margin:0; font-size:24px; }
-  header p { margin:0; color:var(--muted); flex:1; min-width:240px; }
-  nav a { color:var(--accent); text-decoration:none; margin-left:14px; font-weight:600; }
-  main { display:grid; grid-template-columns: minmax(0,1.6fr) minmax(280px,1fr); gap:16px; padding:12px 24px; }
-  @media (max-width:860px){ main { grid-template-columns:1fr; padding:12px 16px; } header{padding:16px 16px 8px;} }
-  .card { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px; }
-  #map { height:560px; position:relative; }
-  #map canvas { width:100%; height:100%; display:block; cursor:pointer; }
+  body {
+    margin:0; font:15px/1.5 "Archivo","Helvetica Neue",Arial,sans-serif; color:var(--ink);
+    background:
+      linear-gradient(rgba(61,213,232,.035) 1px, transparent 1px) 0 0 / 40px 40px,
+      linear-gradient(90deg, rgba(61,213,232,.035) 1px, transparent 1px) 0 0 / 40px 40px,
+      var(--bg);
+    min-height:100vh;
+  }
+  :focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
+  .wrap { max-width:1240px; margin:0 auto; padding:0 16px; }
+  .topnav { display:flex; gap:4px; padding:18px 0 0; font-size:.95rem; }
+  .topnav a { color:var(--muted); text-decoration:none; padding:6px 12px; border-radius:4px; font-weight:600; }
+  .topnav a:hover { color:var(--ink); background:var(--raise); }
+  .topnav a[aria-current="page"] { color:var(--ink); box-shadow: inset 0 -2px 0 var(--accent); border-radius:0; }
+  header { padding:28px 0 18px; }
+  h1 { margin:0; font-size:clamp(2.6rem,7vw,5rem); line-height:.9; letter-spacing:-.025em; font-weight:880; font-variation-settings:"wdth" 125; }
+  header p { margin:14px 0 0; color:var(--muted); max-width:66ch; font-size:1.08rem; }
+  main { display:grid; grid-template-columns:minmax(0,1.6fr) minmax(300px,1fr); gap:16px; padding:12px 0; }
+  @media (max-width:860px){ main { grid-template-columns:1fr; } }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:6px; padding:16px; }
+  #map { height:580px; position:relative; }
+  @media (max-width:860px){ #map { height:420px; } }
+  #map canvas { width:100%; height:100%; display:block; cursor:crosshair; }
   .sw { display:inline-block; width:10px; height:10px; border-radius:50%; margin-right:6px; vertical-align:baseline; }
-  #panel h2 { margin:0 0 6px; font-size:20px; }
-  .badge { display:inline-block; font-size:12px; font-weight:600; padding:2px 8px; border-radius:99px; border:1px solid currentColor; margin-bottom:10px; }
+  #panel h2 { color:var(--ink); margin:0 0 8px; font-size:1.4rem; line-height:1.15; font-weight:780; font-variation-settings:"wdth" 115; }
+  .badge { display:inline-block; font-size:.85rem; font-weight:650; padding:3px 10px; border-radius:4px; border:1px solid currentColor; margin-bottom:12px; }
   .sim { color:var(--sim); } .real { color:var(--real); }
-  .kv { display:grid; grid-template-columns:auto 1fr; gap:4px 12px; margin:8px 0 14px; }
+  a.go-sim { display:inline-block; margin:0 0 14px; background:var(--accent); color:var(--bg); text-decoration:none;
+             font-weight:750; font-variation-settings:"wdth" 112; padding:9px 16px; border-radius:4px; }
+  a.go-sim:hover { filter:brightness(1.1); }
+  .kv { display:grid; grid-template-columns:auto 1fr; gap:4px 14px; margin:8px 0 14px; }
   .kv span:nth-child(odd){ color:var(--muted); }
+  .kv span:nth-child(even){ color:var(--ink); font-variant-numeric:tabular-nums; font-weight:600; }
+  .big { font-size:2.6rem; line-height:1; font-weight:900; font-variation-settings:"wdth" 125; color:var(--fault); margin:2px 0 4px; font-variant-numeric:tabular-nums; }
   .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(88px,1fr)); gap:6px; }
-  .grid img { width:100%; aspect-ratio:1; object-fit:cover; border-radius:6px; border:1px solid var(--line); }
-  #preview { width:100%; max-height:220px; object-fit:contain; border-radius:8px; margin-bottom:10px; display:none; }
+  .grid img, .grid .ph { width:100%; aspect-ratio:1; object-fit:cover; border-radius:4px; border:1px solid var(--line); background:var(--raise); }
+  .missing { font-size:.85rem; color:var(--muted); margin:8px 0 0; }
+  #preview { width:100%; max-height:220px; object-fit:contain; border-radius:4px; margin-bottom:10px; display:none; background:#000; }
   .muted { color:var(--muted); }
-  #list { padding:0 24px 12px; display:flex; flex-wrap:wrap; gap:8px; }
-  @media (max-width:860px){ #list{padding:0 16px 12px;} }
-  #list button { font:inherit; font-size:13px; border:1px solid var(--line); background:var(--card); color:var(--ink); border-radius:99px; padding:5px 12px; cursor:pointer; }
-  #list button.on { border-color:var(--accent); color:var(--accent); font-weight:600; }
-  #stats { margin:0 24px 32px; }
-  @media (max-width:860px){ #stats{margin:0 16px 24px;} }
-  table { border-collapse:collapse; width:100%; font-size:14px; }
-  th, td { text-align:left; padding:6px 8px; border-bottom:1px solid var(--line); }
+  #list { padding:0 0 12px; display:flex; flex-wrap:wrap; gap:8px; }
+  #list button { font:inherit; font-size:.88rem; border:1px solid var(--line); background:var(--card); color:var(--muted); border-radius:4px; padding:6px 12px; cursor:pointer; }
+  #list button:hover { color:var(--ink); }
+  #list button.on { border-color:var(--accent); color:var(--ink); font-weight:650; background:var(--raise); }
+  #stats { margin:4px 0 32px; }
+  #stats h2 { margin:0 0 6px; font-size:1.25rem; font-weight:760; font-variation-settings:"wdth" 115; }
+  table { border-collapse:collapse; width:100%; font-size:.92rem; }
+  th, td { text-align:left; padding:7px 8px; border-bottom:1px solid var(--line); }
+  td:last-child { font-variant-numeric:tabular-nums; font-weight:650; }
   th { color:var(--muted); font-weight:600; }
+  footer { padding:0 0 28px; font-size:.85rem; max-width:90ch; }
+  footer a { color:inherit; }
+  /* from a real photo to the simulated tote */
+  #recipes { margin:0 0 16px; }
+  #recipes h2 { margin:0 0 4px; font-size:1.25rem; font-weight:760; font-variation-settings:"wdth" 115; }
+  #recipes > p { margin:0 0 14px; color:var(--muted); max-width:72ch; }
+  .rgrid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; }
+  @media (max-width:860px){ .rgrid { grid-template-columns:1fr; } }
+  a.rcard { display:block; color:inherit; text-decoration:none; background:var(--bg); border:1px solid var(--line); border-radius:6px; overflow:hidden; }
+  a.rcard:hover { border-color:var(--accent); }
+  .frame { position:relative; aspect-ratio:4/3; background:#000; }
+  .frame > img, .frame > video, .frame > .ph { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+  .frame > .ph { display:grid; place-items:center; background:var(--raise); color:var(--muted); font-size:.9rem; padding:16px; text-align:center; }
+  .frame .tagline { position:absolute; left:10px; top:10px; padding:3px 9px; border-radius:3px; font-size:.8rem; font-weight:700; background:rgba(12,22,29,.85); }
+  .frame .t-real { color:var(--fault); } .frame .t-sim { color:var(--accent); }
+  .rcard .cap { padding:12px 14px 14px; }
+  .rcard .cap b { display:block; font-size:1.02rem; font-weight:750; margin-bottom:2px; }
+  .rcard .cap span { color:var(--muted); font-size:.92rem; }
+  .rcard .cap em { display:block; font-style:normal; color:var(--accent); font-weight:650; font-size:.9rem; margin-top:8px; }
+  @media (prefers-reduced-motion: no-preference) {
+    .frame .sim { animation: showSim 8s ease-in-out infinite; }
+    .frame .real { animation: showReal 8s ease-in-out infinite; }
+    .rcard:nth-child(2) .frame > * { animation-delay: -2.7s; }
+    .rcard:nth-child(3) .frame > * { animation-delay: -5.4s; }
+  }
+  @keyframes showReal { 0%, 40% { opacity:1; } 50%, 90% { opacity:0; } 100% { opacity:1; } }
+  @keyframes showSim { 0%, 40% { opacity:0; } 50%, 90% { opacity:1; } 100% { opacity:0; } }
+  @media (prefers-reduced-motion: reduce) {
+    .frame .real { opacity:0; }   /* no crossfade: show the simulation, the photo is in the grid above */
+  }
 </style>
 </head>
 <body>
+<div class="wrap">
+<nav class="topnav" aria-label="Pages"><a href="atlas.html" aria-current="page">Failure atlas</a><a href="robot.html">Robots</a></nav>
 <header>
-  <h1>Failure Atlas</h1>
+  <h1>Failure atlas</h1>
   <p id="sub">Real failed picks from Amazon's ARMBench, grouped by what went wrong.</p>
-  <nav><a href="atlas.html">Atlas</a><a href="robot.html">Robot</a></nav>
 </header>
 <div id="list"></div>
 <main>
   <div class="card"><div id="map"></div></div>
-  <aside class="card" id="panel"><img id="preview" alt=""><div id="detail" class="muted">Click a point on the map or a button above to see that failure mode.</div></aside>
+  <aside class="card" id="panel"><img id="preview" alt=""><div id="detail" class="muted">Click a point on the map or a button above to see that failure type.</div></aside>
 </main>
+<section class="card" id="recipes" hidden></section>
 <section class="card" id="stats"></section>
-<footer class="muted" style="padding:0 24px 28px;font-size:13px">Data: <a href="https://github.com/armbench/armbench" style="color:inherit">Amazon ARMBench</a> image defect dataset, CC BY 4.0. Photos show the item on the gripper after the pick. Failure modes use Amazon's own labels. Counts are from our 6,000-failure sample, not real-world rates. The three scene recipes are our hypotheses about what causes double-picks.</footer>
+<footer class="muted">Data: <a href="https://github.com/armbench/armbench">Amazon ARMBench</a> image defect dataset, CC BY 4.0. Photos show the item on the gripper after the pick. Failure types use Amazon's own labels. Counts are from our 6,000-failure sample, not real-world rates. The three scene recipes are our hypotheses about what causes double picks.</footer>
+</div>
 
 <script>
 const pct = v => v == null ? 'n/a' : (v * 100).toFixed(0) + '%';
@@ -61,31 +118,64 @@ fetch('atlas.json').then(r => r.json()).then(A => {
   const byId = Object.fromEntries(A.clusters.map(c => [c.id, c]));
   const total = A.clusters.reduce((s, c) => s + c.count, 0);
   document.getElementById('sub').textContent =
-    `${total.toLocaleString()} real failed picks from Amazon's ARMBench, grouped into ${A.clusters.length} failure modes using Amazon's own labels. Modes with a green badge are recreated in simulation.`;
+    `${total.toLocaleString()} real failed picks from Amazon's ARMBench, grouped into ${A.clusters.length} failure types using Amazon's own labels. ${(s => s ? `${s.name.replace(/\s*\(.*\)\s*$/, '')}, ${pct(s.share)} of all failures, is the one we recreate in simulation.` : '')(A.clusters.find(c => c.simulated))}`;
 
-  const PALETTE = ['#2563eb','#dc2626','#16a34a','#d97706','#9333ea','#0891b2','#db2777','#65a30d'];
+  const PALETTE = ['#FF6A2B','#3DD5E8','#B48CFF','#F4C21B','#62D89A','#FF7AB6','#6EA8FF','#C8D46A'];
   const color = Object.fromEntries(A.clusters.map((c, i) => [c.id, PALETTE[i % PALETTE.length]]));
-  const dark = matchMedia('(prefers-color-scheme: dark)').matches;
-  const map = document.getElementById('map');
+    const map = document.getElementById('map');
   const cv = document.createElement('canvas'); map.appendChild(cv);
   let selected = null, W = 0, H = 0;
   const PAD = 14;
   const px = p => [PAD + p.x * (W - 2 * PAD), PAD + (1 - p.y) * (H - 2 * PAD)];
+  const short = c => c.name.replace(/\s*\(.*\)\s*$/, '');
+  // label position per cluster: the densest spot of its points (types are spread across the map, so not the mean)
+  const centre = {};
+  A.clusters.forEach(c => {
+    const cells = {};
+    for (const p of A.points) if (p.cluster === c.id) {
+      const key = Math.floor(p.x * 12) + ',' + Math.floor(p.y * 12);
+      (cells[key] = cells[key] || []).push(p);
+    }
+    const best = Object.values(cells).sort((a, b) => b.length - a.length)[0];
+    if (best) centre[c.id] = { x: best.reduce((s, p) => s + p.x, 0) / best.length, y: best.reduce((s, p) => s + p.y, 0) / best.length };
+  });
+  let from = null, mix = 1, anim = 0;
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function fadeTo(id) {
+    from = selected; selected = id; mix = 0;
+    if (still) { mix = 1; draw(); return; }
+    cancelAnimationFrame(anim);
+    const t0 = performance.now();
+    const step = now => { mix = Math.min(1, (now - t0) / 320); draw(); if (mix < 1) anim = requestAnimationFrame(step); };
+    anim = requestAnimationFrame(step);
+  }
+  const alphaOf = (p, sel) => !sel ? 0.75 : p.cluster === sel ? 0.85 : 0.35;
+  const sizeOf = (p, sel) => sel && p.cluster === sel ? 2.6 : 2.2;
   function draw() {
     const dpr = window.devicePixelRatio || 1;
     W = cv.clientWidth; H = cv.clientHeight;
     cv.width = W * dpr; cv.height = H * dpr;
     const g = cv.getContext('2d'); g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, W, H);
+    const e = mix * mix * (3 - 2 * mix);   // ease in-out
     for (const pass of [false, true]) {
       for (const p of A.points) {
         const on = !selected || p.cluster === selected;
         if (on !== pass) continue;
         const [x, y] = px(p);
-        g.globalAlpha = on ? (selected ? 0.9 : 0.7) : 0.12;
-        g.fillStyle = color[p.cluster]; g.beginPath(); g.arc(x, y, on && selected ? 3.2 : 2.6, 0, 6.283); g.fill();
+        g.globalAlpha = alphaOf(p, from) + (alphaOf(p, selected) - alphaOf(p, from)) * e;
+        const r = sizeOf(p, from) + (sizeOf(p, selected) - sizeOf(p, from)) * e;
+        g.fillStyle = color[p.cluster]; g.beginPath(); g.arc(x, y, r, 0, 6.283); g.fill();
       }
     }
     g.globalAlpha = 1;
+    const c = selected && byId[selected], m = c && centre[c.id];
+    if (m) {   // name the selected type where it is densest
+      const [x, y] = px(m); g.globalAlpha = e;
+      g.textAlign = 'center'; g.lineJoin = 'round'; g.font = '800 16px Archivo, Arial, sans-serif';
+      g.lineWidth = 6; g.strokeStyle = 'rgba(12,22,29,.92)'; g.strokeText(short(c), x, y - 18);
+      g.fillStyle = '#FFFFFF'; g.fillText(short(c), x, y - 18);
+      g.globalAlpha = 1;
+    }
   }
   function nearest(ev) {
     const r = cv.getBoundingClientRect(), mx = ev.clientX - r.left, my = ev.clientY - r.top;
@@ -94,6 +184,7 @@ fetch('atlas.json').then(r => r.json()).then(A => {
     return best;
   }
   const preview = document.getElementById('preview');
+  preview.addEventListener('error', () => { preview.style.display = 'none'; });
   cv.addEventListener('mousemove', ev => { const p = nearest(ev); if (p) { preview.src = p.image; preview.style.display = 'block'; } });
   cv.addEventListener('click', ev => { const p = nearest(ev); if (p) select(p.cluster); });
   window.addEventListener('resize', draw);
@@ -102,32 +193,74 @@ fetch('atlas.json').then(r => r.json()).then(A => {
   const list = document.getElementById('list');
   A.clusters.forEach(c => {
     const b = document.createElement('button');
-    b.innerHTML = `<span class="sw" style="background:${color[c.id]}"></span>${c.name} · ${pct(c.share)}`; b.dataset.id = c.id;
+    b.innerHTML = `<span class="sw" style="background:${color[c.id]}"></span>${short(c)}, ${pct(c.share)}`; b.dataset.id = c.id;
     b.onclick = () => select(c.id); list.appendChild(b);
   });
 
 
+  // one featured scene per recipe: the clearest example of each failure on the Robot page
+  const FEATURED = { flat_stacked: 'flat_stacked_015', small_beside_big: 'small_beside_big_009', against_wall: 'against_wall_015' };
+  const WHY = {
+    flat_stacked: 'Flat items lying on each other cling, so lifting one brings the one underneath.',
+    small_beside_big: 'A small item pressed against a bigger one gets dragged up with it.',
+    against_wall: 'An item tight against the tote wall: the cup cannot seal, so the pick misses.'
+  };
+  function recipes(c) {
+    const box = document.getElementById('recipes');
+    if (!c.scene_modes || !c.scene_modes.length) { box.hidden = true; box.innerHTML = ''; return; }
+    box.hidden = false;
+    box.innerHTML = `<h2>From a real failure to a simulated tote</h2>
+      <p>Each card swaps between a real ${short(c).toLowerCase()} photo from ARMBench and the tote we built to recreate one cause of it, with Grab-only picking. Open a card to watch both robots on that tote.</p>
+      <div class="rgrid">${c.scene_modes.map((m, i) => {
+        const photo = c.examples[i % c.examples.length], scene = FEATURED[m.id];
+        return `<a class="rcard" href="robot.html#${m.id}">
+          <div class="frame">
+            ${scene ? `<video class="sim" src="videos/${scene}_grab_only.mp4" muted autoplay loop playsinline preload="auto" aria-label="Simulated ${m.name.toLowerCase()} tote"></video>` : '<div class="ph sim">Simulation not found</div>'}
+            <img class="real" src="${photo}" alt="Real ${short(c).toLowerCase()} photo from ARMBench">
+            <span class="tagline t-real real">Real: ARMBench</span>
+            <span class="tagline t-sim sim">Simulated: ${m.name}</span>
+          </div>
+          <div class="cap"><b>${m.name}</b><span>${WHY[m.id] || ''}</span><em>Watch both robots on this tote</em></div>
+        </a>`; }).join('')}</div>`;
+    box.querySelectorAll('img.real').forEach(img => img.addEventListener('error', () => {
+      const ph = document.createElement('div'); ph.className = 'ph real'; ph.textContent = 'Real photo not uploaded yet'; img.replaceWith(ph);
+    }, { once: true }));
+    box.querySelectorAll('video').forEach(v => v.addEventListener('error', () => {
+      const ph = document.createElement('div'); ph.className = 'ph sim'; ph.textContent = 'Simulation video not on this server'; v.replaceWith(ph);
+    }, { once: true }));
+  }
+
   function select(id) {
     const c = byId[id];
     list.querySelectorAll('button').forEach(b => b.classList.toggle('on', b.dataset.id === id));
-    selected = id; draw();
+    fadeTo(id); recipes(c);
     preview.src = c.examples[0]; preview.style.display = 'block';
+    const first = c.scene_modes && c.scene_modes[0];
     document.getElementById('detail').innerHTML = `
       <h2>${c.name}</h2>
       <span class="badge ${c.simulated ? 'sim' : 'real'}">${c.simulated ? 'Recreated in simulation' : 'Real data only'}</span>
+      <div class="big">${c.count.toLocaleString()}</div>
+      <div class="muted" style="margin:0 0 12px">failed picks, ${pct(c.share)} of all failures</div>
+      ${first ? `<a class="go-sim" href="robot.html#${first.id}">See the robots try this</a>` : ''}
       <div class="kv">
-        <span>Failures</span><span>${c.count.toLocaleString()} (${pct(c.share)} of all)</span>
         <span>Main label</span><span>${c.defect.replace('_', ' ')}</span>
         <span>Classifier catches</span><span>${pct(c.detection_rate)} of held-out failures${c.n_test ? ` (n=${c.n_test})` : ''}</span>
         <span>Right failure type</span><span>${pct(c.type_accuracy)}</span>
       </div>
-      ${c.scene_modes && c.scene_modes.length ? `<p class="muted" style="margin:0 0 10px">Scene recipes built from this mode: <b>${c.scene_modes.map(m => m.name).join(', ')}</b></p>` : ''}
-      <div class="grid">${c.examples.map(src => `<img src="${src}" alt="" loading="lazy">`).join('')}</div>`;
+      ${c.scene_modes && c.scene_modes.length ? `<p class="muted" style="margin:0 0 10px">Scene recipes built from this type: ${c.scene_modes.map(m => `<a href="robot.html#${m.id}" style="color:var(--accent)">${m.name}</a>`).join(', ')}</p>` : ''}
+      <div class="grid">${c.examples.map(src => `<img src="${src}" alt="Example of a ${short(c).toLowerCase()} failure" loading="lazy">`).join('')}</div>
+      <p class="missing" hidden>Example photos are not on this server yet.</p>`;
+    // a missing photo becomes a blank tile instead of a broken-image icon
+    const imgs = document.querySelectorAll('#detail .grid img');
+    imgs.forEach(img => img.addEventListener('error', () => {
+      const ph = document.createElement('div'); ph.className = 'ph'; img.replaceWith(ph);
+      document.querySelector('#detail .missing').hidden = false;
+    }, { once: true }));
   }
 
   const k = A.classifier;
   document.getElementById('stats').innerHTML = `
-    <h2 style="margin:0 0 6px;font-size:18px">Real-data results</h2>
+    <h2>How well a photo classifier spots each failure</h2>
     <p class="muted" style="margin:0 0 12px">${k.model}. Trained on ${k.train.toLocaleString()} images, tested on ${k.test.toLocaleString()} held-out images.</p>
     <table><tr><th>Measure</th><th>Result</th></tr>
       <tr><td>Failure vs clean pick</td><td>${pct(k.accuracy_failure_vs_clean)}</td></tr>
