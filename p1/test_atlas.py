@@ -1,3 +1,4 @@
+# Property-based tests for the P1 atlas.
 """Property-based tests (Hypothesis) for the Failure Atlas.
 
 Run from p1/:  python3 -m pytest test_atlas.py -q
