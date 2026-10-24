@@ -1,0 +1,89 @@
+{
+ "scene_id": "small_beside_big_005",
+ "mode": "small_beside_big",
+ "seed": 1005,
+ "tote": {
+  "size": [
+   0.4,
+   0.3,
+   0.15
+  ]
+ },
+ "objects": [
+  {
+   "id": "sugar_box_1",
+   "type": "sugar_box",
+   "size": [
+    0.175,
+    0.089,
+    0.038
+   ],
+   "pos": [
+    -0.0044,
+    -0.0297,
+    0.019
+   ],
+   "yaw": 0.0
+  },
+  {
+   "id": "gelatin_box_1",
+   "type": "gelatin_box",
+   "size": [
+    0.085,
+    0.073,
+    0.028
+   ],
+   "pos": [
+    -0.1475,
+    -0.0024,
+    0.014
+   ],
+   "yaw": 0.0
+  },
+  {
+   "id": "gelatin_box_2",
+   "type": "gelatin_box",
+   "size": [
+    0.085,
+    0.073,
+    0.028
+   ],
+   "pos": [
+    0.1313,
+    -0.0238,
+    0.014
+   ],
+   "yaw": 0.0
+  },
+  {
+   "id": "foam_brick_1",
+   "type": "foam_brick",
+   "size": [
+    0.075,
+    0.05,
+    0.05
+   ],
+   "pos": [
+    0.0506,
+    0.1131,
+    0.025
+   ],
+   "yaw": 0.0
+  },
+  {
+   "id": "tomato_soup_can_1",
+   "type": "tomato_soup_can",
+   "size": [
+    0.066,
+    0.066,
+    0.101
+   ],
+   "pos": [
+    -0.0705,
+    0.0908,
+    0.0505
+   ],
+   "yaw": 0.0
+  }
+ ]
+}

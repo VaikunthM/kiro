@@ -1,0 +1,89 @@
+{
+ "scene_id": "against_wall_019",
+ "mode": "against_wall",
+ "seed": 1019,
+ "tote": {
+  "size": [
+   0.4,
+   0.3,
+   0.15
+  ]
+ },
+ "objects": [
+  {
+   "id": "potted_meat_can_1",
+   "type": "potted_meat_can",
+   "size": [
+    0.097,
+    0.082,
+    0.05
+   ],
+   "pos": [
+    -0.0251,
+    -0.103,
+    0.025
+   ],
+   "yaw": 0.0
+  },
+  {
+   "id": "sugar_box_1",
+   "type": "sugar_box",
+   "size": [
+    0.175,
+    0.089,
+    0.038
+   ],
+   "pos": [
+    -0.1043,
+    0.0253,
+    0.019
+   ],
+   "yaw": 0.0
+  },
+  {
+   "id": "flat_box_1",
+   "type": "flat_box",
+   "size": [
+    0.14,
+    0.1,
+    0.015
+   ],
+   "pos": [
+    0.1278,
+    0.0203,
+    0.0075
+   ],
+   "yaw": 0.0
+  },
+  {
+   "id": "foam_brick_1",
+   "type": "foam_brick",
+   "size": [
+    0.075,
+    0.05,
+    0.05
+   ],
+   "pos": [
+    0.1392,
+    -0.0942,
+    0.025
+   ],
+   "yaw": 0.0
+  },
+  {
+   "id": "potted_meat_can_2",
+   "type": "potted_meat_can",
+   "size": [
+    0.097,
+    0.082,
+    0.05
+   ],
+   "pos": [
+    -0.1361,
+    -0.0801,
+    0.025
+   ],
+   "yaw": 0.0
+  }
+ ]
+}

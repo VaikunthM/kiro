@@ -1,0 +1,89 @@
+{
+ "scene_id": "against_wall_009",
+ "mode": "against_wall",
+ "seed": 1009,
+ "tote": {
+  "size": [
+   0.4,
+   0.3,
+   0.15
+  ]
+ },
+ "objects": [
+  {
+   "id": "gelatin_box_1",
+   "type": "gelatin_box",
+   "size": [
+    0.085,
+    0.073,
+    0.028
+   ],
+   "pos": [
+    0.0481,
+    -0.1115,
+    0.014
+   ],
+   "yaw": 0.0
+  },
+  {
+   "id": "gelatin_box_2",
+   "type": "gelatin_box",
+   "size": [
+    0.085,
+    0.073,
+    0.028
+   ],
+   "pos": [
+    0.1011,
+    0.1098,
+    0.014
+   ],
+   "yaw": 0.0
+  },
+  {
+   "id": "foam_brick_1",
+   "type": "foam_brick",
+   "size": [
+    0.075,
+    0.05,
+    0.05
+   ],
+   "pos": [
+    0.1625,
+    0.0132,
+    0.025
+   ],
+   "yaw": 0.0
+  },
+  {
+   "id": "gelatin_box_3",
+   "type": "gelatin_box",
+   "size": [
+    0.085,
+    0.073,
+    0.028
+   ],
+   "pos": [
+    -0.1018,
+    -0.0712,
+    0.014
+   ],
+   "yaw": 0.0
+  },
+  {
+   "id": "foam_brick_2",
+   "type": "foam_brick",
+   "size": [
+    0.075,
+    0.05,
+    0.05
+   ],
+   "pos": [
+    -0.0128,
+    0.0744,
+    0.025
+   ],
+   "yaw": 0.0
+  }
+ ]
+}

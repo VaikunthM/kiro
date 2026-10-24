@@ -1,0 +1,89 @@
+{
+ "scene_id": "small_beside_big_010",
+ "mode": "small_beside_big",
+ "seed": 1010,
+ "tote": {
+  "size": [
+   0.4,
+   0.3,
+   0.15
+  ]
+ },
+ "objects": [
+  {
+   "id": "potted_meat_can_1",
+   "type": "potted_meat_can",
+   "size": [
+    0.097,
+    0.082,
+    0.05
+   ],
+   "pos": [
+    0.0063,
+    -0.0666,
+    0.025
+   ],
+   "yaw": 0.0
+  },
+  {
+   "id": "foam_brick_1",
+   "type": "foam_brick",
+   "size": [
+    0.075,
+    0.05,
+    0.05
+   ],
+   "pos": [
+    0.1057,
+    -0.044,
+    0.025
+   ],
+   "yaw": 0.0
+  },
+  {
+   "id": "potted_meat_can_2",
+   "type": "potted_meat_can",
+   "size": [
+    0.097,
+    0.082,
+    0.05
+   ],
+   "pos": [
+    -0.052,
+    0.0664,
+    0.025
+   ],
+   "yaw": 0.0
+  },
+  {
+   "id": "tomato_soup_can_1",
+   "type": "tomato_soup_can",
+   "size": [
+    0.066,
+    0.066,
+    0.101
+   ],
+   "pos": [
+    0.0442,
+    0.0867,
+    0.0505
+   ],
+   "yaw": 0.0
+  },
+  {
+   "id": "tomato_soup_can_2",
+   "type": "tomato_soup_can",
+   "size": [
+    0.066,
+    0.066,
+    0.101
+   ],
+   "pos": [
+    -0.142,
+    -0.0792,
+    0.0505
+   ],
+   "yaw": 0.0
+  }
+ ]
+}

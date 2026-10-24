@@ -1,0 +1,89 @@
+{
+ "scene_id": "against_wall_015",
+ "mode": "against_wall",
+ "seed": 1015,
+ "tote": {
+  "size": [
+   0.4,
+   0.3,
+   0.15
+  ]
+ },
+ "objects": [
+  {
+   "id": "foam_brick_1",
+   "type": "foam_brick",
+   "size": [
+    0.075,
+    0.05,
+    0.05
+   ],
+   "pos": [
+    0.0863,
+    0.1242,
+    0.025
+   ],
+   "yaw": 0.0
+  },
+  {
+   "id": "gelatin_box_1",
+   "type": "gelatin_box",
+   "size": [
+    0.085,
+    0.073,
+    0.028
+   ],
+   "pos": [
+    -0.0057,
+    0.1038,
+    0.014
+   ],
+   "yaw": 0.0
+  },
+  {
+   "id": "flat_box_1",
+   "type": "flat_box",
+   "size": [
+    0.14,
+    0.1,
+    0.015
+   ],
+   "pos": [
+    0.1278,
+    0.0037,
+    0.0075
+   ],
+   "yaw": 0.0
+  },
+  {
+   "id": "gelatin_box_2",
+   "type": "gelatin_box",
+   "size": [
+    0.085,
+    0.073,
+    0.028
+   ],
+   "pos": [
+    -0.0965,
+    -0.0221,
+    0.014
+   ],
+   "yaw": 0.0
+  },
+  {
+   "id": "tomato_soup_can_1",
+   "type": "tomato_soup_can",
+   "size": [
+    0.066,
+    0.066,
+    0.101
+   ],
+   "pos": [
+    0.0205,
+    -0.1053,
+    0.0505
+   ],
+   "yaw": 0.0
+  }
+ ]
+}

@@ -1,0 +1,89 @@
+{
+ "scene_id": "against_wall_020",
+ "mode": "against_wall",
+ "seed": 1020,
+ "tote": {
+  "size": [
+   0.4,
+   0.3,
+   0.15
+  ]
+ },
+ "objects": [
+  {
+   "id": "sugar_box_1",
+   "type": "sugar_box",
+   "size": [
+    0.175,
+    0.089,
+    0.038
+   ],
+   "pos": [
+    0.101,
+    -0.046,
+    0.019
+   ],
+   "yaw": 0.0
+  },
+  {
+   "id": "potted_meat_can_1",
+   "type": "potted_meat_can",
+   "size": [
+    0.097,
+    0.082,
+    0.05
+   ],
+   "pos": [
+    -0.0343,
+    0.1043,
+    0.025
+   ],
+   "yaw": 0.0
+  },
+  {
+   "id": "potted_meat_can_2",
+   "type": "potted_meat_can",
+   "size": [
+    0.097,
+    0.082,
+    0.05
+   ],
+   "pos": [
+    -0.1482,
+    -0.0064,
+    0.025
+   ],
+   "yaw": 0.0
+  },
+  {
+   "id": "tomato_soup_can_1",
+   "type": "tomato_soup_can",
+   "size": [
+    0.066,
+    0.066,
+    0.101
+   ],
+   "pos": [
+    -0.041,
+    -0.0075,
+    0.0505
+   ],
+   "yaw": 0.0
+  },
+  {
+   "id": "potted_meat_can_3",
+   "type": "potted_meat_can",
+   "size": [
+    0.097,
+    0.082,
+    0.05
+   ],
+   "pos": [
+    0.0759,
+    0.0623,
+    0.025
+   ],
+   "yaw": 0.0
+  }
+ ]
+}
